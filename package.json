@@ -213,6 +213,18 @@
         "enablement": "miniHelix.enabled && miniHelix.mode == normal"
       },
       {
+        "command": "miniHelix.surroundAdd",
+        "title": "Add Surround (ms)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
+        "command": "miniHelix.surroundDelete",
+        "title": "Delete Surround (md)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
         "command": "miniHelix.surroundReplaceInput",
         "title": "Replace Surround: Enter Replacement",
         "category": "Mini Helix",
@@ -2095,6 +2107,159 @@
         "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
       {
+        "key": "m s",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m s",
+        "command": "miniHelix.surroundAdd",
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d '",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d shift+'",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d shift+9",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d shift+0",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d [",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d ]",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d shift+[",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d shift+]",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d shift+,",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d shift+.",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d `",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending && editorReadonly"
+      },
+      {
+        "key": "m d '",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "'"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+'",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "\""
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+9",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "("
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+0",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": ")"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d [",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "["
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d ]",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "]"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+[",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "{"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+]",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "}"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+,",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "<"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+.",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": ">"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d `",
+        "command": "miniHelix.surroundDelete",
+        "args": {
+          "target": "`"
+        },
+        "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
         "key": "m shift+a",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
@@ -2116,11 +2281,6 @@
       },
       {
         "key": "m shift+c",
-        "command": "miniHelix.noop",
-        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
-      },
-      {
-        "key": "m d",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
@@ -2256,11 +2416,6 @@
       },
       {
         "key": "m shift+r",
-        "command": "miniHelix.noop",
-        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
-      },
-      {
-        "key": "m s",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
@@ -4805,6 +4960,676 @@
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
       {
+        "key": "m d a",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+a",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d b",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+b",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d c",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+c",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d d",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+d",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d e",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+e",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d f",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+f",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d g",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+g",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d h",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+h",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d i",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+i",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d j",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+j",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d k",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+k",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d l",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+l",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d m",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+m",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d n",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+n",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d o",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+o",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d p",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+p",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d q",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+q",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d r",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+r",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d s",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+s",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d t",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+t",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d u",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+u",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d v",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+v",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d w",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+w",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d x",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+x",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d y",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+y",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d z",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+z",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 0",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 1",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+1",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 2",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+2",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 3",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+3",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 4",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+4",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 5",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+5",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 6",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+6",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 7",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+7",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 8",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+8",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d 9",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+`",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d -",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+-",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d =",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+=",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d \\",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+\\",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d ;",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+;",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d ,",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d .",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d /",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+/",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d space",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+space",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad0",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad0",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad1",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad1",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad2",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad2",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad3",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad3",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad4",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad4",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad5",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad5",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad6",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad6",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad7",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad7",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad8",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad8",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad9",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad9",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad_add",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad_add",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad_subtract",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad_subtract",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad_multiply",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad_multiply",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad_divide",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad_divide",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad_decimal",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad_decimal",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d numpad_separator",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+numpad_separator",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d enter",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+enter",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d tab",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+tab",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d backspace",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+backspace",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d delete",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d shift+delete",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d escape",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d left",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d right",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d up",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d down",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d home",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d end",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d pageup",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "m d pagedown",
+        "command": "miniHelix.noop",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
         "key": "w",
         "command": "miniHelix.moveNextWordStart",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
@@ -6355,12 +7180,14 @@
       },
       {
         "key": "space",
-        "command": "miniHelix.cancelSurroundReplace",
+        "command": "miniHelix.surroundReplaceInput",
+        "args": " ",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && miniHelix.surroundReplacePending"
       },
       {
         "key": "shift+space",
-        "command": "miniHelix.cancelSurroundReplace",
+        "command": "miniHelix.surroundReplaceInput",
+        "args": " ",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && miniHelix.surroundReplacePending"
       },
       {
@@ -6541,12 +7368,14 @@
       },
       {
         "key": "enter",
-        "command": "miniHelix.cancelSurroundReplace",
+        "command": "miniHelix.surroundReplaceInput",
+        "args": "\n",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && miniHelix.surroundReplacePending"
       },
       {
         "key": "shift+enter",
-        "command": "miniHelix.cancelSurroundReplace",
+        "command": "miniHelix.surroundReplaceInput",
+        "args": "\n",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && miniHelix.surroundReplacePending"
       },
       {

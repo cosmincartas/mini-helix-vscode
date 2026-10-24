@@ -346,13 +346,16 @@ native navigation history; it does not add Helix's select mode or a custom
 jumplist. Input blocking and label keys share the keyboard-layout and context
 update limitations below.
 
-### Match text objects and surround (`mi`, `ma`, `mr`)
+### Match text objects and surround (`mi`, `ma`, `ms`, `md`, `mr`)
 
 | Keys | Does |
 | --- | --- |
 | `miw` / `maw` | select inside or around the word under each cursor |
 | `mi<d>` / `ma<d>` | select inside or around the enclosing `<d>` pair |
 | `[count]mi<d>` / `[count]ma<d>` | select the n-th enclosing pair (the count is ignored for `w`) |
+| `ms<char>` | surround each selection with `<char>`; a delimiter gives its pair, and a closing one is an alias, so `ms(` and `ms)` both give `(text)`; any other printable character, including a space, goes on both sides |
+| `ms<Enter>` | surround each selection with the document's line ending on both sides |
+| `[count]md<d>` | delete the n-th enclosing `<d>` pair |
 | `mr<old><new>` | replace the enclosing `<old>` pair with `<new>`; for example `mr([` turns `(text)` into `[text]` |
 
 `<d>` and `<old>` can be `'` `"` `` ` `` `(` `)` `[` `]` `{` `}` `<` `>`; a closing
@@ -360,11 +363,22 @@ character is an alias for its pair, so `mi)` is the same as `mi(`. `<new>` can
 be any of those, or any other printable character, which is used on both sides:
 `mr"*` turns `"x"` into `*x*`.
 
+`md` accepts the same `<d>` characters and finds pairs the same way as `mr`.
+
 - `mi` and `ma` work on every cursor; a cursor with no match stays where it is.
 - `mr` works with multiple cursors and is one undo step (and one `u` revision).
   If any cursor has no match, nothing changes.
-- Escape or an invalid key after `m`, `mi`, `ma`, `mr` or `mr<old>` cancels the
-  command, clears the count, and types nothing.
+- `ms` ignores a count. Afterwards each selection covers the new pair (the
+  selected text plus the delimiters) and keeps its direction. An empty selection
+  wraps the character under the cursor, so `ms(` on `b` in `abc` gives `a(b)c`
+  with `(b)` selected.
+- `ms` and `md` work with multiple cursors and are one undo step (and one `u`
+  revision). `md` changes nothing if any cursor has no matching pair. After `md`,
+  each selection keeps its direction and moves back by the delimiters deleted
+  before it.
+- In a read-only editor, `ms` and `md` change nothing and clear the count.
+- Escape or an invalid key after `m`, `mi`, `ma`, `ms`, `md`, `mr` or `mr<old>`
+  cancels the command, clears the count, and types nothing.
 
 Limitations:
 
@@ -372,8 +386,15 @@ Limitations:
   and operators such as `->`, count like any other bracket.
 - Quotes pair up on a single line from left to right and do not nest.
 - The punctuation keys follow the US keyboard layout.
-- There are no `mm`, `ms`, or `md` commands and no syntax objects (function,
-  class, argument). This is not exact Helix parity.
+- There is no `mm` command and no syntax objects (function, class, argument).
+  This is not exact Helix parity.
+- `md` accepts only the delimiters (`'` `"` `` ` `` `(` `)` `[` `]` `{` `}` `<`
+  `>`), not any character and not `m` (nearest pair).
+- `md` pairs quotes on a single line; Helix searches across lines.
+- `md` with several cursors in one pair deletes that pair once; Helix rejects
+  this.
+- `md` shows no error message when it finds no pair.
+- `mr<old><space>` does not replace the pair with spaces, as Helix does.
 
 ### Settings
 

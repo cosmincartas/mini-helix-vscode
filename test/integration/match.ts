@@ -18,6 +18,7 @@ const punctuation: Record<string, Key> = {
   '`': ['`', 'Backquote', 192, '`'],
   '.': ['.', 'Period', 190, '.'], ';': [';', 'Semicolon', 186, ';'],
   '/': ['/', 'Slash', 191, '/'], '=': ['=', 'Equal', 187, '='],
+  '<enter>': ['Enter', 'Enter', 13, '\r'],
   '<tab>': ['Tab', 'Tab', 9], '<bs>': ['Backspace', 'Backspace', 8],
   '<left>': ['ArrowLeft', 'ArrowLeft', 37],
 };
@@ -363,6 +364,130 @@ export async function checkMatch(api: MiniHelixApi, keyboard: Keyboard): Promise
   await type('mr({');
   assert.equal(document.getText(), '{ab} z', 'mr after u starts from the undone text');
 
+  // ms: wraps every selection, and its selection then covers the pair.
+  for (const [keys, wrapped] of [['ms(', '(text)'], ['ms)', '(text)'], ['ms*', '*text*'], ['ms ', ' text ']]) {
+    await reset('f text g', new vscode.Selection(0, 2, 0, 6));
+    await type(keys);
+    assert.equal(document.getText(), `f ${wrapped} g`, keys);
+    assert.deepEqual(selected(), [wrapped], keys);
+    assert.deepEqual(where(), [[0, 2, 0, 8]], keys);
+    assert.equal(api.getState().mode, 'normal', keys);
+  }
+  await reset('abc', caret(1));
+  await type('ms(');
+  assert.equal(document.getText(), 'a(b)c', 'a caret wraps the character under it');
+  assert.deepEqual(where(), [[0, 1, 0, 4]]);
+  await reset('text', new vscode.Selection(0, 0, 0, 4));
+  await type('ms<enter>');
+  assert.equal(document.getText(), '\ntext\n', 'Enter wraps in line breaks');
+  assert.deepEqual(selected(), ['\ntext\n']);
+  await reset('ab', new vscode.Selection(0, 2, 0, 0));
+  await type('ms[');
+  assert.equal(document.getText(), '[ab]');
+  assert.deepEqual(where(), [[0, 4, 0, 0]], 'a reversed selection stays reversed');
+  await assertReleased('(text)', 2);
+  // A count does not apply to ms, and does not reach the next command.
+  const afterWord = async (keys: string) => {
+    await reset('abc d e f g h', new vscode.Selection(0, 0, 0, 3));
+    await type(keys);
+    assert.equal(document.getText(), '(abc) d e f g h', keys);
+    return where();
+  };
+  assert.deepEqual(await afterWord('3ms(w'), await afterWord('ms(w'), 'the count of ms does not carry over');
+  // Escape and the other cancel keys end ms with no edit.
+  await reset('(text)', new vscode.Selection(0, 1, 0, 5));
+  await type('ms<esc>');
+  assert.equal(document.getText(), '(text)');
+  assert.deepEqual(where(), [[0, 1, 0, 5]]);
+  await type('d');
+  assert.equal(document.getText(), '()', 'the next key acts normally');
+  for (const keys of ['ms<esc>', 'ms<tab>', 'ms<bs>', 'ms<left>']) {
+    await reset('(text)', caret(2));
+    await type(keys);
+    assert.equal(document.getText(), '(text)', keys);
+    await assertReleased('(text)', 2);
+  }
+  // Several cursors: one pair each, in one undo step.
+  await reset('ab cd', new vscode.Selection(0, 0, 0, 2), new vscode.Selection(0, 3, 0, 5));
+  await type('ms(');
+  assert.equal(document.getText(), '(ab) (cd)');
+  assert.deepEqual(where(), [[0, 0, 0, 4], [0, 5, 0, 9]]);
+  await type('u');
+  assert.equal(document.getText(), 'ab cd', 'u undoes every wrap as one revision');
+  await type('U');
+  assert.equal(document.getText(), '(ab) (cd)', 'U redoes them together');
+  await reset('ab cd', new vscode.Selection(0, 0, 0, 2), new vscode.Selection(0, 3, 0, 5));
+  await type('ms(');
+  await vscode.commands.executeCommand('undo');
+  assert.equal(document.getText(), 'ab cd', 'native undo is one step for every wrap');
+  await vscode.commands.executeCommand('redo');
+  assert.equal(document.getText(), '(ab) (cd)');
+  // A selection change between ms and its key cancels it (F-1).
+  await reset('text', new vscode.Selection(0, 0, 0, 4));
+  await type('ms');
+  editor.selections = [new vscode.Selection(0, 1, 0, 3)];
+  await pause();
+  await type('(');
+  assert.equal(document.getText(), 'text', 'a selection change cancels ms');
+  await assertReleased('text', 1);
+  // mr takes Enter and Space as keys, but they are not replacements: no edit, and the session ends.
+  for (const keys of ['mr(<enter>', 'mr( ']) {
+    await reset('(text)', caret(2));
+    await type(keys);
+    assert.equal(document.getText(), '(text)', keys);
+    assert.equal(api.getState().mode, 'normal', keys);
+    await assertReleased('(text)', 2);
+  }
+
+  // md: deletes the enclosing pair of every cursor.
+  await reset('x (ab) y', caret(4));
+  await type('md(');
+  assert.equal(document.getText(), 'x ab y');
+  assert.deepEqual(where(), [[0, 3, 0, 3]], 'the caret moves back past the deleted opener');
+  await reset('say "hi" now', caret(6));
+  await type('md"');
+  assert.equal(document.getText(), 'say hi now');
+  await reset('x [a] y', caret(4));
+  await type('md]');
+  assert.equal(document.getText(), 'x a y', 'a closing delimiter is an alias');
+  await reset('(a (b))', caret(4));
+  await type('2md(');
+  assert.equal(document.getText(), 'a (b)', 'a count selects the outer pair');
+  await reset('(a)', caret(1));
+  await type('md*');
+  assert.equal(document.getText(), '(a)', 'only the delimiters work');
+  await reset('a (b', caret(3));
+  await type('md(');
+  assert.equal(document.getText(), 'a (b', 'no pair edits nothing');
+  await reset('f(abc)', caret(3));
+  await type('ma(');
+  await type('md(');
+  assert.equal(document.getText(), 'fabc');
+  assert.deepEqual(selected(), ['abc'], 'the inner text stays selected');
+  await reset('(ab) (cd)', caret(1), caret(7));
+  await type('md(');
+  assert.equal(document.getText(), 'ab cd');
+  assert.deepEqual(where(), [[0, 0, 0, 0], [0, 4, 0, 4]], 'each caret moves back past the deleted delimiters before it');
+  await type('u');
+  assert.equal(document.getText(), '(ab) (cd)', 'u undoes every deletion as one revision');
+  await reset('(ab) (cd)', caret(1), caret(7));
+  await type('md(');
+  await vscode.commands.executeCommand('undo');
+  assert.equal(document.getText(), '(ab) (cd)', 'native undo is one step for every deletion');
+  await reset('(ab) (cd)', caret(1), caret(7));
+  await type('md)');
+  assert.equal(document.getText(), 'ab cd');
+  await reset('abcdef', caret(0));
+  await type('3mdx');
+  assert.equal(document.getText(), 'abcdef', 'x after md is an unbound key');
+  assert.deepEqual(where(), [[0, 0, 0, 0]]);
+  await type('d');
+  assert.equal(document.getText(), 'bcdef', 'the unbound key cleared the count');
+  await reset('abcdef', caret(0));
+  await type('md<esc>');
+  await type('d');
+  assert.equal(document.getText(), 'bcdef', 'Escape after md cancels');
+
   // Read-only editors: selecting works, replacing never edits.
   const provider = vscode.workspace.registerTextDocumentContentProvider('mini-helix-match-readonly', {
     provideTextDocumentContent: () => 'a (ro) b',
@@ -387,6 +512,19 @@ export async function checkMatch(api: MiniHelixApi, keyboard: Keyboard): Promise
     await type('2mr(');
     await type('i');
     assert.equal(api.getState().mode, 'normal', 'read-only: mr clears the count and starts nothing');
+    readonlyEditor.selections = [caret(4)];
+    await pause();
+    await type('ms(');
+    assert.equal(readonlyDocument.getText(), 'a (ro) b', 'read-only: ms edits nothing');
+    await type('md(');
+    assert.equal(readonlyDocument.getText(), 'a (ro) b', 'read-only: md edits nothing');
+    assert.deepEqual(readonlyEditor.selections.map(selection => selection.active.character), [4]);
+    await type('2ms(');
+    await type('i');
+    assert.equal(api.getState().mode, 'normal', 'read-only: ms clears the count and starts nothing');
+    await type('2md(');
+    await type('i');
+    assert.equal(api.getState().mode, 'normal', 'read-only: md clears the count');
   } finally {
     provider.dispose();
     editor = await vscode.window.showTextDocument(document, vscode.ViewColumn.One);

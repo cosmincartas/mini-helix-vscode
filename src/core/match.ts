@@ -1,11 +1,11 @@
 /**
- * Helix-style `mi` / `ma` text objects and `mr` surround replacement, by plain
+ * Helix-style `mi` / `ma` text objects and `ms` / `mr` / `md` surround edits, by plain
  * text scanning: no parser, no syntax awareness. Offsets are UTF-16 offsets
  * shared with VS Code selections. Word objects use the grapheme categories of
  * `wordMotion.ts`; brackets are matched lexically over the whole document;
  * quotes (`'`, `"`, backtick) pair up left to right within one line.
  */
-import { Edit } from './editing';
+import { blockRange, Edit, EditResult } from './editing';
 import { OffsetRange, WordMotionText } from './wordMotion';
 
 export type TextObjectKind = 'inside' | 'around';
@@ -171,6 +171,29 @@ export function selectTextObjects(
 }
 
 /**
+ * The distinct enclosing pairs of every range's cursor. undefined = any range
+ * unmatched, or a delimiter offset claimed by two different pairs.
+ */
+function collectPairs(
+  text: WordMotionText, ranges: readonly OffsetRange[], pair: Pair, count: number
+): PairPosition[] | undefined {
+  const found = new Map<string, PairPosition>();
+  const claimed = new Map<number, string>();
+  for (const range of ranges) {
+    const position = findPair(text, cursorOffset(text, range), pair, count);
+    if (!position) { return undefined; }
+    const key = `${position.open}:${position.close}`;
+    for (const offset of [position.open, position.close]) {
+      const owner = claimed.get(offset);
+      if (owner !== undefined && owner !== key) { return undefined; }
+      claimed.set(offset, key);
+    }
+    found.set(key, position);
+  }
+  return [...found.values()];
+}
+
+/**
  * `mr`. undefined = make no edit (old not a delimiter, replacement invalid,
  * any range unmatched, or a delimiter offset claimed by two different pairs).
  * [] = the replacement pair equals the old pair. Otherwise sorted, deduplicated,
@@ -183,25 +206,76 @@ export function replaceSurround(
   const newPair = replacementPair(replacement);
   if (!oldPair || !newPair) { return undefined; }
 
-  const found = new Map<string, PairPosition>();
-  const claimed = new Map<number, string>();
-  for (const range of ranges) {
-    const position = findPair(text, cursorOffset(text, range), oldPair, count);
-    if (!position) { return undefined; }
-    const key = `${position.open}:${position.close}`;
-    for (const offset of [position.open, position.close]) {
-      const owner = claimed.get(offset);
-      if (owner !== undefined && owner !== key) { return undefined; }
-      claimed.set(offset, key);
-    }
-    found.set(key, position);
-  }
+  const found = collectPairs(text, ranges, oldPair, count);
+  if (!found) { return undefined; }
   if (newPair.open === oldPair.open && newPair.close === oldPair.close) { return []; }
 
   const edits: Edit[] = [];
-  for (const { open, close } of found.values()) {
+  for (const { open, close } of found) {
     edits.push({ from: open, to: open + 1, text: newPair.open });
     edits.push({ from: close, to: close + 1, text: newPair.close });
   }
   return edits.sort((a, b) => a.from - b.from);
+}
+
+/**
+ * `ms`. undefined = make no edit (invalid character, or ranges that overlap).
+ * Each range is the block range of its selection. The result selects each
+ * block and its new delimiters, keeps each direction, and follows input order.
+ */
+export function addSurround(
+  text: WordMotionText, ranges: readonly OffsetRange[], character: string, eol: string
+): EditResult | undefined {
+  const pair = character === '\n' ? { open: eol, close: eol }
+    : character === ' ' ? { open: ' ', close: ' ' }
+    : replacementPair(character);
+  if (!pair) { return undefined; }
+
+  const blocks = ranges.map((range, index) => {
+    const block = blockRange(text, range);
+    return { index, from: Math.min(block.anchor, block.head), to: Math.max(block.anchor, block.head), reversed: range.head < range.anchor };
+  }).sort((a, b) => a.from - b.from || a.to - b.to);
+  if (blocks.some((block, i) => i > 0 && block.from < blocks[i - 1].to)) { return undefined; }
+
+  // Opening text at `from`, closing at `to`; insertions at one offset join, close first.
+  const edits: Edit[] = [];
+  const insert = (offset: number, inserted: string) => {
+    const last = edits.at(-1);
+    if (last?.from === offset) { edits[edits.length - 1] = { ...last, text: last.text + inserted }; }
+    else { edits.push({ from: offset, to: offset, text: inserted }); }
+  };
+  for (const block of blocks) {
+    insert(block.from, pair.open);
+    insert(block.to, pair.close);
+  }
+
+  const length = pair.open.length + pair.close.length;
+  const selections: OffsetRange[] = [];
+  blocks.forEach((block, i) => {
+    const start = block.from + i * length;
+    const end = block.to + (i + 1) * length;
+    selections[block.index] = block.reversed ? { anchor: end, head: start } : { anchor: start, head: end };
+  });
+  return { edits, selections };
+}
+
+/**
+ * `md`. undefined = make no edit (not a delimiter, any range unmatched, or a
+ * delimiter offset claimed by two different pairs). Otherwise each delimiter
+ * character is deleted, and every selection boundary moves back by the
+ * deleted offsets before it.
+ */
+export function deleteSurround(
+  text: WordMotionText, ranges: readonly OffsetRange[], target: string, count: number
+): EditResult | undefined {
+  const pair = delimiterPair(target);
+  const found = pair && collectPairs(text, ranges, pair, count);
+  if (!found) { return undefined; }
+
+  const deleted = found.flatMap(({ open, close }) => [open, close]).sort((a, b) => a - b);
+  const moved = (offset: number) => offset - deleted.filter(d => d < offset).length;
+  return {
+    edits: deleted.map(offset => ({ from: offset, to: offset + 1, text: '' })),
+    selections: ranges.map(range => ({ anchor: moved(range.anchor), head: moved(range.head) })),
+  };
 }
