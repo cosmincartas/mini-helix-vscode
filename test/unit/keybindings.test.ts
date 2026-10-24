@@ -7,7 +7,7 @@ interface Binding {
   key: string;
   command: string;
   when: string;
-  args?: string;
+  args?: string | number;
 }
 
 const root = path.resolve(__dirname, '../../..');
@@ -16,14 +16,29 @@ const { createKeybindings } = require(path.join(root, 'scripts/keybindings.cjs')
 };
 const manifest = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
 const bindings: Binding[] = manifest.contributes.keybindings;
+const navigation = [
+  ['g d', 'miniHelix.gotoDefinition'], ['g r', 'miniHelix.gotoReferences'],
+  ['alt+o', 'miniHelix.expandSelection'], ['alt+i', 'miniHelix.shrinkSelection'],
+  ['ctrl+o', 'miniHelix.jumpBack'], ['ctrl+i', 'miniHelix.jumpForward'],
+];
+
+test('navigation works in read-only NORMAL editors, yields to labels, and has no chord blockers', () => {
+  for (const [key, command] of navigation) {
+    assert.deepEqual(bindings.filter(binding => binding.key === key), [{
+      key, command,
+      when: 'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive',
+    }]);
+  }
+});
 
 test('manifest contains the generated bindings', () => {
   assert.deepEqual(bindings, createKeybindings());
 });
 
-test('i, a, c, d, u, U, Escape, g w, and word motions are the default bindings outside a word jump', () => {
+test('i, a, c, d, u, U, Escape, g w, motions, and counts are the default bindings outside a word jump', () => {
   const motionWhen =
     'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive';
+  const hjklWhen = `${motionWhen} && config.miniHelix.hjklMotions`;
   const editWhen = 'editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal';
   assert.deepEqual(bindings.filter(binding =>
     binding.command !== 'miniHelix.noop' && !binding.when.endsWith('&& miniHelix.wordJumpActive')
@@ -39,21 +54,41 @@ test('i, a, c, d, u, U, Escape, g w, and word motions are the default bindings o
       when: 'editorTextFocus && miniHelix.enabled && miniHelix.mode == insert',
     },
     { key: 'g w', command: 'miniHelix.gotoWord', when: motionWhen },
+    ...navigation.map(([key, command]) => ({ key, command, when: motionWhen })),
     { key: 'w', command: 'miniHelix.moveNextWordStart', when: motionWhen },
     { key: 'b', command: 'miniHelix.movePrevWordStart', when: motionWhen },
     { key: 'e', command: 'miniHelix.moveNextWordEnd', when: motionWhen },
     { key: 'shift+w', command: 'miniHelix.moveNextLongWordStart', when: motionWhen },
     { key: 'shift+b', command: 'miniHelix.movePrevLongWordStart', when: motionWhen },
     { key: 'shift+e', command: 'miniHelix.moveNextLongWordEnd', when: motionWhen },
+    { key: 'h', command: 'miniHelix.moveCharLeft', when: hjklWhen },
+    { key: 'j', command: 'miniHelix.moveVisualLineDown', when: hjklWhen },
+    { key: 'k', command: 'miniHelix.moveVisualLineUp', when: hjklWhen },
+    { key: 'l', command: 'miniHelix.moveCharRight', when: hjklWhen },
+    ...Array.from({ length: 10 }, (_, digit) => [
+      { key: String(digit), command: 'miniHelix.count', args: digit, when: motionWhen },
+      { key: `numpad${digit}`, command: 'miniHelix.count', args: digit, when: motionWhen },
+    ]).flat(),
+    { key: 'escape', command: 'miniHelix.clearCount', when: `${motionWhen} && miniHelix.countPending` },
+    // With a count pending, arrows are counted h/j/k/l and other navigation keys clear it.
+    ...[['left', 'miniHelix.moveCharLeft'], ['down', 'miniHelix.moveVisualLineDown'],
+      ['up', 'miniHelix.moveVisualLineUp'], ['right', 'miniHelix.moveCharRight']].map(([key, command]) =>
+      ({ key, command, when: `${motionWhen} && miniHelix.countPending` })),
+    ...[['home', 'cursorHome'], ['end', 'cursorEnd'], ['pageup', 'cursorPageUp'], ['pagedown', 'cursorPageDown']]
+      .map(([key, args]) => ({
+        key, command: 'miniHelix.clearCount', args, when: `${motionWhen} && miniHelix.countPending`,
+      })),
   ]);
 });
 
 test('every bound motion and edit command is contributed and registered', () => {
   const contributed = new Set(manifest.contributes.commands.map((command: { command: string }) => command.command));
   for (const [file, pattern] of [
-    ['src/motions/word.ts', /^miniHelix\.move/],
+    ['src/motions/word.ts', /^miniHelix\.move(Next|Prev)/],
+    ['src/motions/hjkl.ts', /^miniHelix\.move(Char|VisualLine)/],
     ['src/vscode/editing.ts', /^miniHelix\.(append|changeSelection|deleteSelection)$/],
     ['src/vscode/history.ts', /^miniHelix\.(undo|redo)$/],
+    ['src/vscode/navigation.ts', /^miniHelix\.(gotoDefinition|gotoReferences|expandSelection|shrinkSelection|jumpBack|jumpForward)$/],
   ] as const) {
     const source = readFileSync(path.join(root, file), 'utf8');
     const bound = bindings.filter(binding => pattern.test(binding.command));
@@ -65,8 +100,8 @@ test('every bound motion and edit command is contributed and registered', () => 
   }
 });
 
-test('word motion keys override their blockers but yield to label input', () => {
-  for (const key of ['w', 'b', 'e']) {
+test('motion keys override their blockers but yield to label input', () => {
+  for (const key of ['w', 'b', 'e', 'h', 'j', 'k', 'l']) {
     assert.deepEqual(bindings.filter(binding => binding.key === key).map(binding => binding.command), [
       'miniHelix.noop', bindings.find(binding => binding.key === key && binding.command.startsWith('miniHelix.move'))!.command,
       'miniHelix.wordJumpInput',
@@ -74,15 +109,46 @@ test('word motion keys override their blockers but yield to label input', () => 
   }
 });
 
-test('blockers are unique, editable-editor-only, and NORMAL-only', () => {
+test('blockers are unique and NORMAL-only, and editable-editor-only unless a count is pending', () => {
   const blockers = bindings.filter(binding => binding.command === 'miniHelix.noop');
   assert.equal(new Set(blockers.map(binding => binding.key)).size, blockers.length);
   for (const binding of blockers) {
     assert.match(binding.when, /editorTextFocus/);
-    assert.match(binding.when, /!editorReadonly/);
     assert.match(binding.when, /miniHelix.enabled/);
     assert.match(binding.when, /miniHelix.mode == normal/);
+    if (binding.key.startsWith('g ')) {
+      // g chords are motion keys, like g w, so they work in read-only editors.
+      assert.match(binding.when, /!miniHelix.wordJumpActive/);
+    } else {
+      assert.match(binding.when, /\(!editorReadonly \|\| miniHelix.countPending\)/);
+    }
   }
+});
+
+test('every other g chord is an unbound key that clears the count', () => {
+  const chords = bindings.filter(binding => binding.key.startsWith('g '));
+  const single = bindings.filter(binding => binding.command === 'miniHelix.noop' && !binding.key.includes(' '));
+  assert.deepEqual(chords.map(binding => binding.key).sort(),
+    [...single.map(binding => binding.key), 'escape', 'left', 'right', 'up', 'down', 'home', 'end',
+      'pageup', 'pagedown'].map(key => `g ${key}`).sort());
+  assert.deepEqual(new Set(chords.map(binding => binding.command)),
+    new Set(['miniHelix.noop', 'miniHelix.gotoWord', 'miniHelix.gotoDefinition', 'miniHelix.gotoReferences']));
+});
+
+test('digits are counts in NORMAL and label-free; Escape clears a pending count', () => {
+  for (const key of ['1', '0', 'numpad7']) {
+    const matching = bindings.filter(binding => binding.key === key);
+    assert.deepEqual(matching.map(binding => binding.command), [
+      'miniHelix.noop', 'miniHelix.count', 'miniHelix.cancelWordJump',
+    ]);
+    assert.equal(matching[1].args, Number(key.at(-1)));
+  }
+  const escape = bindings.filter(binding => binding.key === 'escape');
+  assert.deepEqual(escape.map(binding => binding.command), [
+    'miniHelix.enterNormal', 'miniHelix.clearCount', 'miniHelix.cancelWordJump',
+  ]);
+  assert.match(escape[1].when, /miniHelix.countPending/);
+  assert.match(escape[1].when, /miniHelix.mode == normal/);
 });
 
 test('ordinary printable keys and direct editing keys are blocked', () => {
@@ -105,11 +171,16 @@ test('ordinary printable keys and direct editing keys are blocked', () => {
   }
 });
 
-test('modified shortcuts remain native; navigation is captured only during a jump', () => {
+test('only requested modified shortcuts are bound; arrow keys are captured only during a jump', () => {
   for (const binding of bindings) {
-    assert.doesNotMatch(binding.key, /ctrl\+|cmd\+|alt\+/);
+    if (/ctrl\+|cmd\+|alt\+/.test(binding.key)) {
+      assert.ok(['alt+o', 'alt+i', 'ctrl+o', 'ctrl+i'].includes(binding.key));
+      assert.ok(binding.when.endsWith('&& !miniHelix.wordJumpActive'));
+    }
     if (/left|right|up|down|home|end|insert/.test(binding.key)) {
-      assert.ok(binding.when.endsWith('&& miniHelix.wordJumpActive'));
+      // Also while a count is pending, so that the key uses or clears it.
+      assert.ok(binding.when.endsWith('&& miniHelix.wordJumpActive') ||
+        binding.when.endsWith('&& miniHelix.countPending') || binding.key.startsWith('g '), binding.key);
     }
   }
 });

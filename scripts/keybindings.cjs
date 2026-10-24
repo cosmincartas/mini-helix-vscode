@@ -11,6 +11,13 @@ const insertWhen =
 const motionWhen = 'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal';
 const jumpWhen = `${motionWhen} && miniHelix.wordJumpActive`;
 const idleMotionWhen = `${motionWhen} && !miniHelix.wordJumpActive`;
+// Blockers also run in read-only editors while a count is pending, because
+// every key that is not a digit clears it, as in Helix.
+const blockWhen =
+  'editorTextFocus && (!editorReadonly || miniHelix.countPending) && miniHelix.enabled && miniHelix.mode == normal';
+// Escape is native in NORMAL unless it has a count to clear.
+const countWhen = `${idleMotionWhen} && miniHelix.countPending`;
+const hjklWhen = `${idleMotionWhen} && config.miniHelix.hjklMotions`;
 
 // Helix word motions; each replaces the selection with the text moved over.
 const motions = [
@@ -21,6 +28,34 @@ const motions = [
   ['shift+b', 'miniHelix.movePrevLongWordStart'],
   ['shift+e', 'miniHelix.moveNextLongWordEnd'],
 ];
+
+// Helix h, j, k, l, behind the miniHelix.hjklMotions setting.
+const charMotions = [
+  ['h', 'miniHelix.moveCharLeft'],
+  ['j', 'miniHelix.moveVisualLineDown'],
+  ['k', 'miniHelix.moveVisualLineUp'],
+  ['l', 'miniHelix.moveCharRight'],
+];
+
+// Helix binds the arrows like h, j, k, l. They stay native, except that with
+// a count pending they use it (3<down> is 3j), as Helix's do.
+const countedArrows = [
+  ['left', 'miniHelix.moveCharLeft'],
+  ['down', 'miniHelix.moveVisualLineDown'],
+  ['up', 'miniHelix.moveVisualLineUp'],
+  ['right', 'miniHelix.moveCharRight'],
+];
+// Other navigation keys clear a pending count, then act natively.
+const countClearing = [
+  ['home', 'cursorHome'],
+  ['end', 'cursorEnd'],
+  ['pageup', 'cursorPageUp'],
+  ['pagedown', 'cursorPageDown'],
+];
+
+// Count digits, including the numeric keypad's, which terminals send to Helix as digits.
+const digits = Array.from({ length: 10 }, (_, digit) => digit)
+  .flatMap(digit => [[String(digit), digit], [`numpad${digit}`, digit]]);
 
 // Helix selection edits; like `i`, they need a writable editor.
 const edits = [
@@ -33,6 +68,16 @@ const edits = [
 const history = [
   ['u', 'miniHelix.undo'],
   ['shift+u', 'miniHelix.redo'],
+];
+
+// Native language navigation, smart selection, and navigation history.
+const navigation = [
+  ['g d', 'miniHelix.gotoDefinition'],
+  ['g r', 'miniHelix.gotoReferences'],
+  ['alt+o', 'miniHelix.expandSelection'],
+  ['alt+i', 'miniHelix.shrinkSelection'],
+  ['ctrl+o', 'miniHelix.jumpBack'],
+  ['ctrl+i', 'miniHelix.jumpForward'],
 ];
 
 function createKeybindings() {
@@ -53,14 +98,25 @@ function createKeybindings() {
     ...blocked.map(key => ({
       key,
       command: 'miniHelix.noop',
-      when: normalWhen,
+      when: blockWhen,
     })),
     // These must follow the blockers: the last matching extension binding wins.
     { key: 'i', command: 'miniHelix.enterInsert', when: normalWhen },
     ...[...edits, ...history].map(([key, command]) => ({ key, command, when: normalWhen })),
     { key: 'escape', command: 'miniHelix.enterNormal', when: insertWhen },
     { key: 'g w', command: 'miniHelix.gotoWord', when: idleMotionWhen },
+    ...navigation.map(([key, command]) => ({ key, command, when: idleMotionWhen })),
+    // Other g chords are unbound keys: they clear the count instead of leaving it pending.
+    ...[...blocked, 'escape', 'left', 'right', 'up', 'down', 'home', 'end', 'pageup', 'pagedown']
+      .filter(key => !['w', 'd', 'r'].includes(key)).map(key => ({
+      key: `g ${key}`, command: 'miniHelix.noop', when: idleMotionWhen,
+    })),
     ...motions.map(([key, command]) => ({ key, command, when: idleMotionWhen })),
+    ...charMotions.map(([key, command]) => ({ key, command, when: hjklWhen })),
+    ...digits.map(([key, digit]) => ({ key, command: 'miniHelix.count', args: digit, when: idleMotionWhen })),
+    { key: 'escape', command: 'miniHelix.clearCount', when: countWhen },
+    ...countedArrows.map(([key, command]) => ({ key, command, when: countWhen })),
+    ...countClearing.map(([key, command]) => ({ key, command: 'miniHelix.clearCount', args: command, when: countWhen })),
     // While labels are visible, i/g/etc. are label input, not mode/chord keys.
     ...[...blocked, 'escape', 'left', 'right', 'up', 'down', 'home', 'end',
       'pageup', 'pagedown', 'insert'].map(key => /^[a-z]$/.test(key) ? {
@@ -71,7 +127,10 @@ function createKeybindings() {
   ];
 }
 
-module.exports = { createKeybindings, motions, edits, history, normalWhen, insertWhen, jumpWhen };
+module.exports = {
+  createKeybindings, motions, charMotions, digits, edits, history, navigation,
+  normalWhen, insertWhen, jumpWhen, blockWhen,
+};
 
 if (require.main === module) {
   const manifestPath = path.join(__dirname, '..', 'package.json');

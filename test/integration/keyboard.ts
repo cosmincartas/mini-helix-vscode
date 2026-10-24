@@ -84,6 +84,7 @@ export class Keyboard {
       '<ret>': ['Enter', 'Enter', 13, '\r'],
       ' ': [' ', 'Space', 32, ' '],
       ',': [',', 'Comma', 188, ','],
+      '-': ['-', 'Minus', 189, '-'],
     };
     for (const [key] of sequence.matchAll(/<[^>]+>|[\s\S]/gu)) {
       if (named[key]) {
@@ -91,6 +92,8 @@ export class Keyboard {
       } else if (/^[a-z]$/i.test(key)) {
         const upper = key.toUpperCase();
         await this.press(key, `Key${upper}`, upper.charCodeAt(0), key, key === upper ? 8 : 0);
+      } else if (/^[0-9]$/.test(key)) {
+        await this.press(key, `Digit${key}`, key.charCodeAt(0), key);
       } else {
         throw new Error(`No key for ${JSON.stringify(key)}`);
       }

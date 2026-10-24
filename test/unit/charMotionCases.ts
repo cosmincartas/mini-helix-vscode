@@ -1,0 +1,126 @@
+/**
+ * `[input, keys, Helix's output]`, run through real Helix 25.07.1
+ * (helix-term's integration harness, line endings as-is, tab width 4, soft
+ * wrap off). `-` is unbound in Helix and blocked here.
+ */
+export type Case = [input: string, keys: string, helix: string];
+
+// h / l
+export const horizontal: Case[] = [
+  ['#[a|]#bc\n', 'l', 'a#[b|]#c\n'],
+  ['#[a|]#bc\n', 'll', 'ab#[c|]#\n'],
+  ['a#[b|]#c\n', 'h', '#[a|]#bc\n'],
+  ['#[a|]#bc\n', 'h', '#[a|]#bc\n'],
+  ['#[a|]#bc\n', '9l', 'abc\n#[|]#'],
+  ['#[a|]#bc', '9l', 'abc#[|]#'],
+  ['ab#[c|]#', 'l', 'abc#[|]#'],
+  ['abc#[\n|]#', 'l', 'abc\n#[|]#'],
+  ['abc\nd#[e|]#f\n', '3h', 'ab#[c|]#\ndef\n'],
+  ['ab#[c|]#\ndef\n', '2l', 'abc\n#[d|]#ef\n'],
+  ['#[|]#', 'l', '#[|]#'],
+  ['#[|]#', 'h', '#[|]#'],
+  ['#[one|]# two\n', 'l', 'one#[ |]#two\n'],
+  ['#[one|]# two\n', 'h', 'o#[n|]#e two\n'],
+  ['#[|one]# two\n', 'l', 'o#[n|]#e two\n'],
+  ['#[|one]# two\n', 'h', '#[o|]#ne two\n'],
+  ['one #[two|]#\n', 'h', 'one t#[w|]#o\n'],
+  ['#[one\n|]#two\n', 'l', 'one\n#[t|]#wo\n'],
+  ['#[one\n|]#two\n', 'h', 'on#[e|]#\ntwo\n'],
+  ['#[a|]#b#(c|)#d\n', 'l', 'a#[b|]#c#(d|)#\n'],
+  ['#[a|]#b#(c|)#d\n', '2h', '#[a|]#bcd\n'],
+  ['#[a|]#👋🏽b\n', 'l', 'a#[👋🏽|]#b\n'],
+  ['#[a|]#👋🏽b\n', 'll', 'a👋🏽#[b|]#\n'],
+  ['#[a|]#e\u0301b\n', 'll', 'ae\u0301#[b|]#\n'],
+  ['x\n\n#[y|]#\n', '2h', 'x#[\n|]#\ny\n'],
+  ['#[a|]#bc\n', '10hl', 'a#[b|]#c\n'],
+];
+
+// j / k
+export const vertical: Case[] = [
+  ['#[a|]#bc\ndef\n', 'j', 'abc\n#[d|]#ef\n'],
+  ['a#[b|]#c\ndef\n', 'j', 'abc\nd#[e|]#f\n'],
+  ['abc\nd#[e|]#f\n', 'k', 'a#[b|]#c\ndef\n'],
+  ['#[a|]#bc\ndef\n', 'k', '#[a|]#bc\ndef\n'],
+  ['#[a|]#bc\ndef\n', 'jj', 'abc\ndef\n#[|]#'],
+  ['#[a|]#bc\ndef\n', 'jjj', 'abc\ndef\n#[|]#'],
+  ['#[a|]#bc\ndef', 'jj', 'abc\n#[d|]#ef'],
+  ['abc\nde#[f|]#', 'k', 'ab#[c|]#\ndef'],
+  ['#[o|]#ne\ntwo\n', '2j', 'one\ntwo\n#[|]#'],
+  ['one\ntwo\nthr#[e|]#e\n', '2k', 'one#[\n|]#two\nthree\n'],
+  ['one\ntwo\nthr#[e|]#e\n', '9k', 'one#[\n|]#two\nthree\n'],
+  ['#[a|]#\nb\nc\nd\ne\n', '3j', 'a\nb\nc\n#[d|]#\ne\n'],
+  ['#[a|]#\nb\nc\nd\ne\n', '99j', 'a\nb\nc\nd\ne\n#[|]#'],
+  ['abcdef#[g|]#h\nab\nabcdefgh\n', 'jj', 'abcdefgh\nab\nabcdef#[g|]#h\n'],
+  ['abcdef#[g|]#h\nab\nabcdefgh\n', 'jjkk', 'abcdef#[g|]#h\nab\nabcdefgh\n'],
+  ['abcdef#[g|]#h\nab\nabcdefgh\n', 'jhj', 'abcdefgh\nab\na#[b|]#cdefgh\n'],
+  ['abcdef#[g|]#h\nab\nabcdefgh\n', 'jwj', 'abcdefgh\nab\nabcdefgh\n#[|]#'],
+  ['abcdef#[g|]#h\nab\nabcdefgh\n', '2j', 'abcdefgh\nab\nabcdef#[g|]#h\n'],
+  ['abcdef#[g|]#h\n\nabcdefgh\n', 'jj', 'abcdefgh\n\nabcdef#[g|]#h\n'],
+  ['abc#[\n|]#abcdef\n', 'j', 'abc\nabc#[d|]#ef\n'],
+  ['abcdef\nab#[c|]#\nx\n', 'kj', 'abcdef\nab#[c|]#\nx\n'],
+  ['#[a|]#\n\tb\n', 'lj', 'a\n#[\t|]#b\n'],
+  ['ab#[c|]#\n\tb\n', 'j', 'abc\n#[\t|]#b\n'],
+  ['abc#[d|]#e\n\tb\n', 'j', 'abcde\n#[\t|]#b\n'],
+  ['abcd#[e|]#f\n\tb\n', 'j', 'abcdef\n\t#[b|]#\n'],
+  ['\tx#[y|]#\nabcdefgh\n', 'j', '\txy\nabcde#[f|]#gh\n'],
+  ['a\t#[b|]#\n\t\tc\n', 'j', 'a\tb\n\t#[\t|]#c\n'],
+  ['abcdef#[g|]#\n  \tz\n', 'j', 'abcdefg\n  \tz#[\n|]#'],
+  ['パーテ#[ィ|]#ー\nabcdefghij\n', 'j', 'パーティー\nabcdef#[g|]#hij\n'],
+  ['abcde#[f|]#gh\nパーティー\n', 'j', 'abcdefgh\nパー#[テ|]#ィー\n'],
+  ['abcd#[e|]#fgh\nパーティー\n', 'j', 'abcdefgh\nパー#[テ|]#ィー\n'],
+  ['ab#[c|]#d\n👋🏽xyz\n', 'j', 'abcd\n#[👋🏽|]#xyz\n'],
+  ['ab#[c|]#d\n❤\ufe0fxyz\n', 'j', 'abcd\n❤\ufe0f#[x|]#yz\n'],
+  ['ab#[c|]#d\n❤xyz\n', 'j', 'abcd\n❤x#[y|]#z\n'],
+  ['ab#[c|]#d\ne\u0301\u0301xyz\n', 'j', 'abcd\ne\u0301\u0301x#[y|]#z\n'],
+  ['ab#[c|]#d\néxyz\n', 'j', 'abcd\néx#[y|]#z\n'],
+  ['#[one|]# two\nthree four\n', 'j', 'one two\nth#[r|]#ee four\n'],
+  ['#[|one]# two\nthree four\n', 'j', 'one two\n#[t|]#hree four\n'],
+  ['one #[two|]#\nthree four\n', 'j', 'one two\nthree #[f|]#our\n'],
+  ['#[one\n|]#three four\nfive\n', 'j', 'one\nthr#[e|]#e four\nfive\n'],
+  ['#[a|]#bc\n#(d|)#ef\nghi\n', 'j', 'abc\n#[d|]#ef\n#(g|)#hi\n'],
+  ['a#[b|]#c\nd\n#(g|)#hi\njkl\n', 'j', 'abc\nd#[\n|]#ghi\n#(j|)#kl\n'],
+  ['a#[b|]#c\nd\n#(g|)#hi\njkl\n', 'jj', 'abc\nd\ng#[h|]#i\njkl\n#(|)#'],
+  ['#[|]#', 'j', '#[|]#'],
+  ['#[|]#', 'k', '#[|]#'],
+  ['#[\n|]#', 'j', '\n#[|]#'],
+  ['\n#[|]#', 'k', '#[\n|]#'],
+  // A merged cursor forgets its column; the others keep theirs.
+  ['abcdef#[g|]#h\nab\na#(b|)#cdefgh\na#(b|)#cdefgh', 'j', 'abcdefgh\nab#[\n|]#abcdefgh\na#(b|)#cdefgh'],
+  ['abcdef#[g|]#h\nab\na#(b|)#cdefgh\na#(b|)#cdefgh', 'jj', 'abcdefgh\nab\nabcdef#[g|]#h\na#(b|)#cdefgh'],
+  // h and l forget the column, even when they cannot move.
+  ['abcd#[e|]#f\n', 'jlk', '#[a|]#bcdef\n'],
+  ['#[a|]#bcdef\nab\nabcdef\n', '4ljhlj', 'abcdef\nab\nab#[c|]#def\n'],
+  ['#[a|]#bcdef\nabc\nabcdef\n', '4ljhj', 'abcdef\nabc\nab#[c|]#def\n'],
+];
+
+// counts with word motions
+export const counted: Case[] = [
+  ['#[o|]#ne two three four\n', '3w', 'one two #[three |]#four\n'],
+  ['#[o|]#ne two three four\n', '20w', 'one two three four\n#[|]#'],
+  ['#[o|]#ne two three four\n', '0w', '#[one |]#two three four\n'],
+  ['one two three #[f|]#our\n', '2b', 'one #[|two ]#three four\n'],
+  ['#[o|]#ne two three four\n', '2e', 'one#[ two|]# three four\n'],
+  ['#[o|]#ne t.wo three four\n', '2W', 'one #[t.wo |]#three four\n'],
+  ['one t.wo three #[f|]#our\n', '2B', 'one #[|t.wo ]#three four\n'],
+  ['#[o|]#ne t.wo three four\n', '2E', 'one#[ t.wo|]# three four\n'],
+  ['#[o|]#ne two\nthree four\n', '3w', 'one two\n#[three |]#four\n'],
+  ['#[o|]#ne two three four\n', '11w', 'one two three four\n#[|]#'],
+  ['#[o|]#ne two three four five six seven eight nine ten eleven twelve\n', '10w', 'one two three four five six seven eight nine #[ten |]#eleven twelve\n'],
+  ['#[o|]#ne two three four five six seven eight nine ten eleven twelve\n', '1w', '#[one |]#two three four five six seven eight nine ten eleven twelve\n'],
+];
+
+// count lifetime
+export const countLifetime: Case[] = [
+  ['#[o|]#ne two three four\n', '2-w', '#[one |]#two three four\n'],
+  ['#[o|]#ne two three four\n', '2<esc>w', '#[one |]#two three four\n'],
+  ['#[o|]#ne two three four\n', '2i<esc>w', '#[one |]#two three four\n'],
+  ['#[o|]#ne two three four\n', '2d2w', 'ne #[two |]#three four\n'],
+  ['#[o|]#ne two three four\n', '22w', 'one two three four\n#[|]#'],
+  ['#[o|]#ne two three four\n', '2w2w', 'one two three #[four|]#\n'],
+  ['#[o|]#ne two three four\n', '2ww', 'one two #[three |]#four\n'],
+  ['#[a|]#bcdefghijklmnop\n', '1000000000000l', 'abcdefghijklmnop\n#[|]#'],
+  ['abcdefghijklmnop#[\n|]#', '999999999h', '#[a|]#bcdefghijklmnop\n'],
+  ['#[a|]#\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\n', '10j', 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj\n#[k|]#\nl\n'],
+  ['#[a|]#bcdefghijkl\n', '10l', 'abcdefghij#[k|]#l\n'],
+  ['#[a|]#bcdefghijkl\n', '1-0l', 'a#[b|]#cdefghijkl\n'],
+];

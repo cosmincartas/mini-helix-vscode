@@ -8,11 +8,17 @@ export const MAX_COUNT = 100_000_000;
  */
 export class Count {
   private value: number | undefined;
+  private keys = 0;
 
   constructor(private readonly changed: (value: number | undefined) => void = () => undefined) {}
 
   get pending(): number | undefined {
     return this.value;
+  }
+
+  /** How many non-digit keys (and mode changes) have used or cleared the count. */
+  get presses(): number {
+    return this.keys;
   }
 
   /** A digit key. `0` is unbound in Helix, so it does nothing unless a count is pending. */
@@ -33,6 +39,7 @@ export class Count {
   }
 
   clear(): void {
+    this.keys++;
     if (this.value !== undefined) { this.set(undefined); }
   }
 

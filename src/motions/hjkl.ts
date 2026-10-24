@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Direction, Lines, moveHorizontally, moveVertically } from '../core/charMotion';
 import { Count } from '../core/count';
 import { ModeController } from '../core/mode';
-import { Motion, registerMotion } from '../core/registerMotion';
+import { Motion, Queue, registerMotion } from '../core/registerMotion';
 import { OffsetRange } from '../core/wordMotion';
 import { prepared } from './word';
 
@@ -48,9 +48,13 @@ function documentLines(document: vscode.TextDocument): Lines {
 interface Memory {
   readonly editor: vscode.TextEditor;
   readonly version: number;
-  readonly selections: readonly OffsetRange[];
-  readonly columns: readonly number[];
+  /** `Count.presses` after the move's key: any other key since then forgets the columns. */
+  readonly presses: number;
+  /** Column by cursor position; cursors that merged have none, as in Helix. */
+  readonly columns: ReadonlyMap<string, number | undefined>;
 }
+
+const key = ({ anchor, head }: OffsetRange) => `${anchor}:${head}`;
 
 function same(document: vscode.TextDocument, selections: readonly vscode.Selection[], ranges: readonly OffsetRange[]): boolean {
   return selections.length === ranges.length && selections.every((selection, index) =>
@@ -59,45 +63,34 @@ function same(document: vscode.TextDocument, selections: readonly vscode.Selecti
 }
 
 /** Helix's `h`, `j`, `k`, and `l`. */
-export class CharMotions implements vscode.Disposable {
+export class CharMotions {
   private memory: Memory | undefined;
-  private readonly subscription: vscode.Disposable;
 
-  constructor() {
-    // Like Helix, any other selection change forgets the remembered columns.
-    this.subscription = vscode.window.onDidChangeTextEditorSelection(event => {
-      const memory = this.memory;
-      if (memory && (memory.editor !== event.textEditor ||
-          !same(event.textEditor.document, event.selections, memory.selections))) {
-        this.memory = undefined;
-      }
-    });
-  }
-
-  register(modes: ModeController, count: Count): vscode.Disposable[] {
+  register(modes: ModeController, count: Count, queue: Queue): vscode.Disposable[] {
     return [
       ...Object.entries(horizontalMotions).map(([id, direction]) =>
-        registerMotion(id, horizontalMotion(direction), modes, count)),
+        registerMotion(id, horizontalMotion(direction), modes, count, queue)),
       ...Object.entries(verticalMotions).map(([id, direction]) =>
-        vscode.commands.registerCommand(id, () => this.vertical(modes, direction, count.take()))),
+        vscode.commands.registerCommand(id, () => {
+          const previous = count.presses;
+          const times = count.take();
+          const presses = count.presses;
+          return queue.run(() => this.vertical(modes, direction, times, previous, presses));
+        })),
     ];
   }
 
-  /** Mode changes rebuild Helix's ranges, which drops their columns. */
-  forget(): void {
-    this.memory = undefined;
-  }
-
-  dispose(): void {
-    this.subscription.dispose();
-  }
-
-  private async vertical(modes: ModeController, direction: Direction, count: number): Promise<void> {
+  /** `previous` is `Count.presses` before this key, `presses` after it. */
+  private async vertical(
+    modes: ModeController, direction: Direction, count: number, previous: number, presses: number
+  ): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor || !modes.current.enabled || modes.current.mode !== 'normal') { return; }
     const document = editor.document;
     const ranges = editor.selections.map(selection => offsets(document, selection));
 
+    const memory = this.memory;
+    this.memory = undefined;
     if (vscode.workspace.getConfiguration('editor', document).get<string>('wordWrap', 'off') !== 'off') {
       // Helix's soft-wrap mode moves by screen line, and only VS Code knows
       // where it wrapped: collapse to the block cursors and move natively.
@@ -114,21 +107,20 @@ export class CharMotions implements vscode.Disposable {
       return;
     }
 
-    const memory = this.memory;
+    // Selections set by anything but this motion (a click, say) have no column.
     const columns = memory?.editor === editor && memory.version === document.version &&
-      same(document, editor.selections, memory.selections) ? memory.columns : undefined;
+      memory.presses === previous ? memory.columns : undefined;
     const tabSize = typeof editor.options.tabSize === 'number' ? editor.options.tabSize : 4;
     const lines = documentLines(document);
-    const moves = ranges.map((range, index) =>
-      moveVertically(lines, range, direction, count, tabSize, columns?.[index]));
+    const moves = ranges.map(range =>
+      moveVertically(lines, range, direction, count, tabSize, columns?.get(key(range))));
     editor.selections = moves.map(({ range }) =>
       new vscode.Selection(document.positionAt(range.anchor), document.positionAt(range.head)));
-    this.memory = {
-      editor,
-      version: document.version,
-      selections: moves.map(move => move.range),
-      columns: moves.map(move => move.column),
-    };
+    const remembered = new Map<string, number | undefined>();
+    for (const { range, column } of moves) {
+      remembered.set(key(range), remembered.has(key(range)) ? undefined : column);
+    }
+    this.memory = { editor, version: document.version, presses, columns: remembered };
     editor.revealRange(editor.selection);
   }
 }
