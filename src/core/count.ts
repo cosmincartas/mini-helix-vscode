@@ -23,6 +23,7 @@ export class Count {
 
   /** A digit key. `0` is unbound in Helix, so it does nothing unless a count is pending. */
   digit(digit: number): void {
+    if (!Number.isInteger(digit) || digit < 0 || digit > 9) { return; }
     if (this.value === undefined) {
       if (digit !== 0) { this.set(digit); }
       return;

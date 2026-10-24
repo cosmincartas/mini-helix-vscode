@@ -3,8 +3,14 @@
 A minimal VS Code extension with **NORMAL / INSERT modes**, Helix-style
 **`h`/`j`/`k`/`l`** and selection-first **word motions** (`w`, `b`, `e`, `W`,
 `B`, `E`), **counts** (`3w`, `5j`), the **selection
-edits** `i`, `a`, `c`, `d`, **undo/redo** with `u` and `U`, and **`gw` word jumps**. Add other individual bindings as you need them; this is not a full Helix
+edits** `i`, `a`, `c`, `d`, **line selections** (`x`, `X`), **undo/redo** with `u` and `U`, and **`gw` word jumps**. Add other individual bindings as you need them; this is not a full Helix
 emulator.
+
+Exact Helix line-selection parity requires **`"editor.multiCursorMergeOverlapping": false`**.
+With VS Code's default value, an EOF cursor touching another selection is merged
+away, so that configuration cannot preserve Helix's complete selection set.
+Mini Helix never changes this setting automatically; choose it in your settings
+before relying on exact multi-selection parity.
 
 ## Try it
 
@@ -22,6 +28,8 @@ Open this folder in VS Code, select **Run Mini Helix** in Run and Debug, and pre
 - Press **`i`** to enter **INSERT** and type normally; **`a`** appends instead.
 - Press **Escape** to return to **NORMAL**.
 - In NORMAL, press **`w`**, **`b`**, or **`e`** to select the next/previous word.
+- Press **`x`** to select whole lines and repeat to extend below; **`Shift+x`**
+  expands to line boundaries while preserving direction. **`2x`** selects two lines.
 - Press **`d`** to delete the selection, or **`c`** to delete it and type a
   replacement.
 - In NORMAL, press **`g` then `w`**, then type a word's two-letter label to select it.
@@ -48,7 +56,7 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - One global mode shared by the window's text editors.
 - NORMAL blocks ordinary printable keys (including numeric keypad digits and
   operators), Space, Enter, Tab, Backspace, Delete, and their Shift variants,
-  except `i`, `a`, `c`, `d`, `u`, `U`, `h`, `j`, `k`, `l`, the word motions,
+  except `i`, `a`, `c`, `d`, `u`, `U`, `h`, `j`, `k`, `l`, `x`, `X`, the word motions,
   count digits, and the `gw`, `gd`, `gr` chords.
 - INSERT uses VS Code's native typing, completion, and cursor style.
 - `i` collapses each selection to its start, so typing inserts before the
@@ -66,7 +74,7 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
   native except for the NORMAL-mode bindings below. NORMAL is **not read-only**: paste, cut, undo, command-driven
   edits, and other native editing shortcuts can still modify the document.
 
-There are deliberately **no** bindings for `gs`, `gl`, `x`, or `%`.
+There are deliberately **no** bindings for `gs`, `gl`, or `%`.
 No language server, parser, custom buffer, custom jump history, or global `type`
 override is installed.
 
@@ -166,7 +174,8 @@ next to the mode in the status bar (`NORMAL 12`).
 
 The next key uses the count and clears it, whether or not it uses it:
 
-- `h`, `j`, `k`, `l`, the word motions, `u`, and `U` repeat.
+- `h`, `j`, `k`, `l`, the word motions, `x`, `u`, and `U` repeat.
+- `X` consumes the count and expands to line bounds once.
 - `i`, `a`, `c`, `d`, `gw`, `gd`, and `gr` ignore it, as in Helix.
 - With a count, the arrow keys act as `h`, `j`, `k`, and `l`, so `3` Down moves
   three lines, as in Helix. Home, End, Page Up, and Page Down clear the count,
@@ -182,6 +191,25 @@ Escape, the arrow keys, and the blockers in read-only editors rely on the
 `miniHelix.countPending` context key, so a key typed in the instant after the
 first digit, before VS Code receives that update, can still act natively. Digits
 themselves and every other Mini Helix key never wait for it.
+
+### Line selections (`x`, `X`)
+
+| Key | Command | Selects |
+| --- | --- | --- |
+| `x` | `miniHelix.extendLineBelow` | covered logical lines; repeat extends below |
+| `X` (`Shift+x`) | `miniHelix.extendToLineBounds` | covered logical lines, keeping direction |
+
+`x` counts its first expansion as a step: `2x` expands a partial selection to
+two lines, while `x2x` first selects a line and then adds two more. `X` is
+idempotent and consumes a count without repeating expansion (`2Xx` leaves an
+ordinary single `x`). These commands change selections without changing text,
+dirty state, or undo history, and work in read-only editors.
+
+The pure core follows pinned Helix `ba40e547426b0f9896c8bdc699a4ab11f2b37dbc`,
+including whole-set normalization and primary selection preservation. Its logical
+lines split at LF, with CRLF kept together as a grapheme; a lone CR is content,
+as in that Helix build. See [oracle provenance and regeneration](test/fixtures/line-selection-oracle.md)
+and the [upstream test inventory](test/fixtures/helix-selection-upstream.md).
 
 ### Selection edits (`i`, `a`, `c`, `d`)
 
@@ -388,6 +416,7 @@ VS Code keybinding resolver
   ├── 0–9 ──────────────────> Count → pending count, status bar
   ├── w b e W B E h l ──────> registerMotion → word/character motion selections
   ├── j k ──────────────────> CharMotions → line moves, remembered columns
+  ├── x X ──────────────────> queued whole-set line selections
   ├── a c d ────────────────> SelectionEdits → document edits, then mode
   ├── u U ──────────────────> UndoHistory → native undo/redo, whole revisions
   ├── g w / label input ────> WordJump → decorations / word selection
@@ -443,7 +472,7 @@ export const myMotion: Motion = (_document, selection, _count) => {
 };
 ```
 
-Register it in `activate()`, after creating `modes` and `count`:
+Register it in `activate()`, using the existing shared `modes` and `count`:
 
 ```ts
 context.subscriptions.push(
@@ -480,6 +509,7 @@ such as the `gw` session, can be independent modules.
 | `miniHelix.moveCharLeft` / `moveVisualLineDown` / `moveVisualLineUp` / `moveCharRight` | `h` / `j` / `k` / `l` |
 | `miniHelix.count` | Internal count digit (argument: the digit) |
 | `miniHelix.clearCount` | Clear a pending count (Escape) |
+| `miniHelix.extendLineBelow` / `extendToLineBounds` | `x` / `X` |
 | `miniHelix.wordJumpInput` | Internal label input |
 | `miniHelix.cancelWordJump` | Cancel labels |
 | `miniHelix.noop` | Internal NORMAL input blocker |

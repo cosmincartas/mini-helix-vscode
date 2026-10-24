@@ -1,3 +1,0 @@
-sample README.md 6bf30e917dcf14cdc71076d80501927d51407cefad46451c0da0296dd6f1503f
-DIFF package.json
-baseline files 24 differing 1

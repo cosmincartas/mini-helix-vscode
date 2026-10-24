@@ -1,8 +1,0 @@
-$ node scripts/test-match-oracle.cjs --no-build --skip-self-test --filter plaintext-objects/miw-ascii
-PASS pinned source tree 84267efbebf5... equals native/helix-lock.json (revision ba40e547426b)
-PASS runtime linux-x64: 1799 assets re-hashed, runtime hash fd5ee12cf756... equals native/helix-lock.json
---- 1 fixture cases (8 parallel oracle processes)
-FAIL plaintext-objects/miw-ascii: $.final.selections[0].head: expected 12 actual 11 | $.final.selections[0].headUtf16: expected 12 actual 11
-
-FAILED: 1 problem(s)
-exit=1

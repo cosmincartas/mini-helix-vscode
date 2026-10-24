@@ -1,6 +1,0 @@
-$ (expected removed from surround/ms-paren) npm run test:match:oracle -- --no-build --skip-self-test --filter surround/ms-paren
---- 1 fixture cases (8 parallel oracle processes)
-FAIL surround/ms-paren: no expected result recorded (pending; run with --update after review)
-
-FAILED: 1 problem(s)
-exit=1

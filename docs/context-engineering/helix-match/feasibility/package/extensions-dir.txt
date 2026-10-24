@@ -1,5 +1,0 @@
-total 4
-drwxr-xr-x. 3 cosmincartas cosmincartas  80 Oct 24 03:21 .
-drwxr-xr-x. 9 cosmincartas cosmincartas 180 Oct 24 03:21 ..
--rw-r--r--. 1 cosmincartas cosmincartas 418 Oct 24 03:21 extensions.json
-drwxr-xr-x. 4 cosmincartas cosmincartas 140 Oct 24 03:21 local.mini-helix-0.99.0

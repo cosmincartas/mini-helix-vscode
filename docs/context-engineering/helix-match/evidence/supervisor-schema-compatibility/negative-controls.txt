@@ -1,5 +1,0 @@
-rejected: non-string git.attributes
-rejected: non-string git.config
-rejected: unknown input property
-rejected: unknown normalization tag
-rejected: non-array steps

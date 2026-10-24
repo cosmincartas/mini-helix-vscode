@@ -1,9 +1,0 @@
-test/fixtures/helix-match/cases/counts-pending.json: OK
-test/fixtures/helix-match/cases/git-hunks.json: OK
-test/fixtures/helix-match/cases/plaintext-objects-2.json: OK
-test/fixtures/helix-match/cases/plaintext-objects.json: OK
-test/fixtures/helix-match/cases/selection-identity.json: OK
-test/fixtures/helix-match/cases/selections-eol.json: OK
-test/fixtures/helix-match/cases/surround.json: OK
-test/fixtures/helix-match/cases/syntax-failure.json: OK
-test/fixtures/helix-match/cases/syntax-objects.json: OK

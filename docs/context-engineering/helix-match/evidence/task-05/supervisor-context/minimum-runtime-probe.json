@@ -1,8 +1,0 @@
-{
-  "nodeVersion": "v18.15.0",
-  "excludeNetworkSupported": false,
-  "loopbackHostsWithPropertySet": [
-    "localhost"
-  ],
-  "networkInterfacesStillIncluded": true
-}

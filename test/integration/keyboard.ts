@@ -89,6 +89,8 @@ export class Keyboard {
     for (const [key] of sequence.matchAll(/<[^>]+>|[\s\S]/gu)) {
       if (named[key]) {
         await this.press(...named[key]);
+      } else if (/^[0-9]$/.test(key)) {
+        await this.press(key, `Digit${key}`, 48 + Number(key), key);
       } else if (/^[a-z]$/i.test(key)) {
         const upper = key.toUpperCase();
         await this.press(key, `Key${upper}`, upper.charCodeAt(0), key, key === upper ? 8 : 0);

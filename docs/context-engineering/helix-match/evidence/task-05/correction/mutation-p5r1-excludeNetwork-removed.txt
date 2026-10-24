@@ -1,7 +1,0 @@
-  ✖ detects the host libc without name resolution (process.report excludeNetwork is set during the call) (1.371804ms)
-✖ Helper layout and target detection (2.16783ms)
-ℹ pass 0
-ℹ fail 1
-✖ failing tests:
-✖ detects the host libc without name resolution (process.report excludeNetwork is set during the call) (1.371804ms)
-  AssertionError [ERR_ASSERTION]: getReport ran once with excludeNetwork = true

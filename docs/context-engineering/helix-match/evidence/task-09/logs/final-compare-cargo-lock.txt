@@ -1,9 +1,0 @@
-{
-  "upstreamPairs": 337,
-  "nativePairs": 146,
-  "pruned": 192,
-  "deviations": [],
-  "added": [
-    "mini-helix-match-helper@0.0.0 (path package)"
-  ]
-}

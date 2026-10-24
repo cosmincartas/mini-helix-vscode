@@ -1,5 +1,7 @@
 > **SUPERSEDED (2026-10-24), historical only.** The user switched to a TypeScript-only implementation; see [../helix-match-typescript/spec.md](../helix-match-typescript/spec.md). Native code archived at /home/cosmincartas/work/archives/vscode-extension-helix-match-native-20261024.
 
+> Detailed `evidence/` and `feasibility/` records were moved to the native archive under `docs/context-engineering/helix-match/`. Relative links below refer to that archived tree.
+
 # Helix Match Implementation Progress
 
 This note tracks execution of [plan.md](plan.md) against [spec.md](spec.md).

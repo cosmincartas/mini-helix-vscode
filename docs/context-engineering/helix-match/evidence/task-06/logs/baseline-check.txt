@@ -1,3 +1,0 @@
-['source', 'worktree', 'branch', 'head', 'captured_at', 'tracked_changes', 'untracked', 'files']
-DIFF package.json
-checked 24 differences 1

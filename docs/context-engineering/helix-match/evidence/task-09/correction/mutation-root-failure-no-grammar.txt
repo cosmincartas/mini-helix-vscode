@@ -1,5 +1,0 @@
-thread 'every_in_scope_oracle_case_matches_step_by_step_through_the_helper' panicked at match-helper/tests/textobjects_syntax.rs:157:5:
-assertion `left == right` failed: syntax-failure-2/query-root-highlights-rust None: helper syntax state vs the state derived from the case input
-  left: "no_grammar"
- right: "initial_failure"
-test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 29.23s
