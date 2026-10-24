@@ -33,3 +33,12 @@ Updated 2026-10-24. Plan: [plan.md](plan.md). Spec: [spec.md](spec.md).
 - Full `npm run test:integration` exited 0 with 23 PASS lines, including "PASS match: text objects and surround replacement".
 - `npm run package:vsix` produced 25 files (about 56 KB) with no `native/`, `docs/`, `src/` or test files.
 - The independent Initial review returned PASS with one P3 documentation finding (F1, the stale task table, now fixed). The final task record is in [tasks.md](tasks.md).
+
+## Integration with master and PR verification (2026-10-24)
+
+- Merged master `22c46f0` into the implementation branch and resolved conflicts while preserving line selections, count guards, motion normalization, and match pending-input precedence.
+- The implementation was merged into master through PR #2 (`6b5700f`).
+- Post-merge `npm test`: **445/445 passed**.
+- Full `npm run test:integration`: exit 0, **26 PASS checks** on VS Code 1.143.1, including the line-selection oracle cases, 110 character/count cases, and the complete match suite.
+- `npm run package:vsix`: passes after adding the Git repository URL to the manifest so README links resolve; VSIX **62,495 bytes**, **27 entries**. Inspection found no native runtime, docs, tests, or TypeScript sources.
+- Detailed native feasibility and evidence records are retained in the external native archive under `docs/context-engineering/helix-match/`; the active repository retains the historical design and the TypeScript specification, plan, and review record.

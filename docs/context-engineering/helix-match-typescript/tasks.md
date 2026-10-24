@@ -4,7 +4,7 @@ Run: 2026-10-24, `/sdd-cc`. Session 28e6e584-8749-4143-b8ee-72f117d51add.
 Frozen basis: [spec.md](spec.md) v1 and the user request "Let's go for a cleanup and go for Typescript only implementation".
 Baseline used for attribution: `/tmp/helix-match-typescript-20261024/` (baseline status, diff, tarball, sha manifest).
 Native archive: `/home/cosmincartas/work/archives/vscode-extension-helix-match-native-20261024` (16 GB, see its `ARCHIVE.md`).
-Nothing was committed, pushed or published.
+The implementation session did not commit, push or publish; the subsequent integration and PR work is recorded in `progress.md`.
 
 | ID | Role | Final status | Assignment | Outcome | Verification | Review |
 | --- | --- | --- | --- | --- | --- | --- |
