@@ -84,6 +84,18 @@
         "enablement": "miniHelix.enabled && miniHelix.mode == normal"
       },
       {
+        "command": "miniHelix.extendLineBelow",
+        "title": "Extend Line Below (x)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
+        "command": "miniHelix.extendToLineBounds",
+        "title": "Extend to Line Bounds (X)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
         "command": "miniHelix.moveNextWordStart",
         "title": "Move to Next Word Start (w)",
         "category": "Mini Helix",
@@ -828,6 +840,676 @@
         "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal"
       },
       {
+        "key": "a",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+a",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "b",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+b",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "c",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+c",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "d",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+d",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "e",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+e",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "f",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+f",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "g",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+g",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "h",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+h",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "i",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+i",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "j",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+j",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "k",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+k",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "l",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+l",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "m",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+m",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "n",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+n",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "o",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+o",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "p",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+p",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "q",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+q",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "r",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+r",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "s",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+s",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "t",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+t",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "u",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+u",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "v",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+v",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "w",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+w",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "x",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+x",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "y",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+y",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "z",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+z",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "0",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+0",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "1",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+1",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "2",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+2",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "3",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+3",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "4",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+4",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "5",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+5",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "6",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+6",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "7",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+7",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "8",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+8",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "9",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+9",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "`",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+`",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "-",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+-",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "=",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+=",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "[",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+[",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "]",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+]",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "\\",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+\\",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": ";",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+;",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "'",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+'",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": ",",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+,",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": ".",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+.",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "/",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+/",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "space",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+space",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad0",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad0",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad1",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad1",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad2",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad2",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad3",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad3",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad4",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad4",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad5",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad5",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad6",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad6",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad7",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad7",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad8",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad8",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad9",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad9",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad_add",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad_add",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad_subtract",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad_subtract",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad_multiply",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad_multiply",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad_divide",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad_divide",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad_decimal",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad_decimal",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad_separator",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+numpad_separator",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "backspace",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+backspace",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "delete",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+delete",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "enter",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+enter",
+        "command": "miniHelix.clearCount",
+        "when": "editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
         "key": "i",
         "command": "miniHelix.enterInsert",
         "when": "editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal"
@@ -863,6 +1545,11 @@
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == insert"
       },
       {
+        "key": "escape",
+        "command": "miniHelix.enterNormal",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
         "key": "g w",
         "command": "miniHelix.gotoWord",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
@@ -895,6 +1582,136 @@
       {
         "key": "shift+e",
         "command": "miniHelix.moveNextLongWordEnd",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "x",
+        "command": "miniHelix.extendLineBelow",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+x",
+        "command": "miniHelix.extendToLineBounds",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "0",
+        "command": "miniHelix.countDigit",
+        "args": 0,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad0",
+        "command": "miniHelix.countDigit",
+        "args": 0,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "1",
+        "command": "miniHelix.countDigit",
+        "args": 1,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad1",
+        "command": "miniHelix.countDigit",
+        "args": 1,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "2",
+        "command": "miniHelix.countDigit",
+        "args": 2,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad2",
+        "command": "miniHelix.countDigit",
+        "args": 2,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "3",
+        "command": "miniHelix.countDigit",
+        "args": 3,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad3",
+        "command": "miniHelix.countDigit",
+        "args": 3,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "4",
+        "command": "miniHelix.countDigit",
+        "args": 4,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad4",
+        "command": "miniHelix.countDigit",
+        "args": 4,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "5",
+        "command": "miniHelix.countDigit",
+        "args": 5,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad5",
+        "command": "miniHelix.countDigit",
+        "args": 5,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "6",
+        "command": "miniHelix.countDigit",
+        "args": 6,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad6",
+        "command": "miniHelix.countDigit",
+        "args": 6,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "7",
+        "command": "miniHelix.countDigit",
+        "args": 7,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad7",
+        "command": "miniHelix.countDigit",
+        "args": 7,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "8",
+        "command": "miniHelix.countDigit",
+        "args": 8,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad8",
+        "command": "miniHelix.countDigit",
+        "args": 8,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "9",
+        "command": "miniHelix.countDigit",
+        "args": 9,
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "numpad9",
+        "command": "miniHelix.countDigit",
+        "args": 9,
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
       },
       {

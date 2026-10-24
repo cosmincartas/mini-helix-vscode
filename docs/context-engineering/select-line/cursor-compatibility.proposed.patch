@@ -1,0 +1,16 @@
+--- a/src/extension.ts
++++ b/src/extension.ts
+@@ -113,6 +113,13 @@
+       ui.render(modes.current);
+     }),
+     vscode.window.onDidChangeVisibleTextEditors(() => ui.render(modes.current)),
++    // Older hosts can apply native cursor settings after the configuration event.
++    vscode.window.onDidChangeTextEditorOptions(event => {
++      if (modes.current.enabled && modes.current.mode === 'normal' &&
++          event.options.cursorStyle !== vscode.TextEditorCursorStyle.Block) {
++        ui.render(modes.current);
++      }
++    }),
+     vscode.workspace.onDidChangeConfiguration(event => {
+       if (event.affectsConfiguration('miniHelix.enabled')) {
+         void modes.setEnabled(

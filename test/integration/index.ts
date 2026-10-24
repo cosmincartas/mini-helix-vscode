@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import * as vscode from 'vscode';
 import type { MiniHelixApi } from '../../src/extension';
+import { Count } from '../../src/core/count';
+import { checkLineSelection } from './lineSelection';
 import { ModeController } from '../../src/core/mode';
 import { registerMotion } from '../../src/core/registerMotion';
 import { Keyboard } from './keyboard';
@@ -27,6 +29,11 @@ export async function run(): Promise<void> {
   assert.ok(extension);
   const api = await extension.activate();
   const keyboard = await Keyboard.connect();
+  assert.equal(vscode.window.activeTextEditor, undefined, 'isolated host starts without an editor');
+  await vscode.commands.executeCommand('miniHelix.countDigit', 2);
+  await vscode.commands.executeCommand('miniHelix.extendLineBelow');
+  await vscode.commands.executeCommand('miniHelix.extendToLineBounds');
+  console.log('PASS line commands and count input guard no-editor calls');
   const document = await vscode.workspace.openTextDocument({
     language: 'plaintext', content: 'alpha beta\ngamma delta\n',
   });
@@ -57,7 +64,8 @@ export async function run(): Promise<void> {
       for (const key of keys) { await keyboard.press(...key); }
       await new Promise(resolve => setTimeout(resolve, 150));
       assert.equal(document.getText(), baseline);
-      assert.equal(editor.selection.active.character, 0, 'x must not have a motion');
+      // x/X now select lines; the same key stream must still preserve the document.
+      await keyboard.keys('<esc>');
     });
 
     await check('numeric keypad digits and operators cannot type in NORMAL', async () => {
@@ -173,15 +181,28 @@ export async function run(): Promise<void> {
 
     await check('cursor-setting changes retain NORMAL styling and update INSERT styling', async () => {
       const settings = vscode.workspace.getConfiguration('editor');
-      await settings.update('cursorStyle', 'line-thin', vscode.ConfigurationTarget.Global);
-      await new Promise(resolve => setTimeout(resolve, 150));
-      assert.equal(editor.options.cursorStyle, vscode.TextEditorCursorStyle.Block);
-      await vscode.commands.executeCommand('miniHelix.enterInsert');
-      assert.equal(editor.options.cursorStyle, vscode.TextEditorCursorStyle.LineThin);
-      await settings.update('cursorStyle', 'underline', vscode.ConfigurationTarget.Global);
-      await new Promise(resolve => setTimeout(resolve, 150));
-      assert.equal(editor.options.cursorStyle, vscode.TextEditorCursorStyle.Underline);
-      await vscode.commands.executeCommand('miniHelix.enterNormal');
+      let changed = false;
+      const subscription = vscode.workspace.onDidChangeConfiguration(event => {
+        if (event.affectsConfiguration('editor.cursorStyle')) { changed = true; }
+      });
+      try {
+        await settings.update('cursorStyle', 'line-thin', vscode.ConfigurationTarget.Global);
+        await until(() => changed && editor.options.cursorStyle === vscode.TextEditorCursorStyle.Block,
+          'cursor setting did not propagate and restore NORMAL block styling');
+        assert.equal(vscode.workspace.getConfiguration('editor').get('cursorStyle'), 'line-thin');
+        assert.equal(editor.options.cursorStyle, vscode.TextEditorCursorStyle.Block);
+        await vscode.commands.executeCommand('miniHelix.enterInsert');
+        assert.equal(editor.options.cursorStyle, vscode.TextEditorCursorStyle.LineThin);
+        changed = false;
+        await settings.update('cursorStyle', 'underline', vscode.ConfigurationTarget.Global);
+        await until(() => changed && editor.options.cursorStyle === vscode.TextEditorCursorStyle.Underline,
+          'cursor setting did not propagate to INSERT styling');
+        assert.equal(vscode.workspace.getConfiguration('editor').get('cursorStyle'), 'underline');
+        assert.equal(editor.options.cursorStyle, vscode.TextEditorCursorStyle.Underline);
+        await vscode.commands.executeCommand('miniHelix.enterNormal');
+      } finally {
+        subscription.dispose();
+      }
     });
 
     await check('both visible editors follow the global mode and restore native cursors', async () => {
@@ -204,6 +225,7 @@ export async function run(): Promise<void> {
       await until(() => api.getState().enabled, 'enabled setting was not reapplied');
     });
 
+    await checkLineSelection(api, keyboard);
     await checkWordJump(api, keyboard);
     await checkWordMotions(api, keyboard);
     await checkEditing(api, keyboard);
@@ -219,7 +241,7 @@ export async function run(): Promise<void> {
         calls++;
         const next = doc.positionAt(doc.offsetAt(selection.active) + 1);
         return new vscode.Selection(next, next);
-      }, modes);
+      }, modes, new Count());
       try {
         editor.selections = [new vscode.Selection(0, 0, 0, 0), new vscode.Selection(1, 0, 1, 0)];
         await vscode.commands.executeCommand('miniHelix.testMotion');
