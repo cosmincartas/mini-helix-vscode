@@ -3,6 +3,7 @@ import { Direction, Lines, moveHorizontally, moveVertically } from '../core/char
 import { Count } from '../core/count';
 import { ModeController } from '../core/mode';
 import { Motion, Queue, registerMotion } from '../core/registerMotion';
+import { uniqueSelections } from '../core/selections';
 import { OffsetRange } from '../core/wordMotion';
 import { prepared } from './word';
 
@@ -98,8 +99,8 @@ export class CharMotions {
       const text = prepared(document);
       const cursors = ranges.map(range => moveHorizontally(text, range, direction, 0));
       if (!same(document, editor.selections, cursors)) {
-        editor.selections = cursors.map(({ head }) =>
-          new vscode.Selection(document.positionAt(head), document.positionAt(head)));
+        editor.selections = uniqueSelections(cursors.map(({ head }) =>
+          new vscode.Selection(document.positionAt(head), document.positionAt(head))));
       }
       await vscode.commands.executeCommand('cursorMove', {
         to: direction === 'forward' ? 'down' : 'up', by: 'wrappedLine', value: count,
@@ -114,8 +115,8 @@ export class CharMotions {
     const lines = documentLines(document);
     const moves = ranges.map(range =>
       moveVertically(lines, range, direction, count, tabSize, columns?.get(key(range))));
-    editor.selections = moves.map(({ range }) =>
-      new vscode.Selection(document.positionAt(range.anchor), document.positionAt(range.head)));
+    editor.selections = uniqueSelections(moves.map(({ range }) =>
+      new vscode.Selection(document.positionAt(range.anchor), document.positionAt(range.head))));
     const remembered = new Map<string, number | undefined>();
     for (const { range, column } of moves) {
       remembered.set(key(range), remembered.has(key(range)) ? undefined : column);

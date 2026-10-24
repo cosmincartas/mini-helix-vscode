@@ -57,6 +57,11 @@ const countClearing = [
 const digits = Array.from({ length: 10 }, (_, digit) => digit)
   .flatMap(digit => [[String(digit), digit], [`numpad${digit}`, digit]]);
 
+const lines = [
+  ['x', 'miniHelix.extendLineBelow'],
+  ['shift+x', 'miniHelix.extendToLineBounds'],
+];
+
 // Helix selection edits; like `i`, they need a writable editor.
 const edits = [
   ['a', 'miniHelix.append'],
@@ -111,7 +116,7 @@ function createKeybindings() {
       .filter(key => !['w', 'd', 'r'].includes(key)).map(key => ({
       key: `g ${key}`, command: 'miniHelix.noop', when: idleMotionWhen,
     })),
-    ...motions.map(([key, command]) => ({ key, command, when: idleMotionWhen })),
+    ...[...motions, ...lines].map(([key, command]) => ({ key, command, when: idleMotionWhen })),
     ...charMotions.map(([key, command]) => ({ key, command, when: hjklWhen })),
     ...digits.map(([key, digit]) => ({ key, command: 'miniHelix.count', args: digit, when: idleMotionWhen })),
     { key: 'escape', command: 'miniHelix.clearCount', when: countWhen },
@@ -128,7 +133,7 @@ function createKeybindings() {
 }
 
 module.exports = {
-  createKeybindings, motions, charMotions, digits, edits, history, navigation,
+  createKeybindings, motions, charMotions, lines, digits, edits, history, navigation,
   normalWhen, insertWhen, jumpWhen, blockWhen,
 };
 

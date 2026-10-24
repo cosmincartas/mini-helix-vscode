@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { Count } from './count';
 import { ModeController } from './mode';
+import { uniqueSelections } from './selections';
 
 /** A motion transforms one selection, `count` times, without changing the document. */
 export type Motion = (
@@ -36,9 +37,9 @@ export function registerMotion(
         return;
       }
 
-      editor.selections = editor.selections.map(selection =>
+      editor.selections = uniqueSelections(editor.selections.map(selection =>
         motion(editor.document, selection, times)
-      );
+      ));
       editor.revealRange(editor.selection);
     });
   });

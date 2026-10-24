@@ -26,6 +26,7 @@ async function main(): Promise<void> {
     await mkdir(workspace);
     await writeFile(path.join(profile, 'User/settings.json'), JSON.stringify({
       'editor.cursorStyle': 'underline',
+      'editor.multiCursorMergeOverlapping': false,
       'editor.quickSuggestions': false,
       'editor.wordBasedSuggestions': 'off',
       'miniHelix.enabled': true,
@@ -41,6 +42,10 @@ async function main(): Promise<void> {
         key: 'g l', command: 'cursorEnd',
         when: 'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive',
       },
+      {
+        key: 'x', command: 'cursorEnd',
+        when: 'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && resourceScheme == mini-helix-line-override',
+      },
     ]));
 
     await runTests({
@@ -54,6 +59,7 @@ async function main(): Promise<void> {
         `--extensions-dir=${path.join(temporary, 'extensions')}`,
         `--remote-debugging-port=${port}`,
         '--disable-extensions',
+        '--disable-gpu',
         '--disable-extension=github.copilot-chat',
         '--disable-extension=github.copilot',
         '--skip-welcome',

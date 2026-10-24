@@ -84,6 +84,18 @@
         "enablement": "miniHelix.enabled && miniHelix.mode == normal"
       },
       {
+        "command": "miniHelix.extendLineBelow",
+        "title": "Extend Line Below (x)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
+        "command": "miniHelix.extendToLineBounds",
+        "title": "Extend to Line Bounds (X)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
         "command": "miniHelix.moveNextWordStart",
         "title": "Move to Next Word Start (w)",
         "category": "Mini Helix",
@@ -1701,6 +1713,16 @@
       {
         "key": "shift+e",
         "command": "miniHelix.moveNextLongWordEnd",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "x",
+        "command": "miniHelix.extendLineBelow",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
+      },
+      {
+        "key": "shift+x",
+        "command": "miniHelix.extendToLineBounds",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
       },
       {
