@@ -12,6 +12,7 @@ import { checkCharMotions } from './hjkl';
 import { checkWordJump } from './wordJump';
 import { checkWordMotions } from './wordMotion';
 import { checkNavigation } from './navigation';
+import { checkMatch } from './match';
 
 async function until(predicate: () => boolean, message: string): Promise<void> {
   const deadline = Date.now() + 5000;
@@ -236,6 +237,7 @@ export async function run(): Promise<void> {
     await checkEditing(api, keyboard);
     await checkHistory(api, keyboard);
     await checkCharMotions(api, keyboard);
+    await check('match: text objects and surround replacement', () => checkMatch(api, keyboard));
     editor = await vscode.window.showTextDocument(document, vscode.ViewColumn.One);
 
     await check('motion runner supports multiple selections and guards INSERT/disabled states', async () => {

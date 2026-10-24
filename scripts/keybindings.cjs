@@ -10,7 +10,11 @@ const insertWhen =
 // Navigation works in read-only editors too; only editing blockers require writable text.
 const motionWhen = 'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal';
 const jumpWhen = `${motionWhen} && miniHelix.wordJumpActive`;
-const idleMotionWhen = `${motionWhen} && !miniHelix.wordJumpActive`;
+// While `mr<old>` waits for its replacement, nothing else may start.
+const idleMotionWhen =
+  `${motionWhen} && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending`;
+const surroundWhen = `${normalWhen} && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending`;
+const surroundPendingWhen = `${motionWhen} && miniHelix.surroundReplacePending`;
 // Blockers also run in read-only editors while a count is pending, because
 // every key that is not a digit clears it, as in Helix.
 const blockWhen =
@@ -85,6 +89,38 @@ const navigation = [
   ['ctrl+i', 'miniHelix.jumpForward'],
 ];
 
+// `mi`, `ma`, and `mr` delimiters on the US layout: key → the character it types.
+const delimiterKeys = [
+  ["'", "'"], ["shift+'", '"'], ['shift+9', '('], ['shift+0', ')'], ['[', '['],
+  [']', ']'], ['shift+[', '{'], ['shift+]', '}'], ['shift+,', '<'], ['shift+.', '>'],
+];
+// Text objects add the word to the delimiters.
+const textObjectKeys = [['w', 'w'], ...delimiterKeys];
+const textObjectKinds = [['i', 'inside'], ['a', 'around']];
+
+// US-layout characters typed by the unmodified and shifted punctuation keys.
+const punctuationKeys = [
+  ['`', '~'], ['-', '_'], ['=', '+'], ['[', '{'], [']', '}'], ['\\', '|'],
+  [';', ':'], ["'", '"'], [',', '<'], ['.', '>'], ['/', '?'],
+];
+const shiftedDigits = ')!@#$%^&*(';
+const numpadCharacters = [
+  ['numpad_add', '+'], ['numpad_subtract', '-'], ['numpad_multiply', '*'],
+  ['numpad_divide', '/'], ['numpad_decimal', '.'], ['numpad_separator', ','],
+];
+// Key → the character it types, for the replacement of a pending `mr`.
+const typedCharacters = new Map([
+  ...[...'abcdefghijklmnopqrstuvwxyz'].flatMap(key => [[key, key], [`shift+${key}`, key.toUpperCase()]]),
+  ...Array.from({ length: 10 }, (_, digit) => [
+    [String(digit), String(digit)], [`shift+${digit}`, shiftedDigits[digit]],
+    [`numpad${digit}`, String(digit)],
+  ]).flat(),
+  ...punctuationKeys.flatMap(([key, shifted]) => [[key, key], [`shift+${key}`, shifted]]),
+  ...numpadCharacters,
+]);
+
+const navigationKeys = ['left', 'right', 'up', 'down', 'home', 'end', 'pageup', 'pagedown'];
+
 function createKeybindings() {
   const printable = [
     ...'abcdefghijklmnopqrstuvwxyz0123456789',
@@ -112,10 +148,21 @@ function createKeybindings() {
     { key: 'g w', command: 'miniHelix.gotoWord', when: idleMotionWhen },
     ...navigation.map(([key, command]) => ({ key, command, when: idleMotionWhen })),
     // Other g chords are unbound keys: they clear the count instead of leaving it pending.
-    ...[...blocked, 'escape', 'left', 'right', 'up', 'down', 'home', 'end', 'pageup', 'pagedown']
-      .filter(key => !['w', 'd', 'r'].includes(key)).map(key => ({
-      key: `g ${key}`, command: 'miniHelix.noop', when: idleMotionWhen,
+    ...chordNoops('g', ['w', 'd', 'r']),
+    // m i / m a select text objects, and m r starts a surround replacement, which
+    // needs a writable editor: in a read-only one its delimiter key only clears the count.
+    ...textObjectKinds.flatMap(([prefix, kind]) => textObjectKeys.map(([key, target]) => ({
+      key: `m ${prefix} ${key}`, command: 'miniHelix.selectTextObject', args: { kind, target }, when: idleMotionWhen,
+    }))),
+    ...delimiterKeys.map(([key]) => ({
+      key: `m r ${key}`, command: 'miniHelix.noop', when: `${idleMotionWhen} && editorReadonly`,
     })),
+    ...delimiterKeys.map(([key, target]) => ({
+      key: `m r ${key}`, command: 'miniHelix.surroundReplace', args: { target }, when: surroundWhen,
+    })),
+    ...chordNoops('m', ['i', 'a', 'r']),
+    ...textObjectKinds.flatMap(([prefix]) => chordNoops(`m ${prefix}`, textObjectKeys.map(([key]) => key))),
+    ...chordNoops('m r', delimiterKeys.map(([key]) => key)),
     ...[...motions, ...lines].map(([key, command]) => ({ key, command, when: idleMotionWhen })),
     ...charMotions.map(([key, command]) => ({ key, command, when: hjklWhen })),
     ...digits.map(([key, digit]) => ({ key, command: 'miniHelix.count', args: digit, when: idleMotionWhen })),
@@ -129,12 +176,26 @@ function createKeybindings() {
       } : {
         key, command: 'miniHelix.cancelWordJump', when: jumpWhen,
       }),
+    // Last, so the replacement of a pending mr beats every other NORMAL binding.
+    ...[...blocked, 'escape', ...navigationKeys, 'insert'].map(key => typedCharacters.has(key) ? {
+      key, command: 'miniHelix.surroundReplaceInput', args: typedCharacters.get(key), when: surroundPendingWhen,
+    } : {
+      key, command: 'miniHelix.cancelSurroundReplace', when: surroundPendingWhen,
+    }),
   ];
+
+  // Unbound keys after a chord prefix clear the count and never type.
+  function chordNoops(prefix, bound) {
+    return [...blocked, 'escape', ...navigationKeys]
+      .filter(key => !bound.includes(key)).map(key => ({
+        key: `${prefix} ${key}`, command: 'miniHelix.noop', when: idleMotionWhen,
+      }));
+  }
 }
 
 module.exports = {
   createKeybindings, motions, charMotions, lines, digits, edits, history, navigation,
-  normalWhen, insertWhen, jumpWhen, blockWhen,
+  normalWhen, insertWhen, jumpWhen, blockWhen, delimiterKeys, textObjectKeys, typedCharacters,
 };
 
 if (require.main === module) {

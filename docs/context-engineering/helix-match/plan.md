@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 artifact: implementation-plan
-status: validated
+status: superseded
 subject: helix-match
 spec: spec.md
 spec_sha256: ca7f9e8365d069cffddab142f0b48d02d42fc2238db85a8497406d12e83a9776
@@ -10,6 +10,8 @@ working_tree: Existing concurrent motion, count, navigation, and test changes; p
 created: 2026-10-24
 updated: 2026-10-24
 ---
+
+> **SUPERSEDED (2026-10-24), historical only.** The user switched to a TypeScript-only implementation; see [../helix-match-typescript/spec.md](../helix-match-typescript/spec.md). Native code archived at /home/cosmincartas/work/archives/vscode-extension-helix-match-native-20261024.
 
 # Helix Match Implementation Plan
 

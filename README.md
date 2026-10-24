@@ -320,6 +320,35 @@ native navigation history; it does not add Helix's select mode or a custom
 jumplist. Input blocking and label keys share the keyboard-layout and context
 update limitations below.
 
+### Match text objects and surround (`mi`, `ma`, `mr`)
+
+| Keys | Does |
+| --- | --- |
+| `miw` / `maw` | select inside or around the word under each cursor |
+| `mi<d>` / `ma<d>` | select inside or around the enclosing `<d>` pair |
+| `[count]mi<d>` / `[count]ma<d>` | select the n-th enclosing pair (the count is ignored for `w`) |
+| `mr<old><new>` | replace the enclosing `<old>` pair with `<new>`; for example `mr([` turns `(text)` into `[text]` |
+
+`<d>` and `<old>` can be `'` `"` `(` `)` `[` `]` `{` `}` `<` `>`; a closing
+character is an alias for its pair, so `mi)` is the same as `mi(`. `<new>` can
+be any of those, or any other printable character, which is used on both sides:
+`mr"*` turns `"x"` into `*x*`.
+
+- `mi` and `ma` work on every cursor; a cursor with no match stays where it is.
+- `mr` works with multiple cursors and is one undo step (and one `u` revision).
+  If any cursor has no match, nothing changes.
+- Escape or an invalid key after `m`, `mi`, `ma`, `mr` or `mr<old>` cancels the
+  command, clears the count, and types nothing.
+
+Limitations:
+
+- Matching is lexical, not syntax-aware. Brackets inside comments and strings,
+  and operators such as `->`, count like any other bracket.
+- Quotes pair up on a single line from left to right and do not nest.
+- The punctuation keys follow the US keyboard layout.
+- There are no `mm`, `ms`, or `md` commands and no syntax objects (function,
+  class, argument). This is not exact Helix parity.
+
 ### Settings
 
 ```json
