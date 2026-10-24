@@ -1,0 +1,13 @@
+# files in precorrection.tar that differ from the working tree (path: status)
+CHANGED native/match-helper/src/evaluate/mod.rs
+CHANGED native/match-helper/src/git/mod.rs
+CHANGED native/match-helper/src/protocol/mod.rs
+CHANGED native/match-helper/src/protocol/session.rs
+CHANGED native/match-helper/tests/common/mod.rs
+CHANGED native/match-helper/tests/fixtures/protocol/constants.json
+CHANGED native/match-helper/tests/protocol.rs
+CHANGED native/match-helper/tests/textobjects_git.rs
+CHANGED src/native/protocol.ts
+CHANGED test/fixtures/helix-match/README.md
+CHANGED test/fixtures/helix-match/schema/case-file.schema.json
+# files in tree not in tar: only listed if under test/fixtures/helix-match/cases:

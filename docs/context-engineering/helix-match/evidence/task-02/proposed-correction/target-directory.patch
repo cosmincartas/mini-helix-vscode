@@ -1,0 +1,47 @@
+--- a/native/feasibility/grammars/stage-helper.sh
++++ b/native/feasibility/grammars/stage-helper.sh
+@@ -3,9 +3,15 @@
+ set -euo pipefail
+ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ native="$(cd "$here/../.." && pwd)"
+-(cd "$native/feasibility" && CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-$native/target}" GIT_CEILING_DIRECTORIES="$native/feasibility/upstream" \
++target="${CARGO_TARGET_DIR:-$native/target}"
++# Cargo runs from the feasibility workspace; resolve relative overrides there.
++case "$target" in
++  /*) ;;
++  *) target="$native/feasibility/$target" ;;
++esac
++(cd "$native/feasibility" && CARGO_TARGET_DIR="$target" GIT_CEILING_DIRECTORIES="$native/feasibility/upstream" \
+    HELIX_NIX_BUILD_REV=ba40e547426b0f9896c8bdc699a4ab11f2b37dbc \
+    cargo build --release --locked -p mini-helix-match-feasibility)
+ mkdir -p "$native/feasibility/build/stage"
+-cp "$native/target/release/mini-helix-match-feasibility" "$native/feasibility/build/stage/"
++cp "$target/release/mini-helix-match-feasibility" "$native/feasibility/build/stage/"
+ ls -l "$native/feasibility/build/stage"
+--- a/native/feasibility/grammars/build-grammars.sh
++++ b/native/feasibility/grammars/build-grammars.sh
+@@ -7,6 +7,12 @@
+ set -euo pipefail
+ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ native="$(cd "$here/../.." && pwd)"
++target="${CARGO_TARGET_DIR:-$native/target}"
++# Cargo runs from the feasibility workspace; resolve relative overrides there.
++case "$target" in
++  /*) ;;
++  *) target="$native/feasibility/$target" ;;
++esac
+ build="$native/feasibility/build"
+ GRAMMAR_SUBSET='["rust", "markdown", "markdown_inline", "html", "javascript"]'
+ 
+@@ -19,9 +25,9 @@
+ export XDG_CONFIG_HOME="$build/xdg/config" XDG_DATA_HOME="$build/xdg/data" XDG_CACHE_HOME="$build/xdg/cache"
+ export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
+ 
+-bin="$native/target/release/grammars"
++bin="$target/release/grammars"
+ if [ ! -x "$bin" ]; then
+-  (cd "$native/feasibility" && CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-$native/target}" GIT_CEILING_DIRECTORIES="$native/feasibility/upstream" \
++  (cd "$native/feasibility" && CARGO_TARGET_DIR="$target" GIT_CEILING_DIRECTORIES="$native/feasibility/upstream" \
+      HELIX_NIX_BUILD_REV=ba40e547426b0f9896c8bdc699a4ab11f2b37dbc \
+      cargo build --release --locked -p mini-helix-match-feasibility --bin grammars)
+ fi

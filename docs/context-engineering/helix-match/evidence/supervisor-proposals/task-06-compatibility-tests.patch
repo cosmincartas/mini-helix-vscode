@@ -1,0 +1,20 @@
+--- a/test/unit/matchClient.test.ts
++++ b/test/unit/matchClient.test.ts
+@@ -682,7 +682,7 @@
+       const cmdline = fs.readFileSync(`/proc/${pid}/cmdline`, 'utf8').split('\0').filter(Boolean);
+       assert.deepEqual(cmdline.slice(1), ['serve', '--runtime-root', realRuntime]);
+     }
+-    const e = await failure(client.request('open', { documentId: SENTINEL }));
++    const e = await failure(client.request('evaluate', { documentId: SENTINEL }));
+     expectKind(e, 'remote_error');
+     assert.equal(e.helperCode, 'invalid_request');
+     assert.equal(e.detail, 'unsupported_method');
+@@ -729,7 +729,7 @@
+     assert.notEqual(second.epoch, first.epoch);
+     const stale = await failure(client.request('open', {}, { expectedEpoch: first.epoch }));
+     expectKind(stale, 'stale_epoch');
+-    const err = await failure(client.request('open', { documentId: 'd1' }, { expectedEpoch: second.epoch }));
++    const err = await failure(client.request('evaluate', { documentId: 'd1' }, { expectedEpoch: second.epoch }));
+     expectKind(err, 'remote_error');
+     assert.equal(err.detail, 'unsupported_method');
+   });

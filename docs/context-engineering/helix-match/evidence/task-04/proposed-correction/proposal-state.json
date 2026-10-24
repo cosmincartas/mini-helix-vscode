@@ -1,0 +1,12 @@
+{
+  "status": "unapplied; 27/27 protocol tests passed in scratch copy",
+  "scratch": "/tmp/helix-vr4-proposal-gr70d58z",
+  "original_source_hashes": {
+    "native/match-helper/src/protocol/envelope.rs": "5ae685f0c6e7ba77df93ce576027ba63c31f5027c14bffb38b66450cdac428bc",
+    "native/match-helper/tests/protocol.rs": "d96f6bc4574136d9d68ec0d5ef54fe433322a60f9bfac07eb9345101822d1eea"
+  },
+  "source_files_unchanged": true,
+  "verification_command": "cargo +1.90.0 test --locked --manifest-path /tmp/helix-vr4-proposal-gr70d58z/native/Cargo.toml -p mini-helix-match-helper --test protocol",
+  "verification_exit_code": 0,
+  "red_regression_exit_code": 101
+}

@@ -1,0 +1,122 @@
+5 | use helix_stdx::{env::current_working_dir, path};
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.42s
+     Running tests/protocol.rs (target/debug/deps/protocol-c91bbacd74f263db)
+running 22 tests
+test constants_fixtures_and_implementation_agree_on_one_compatibility_check ... ok
+test diagnostics_never_contain_request_or_document_text ... FAILED
+test eof_in_the_middle_of_a_frame_is_an_explicit_failure_and_the_partial_frame_is_never_executed ... FAILED
+test a_stalled_partial_frame_times_out_explicitly_instead_of_hanging ... FAILED
+test eof_after_oversize_discard_is_reported_once_and_exits ... FAILED
+test envelope_fields_are_validated_with_precise_stable_errors ... FAILED
+test initialize_params_are_validated_and_second_initialize_is_rejected_without_ending_the_session ... FAILED
+test fragmented_frames_including_mid_utf8_and_mid_json_are_reassembled ... FAILED
+test requests_before_initialize_are_rejected_but_shutdown_is_allowed ... FAILED
+test malformed_json_and_invalid_bytes_get_explicit_errors_and_the_stream_stays_in_sync ... FAILED
+test initialize_returns_actual_identity_and_capabilities_then_serves_requests ... FAILED
+test identity_mismatches_fail_explicitly_and_end_the_session ... FAILED
+test shutdown_replies_then_exits_zero_with_no_children ... FAILED
+test unsupported_protocol_version_fixture_terminates_the_session ... FAILED
+test oversized_frames_are_rejected_whole_without_truncation_and_the_session_continues ... FAILED
+test wrong_protocol_version_fails_explicitly_and_ends_the_session ... FAILED
+test unknown_and_not_yet_implemented_methods_return_a_typed_error_and_do_not_crash ... FAILED
+test several_frames_in_one_write_are_answered_in_order_and_nothing_after_shutdown_runs ... FAILED
+test fixtures_round_trip_through_the_real_helper_with_the_real_runtime ... FAILED
+test clean_eof_exits_zero_without_output_before_and_after_initialize ... FAILED
+test corrupted_runtime_is_runtime_unavailable_and_no_library_is_loaded ... FAILED
+test corrupted_or_missing_assets_in_a_scratch_copy_of_the_real_runtime_are_runtime_unavailable ... FAILED
+failures:
+---- diagnostics_never_contain_request_or_document_text stdout ----
+thread 'diagnostics_never_contain_request_or_document_text' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---- eof_in_the_middle_of_a_frame_is_an_explicit_failure_and_the_partial_frame_is_never_executed stdout ----
+thread 'eof_in_the_middle_of_a_frame_is_an_explicit_failure_and_the_partial_frame_is_never_executed' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- a_stalled_partial_frame_times_out_explicitly_instead_of_hanging stdout ----
+thread 'a_stalled_partial_frame_times_out_explicitly_instead_of_hanging' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- eof_after_oversize_discard_is_reported_once_and_exits stdout ----
+thread 'eof_after_oversize_discard_is_reported_once_and_exits' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- envelope_fields_are_validated_with_precise_stable_errors stdout ----
+thread 'envelope_fields_are_validated_with_precise_stable_errors' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- initialize_params_are_validated_and_second_initialize_is_rejected_without_ending_the_session stdout ----
+thread 'initialize_params_are_validated_and_second_initialize_is_rejected_without_ending_the_session' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- fragmented_frames_including_mid_utf8_and_mid_json_are_reassembled stdout ----
+thread 'fragmented_frames_including_mid_utf8_and_mid_json_are_reassembled' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- requests_before_initialize_are_rejected_but_shutdown_is_allowed stdout ----
+thread 'requests_before_initialize_are_rejected_but_shutdown_is_allowed' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- malformed_json_and_invalid_bytes_get_explicit_errors_and_the_stream_stays_in_sync stdout ----
+thread 'malformed_json_and_invalid_bytes_get_explicit_errors_and_the_stream_stays_in_sync' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- initialize_returns_actual_identity_and_capabilities_then_serves_requests stdout ----
+thread 'initialize_returns_actual_identity_and_capabilities_then_serves_requests' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- identity_mismatches_fail_explicitly_and_end_the_session stdout ----
+thread 'identity_mismatches_fail_explicitly_and_end_the_session' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- shutdown_replies_then_exits_zero_with_no_children stdout ----
+thread 'shutdown_replies_then_exits_zero_with_no_children' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- unsupported_protocol_version_fixture_terminates_the_session stdout ----
+thread 'unsupported_protocol_version_fixture_terminates_the_session' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- oversized_frames_are_rejected_whole_without_truncation_and_the_session_continues stdout ----
+thread 'oversized_frames_are_rejected_whole_without_truncation_and_the_session_continues' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- wrong_protocol_version_fails_explicitly_and_ends_the_session stdout ----
+thread 'wrong_protocol_version_fails_explicitly_and_ends_the_session' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- unknown_and_not_yet_implemented_methods_return_a_typed_error_and_do_not_crash stdout ----
+thread 'unknown_and_not_yet_implemented_methods_return_a_typed_error_and_do_not_crash' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- several_frames_in_one_write_are_answered_in_order_and_nothing_after_shutdown_runs stdout ----
+thread 'several_frames_in_one_write_are_answered_in_order_and_nothing_after_shutdown_runs' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- fixtures_round_trip_through_the_real_helper_with_the_real_runtime stdout ----
+thread 'fixtures_round_trip_through_the_real_helper_with_the_real_runtime' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- clean_eof_exits_zero_without_output_before_and_after_initialize stdout ----
+thread 'clean_eof_exits_zero_without_output_before_and_after_initialize' panicked at match-helper/tests/protocol.rs:844:5:
+assertion `left == right` failed
+  left: (2, 0, "{\"error\":\"unknown command serve\"}\n")
+ right: (0, 0, "")
+---- corrupted_runtime_is_runtime_unavailable_and_no_library_is_loaded stdout ----
+thread 'corrupted_runtime_is_runtime_unavailable_and_no_library_is_loaded' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+---- corrupted_or_missing_assets_in_a_scratch_copy_of_the_real_runtime_are_runtime_unavailable stdout ----
+thread 'corrupted_or_missing_assets_in_a_scratch_copy_of_the_real_runtime_are_runtime_unavailable' panicked at match-helper/tests/protocol.rs:128:52:
+helper closed stdout without a response
+failures:
+    a_stalled_partial_frame_times_out_explicitly_instead_of_hanging
+    clean_eof_exits_zero_without_output_before_and_after_initialize
+    corrupted_or_missing_assets_in_a_scratch_copy_of_the_real_runtime_are_runtime_unavailable
+    corrupted_runtime_is_runtime_unavailable_and_no_library_is_loaded
+    diagnostics_never_contain_request_or_document_text
+    envelope_fields_are_validated_with_precise_stable_errors
+    eof_after_oversize_discard_is_reported_once_and_exits
+    eof_in_the_middle_of_a_frame_is_an_explicit_failure_and_the_partial_frame_is_never_executed
+    fixtures_round_trip_through_the_real_helper_with_the_real_runtime
+    fragmented_frames_including_mid_utf8_and_mid_json_are_reassembled
+    identity_mismatches_fail_explicitly_and_end_the_session
+    initialize_params_are_validated_and_second_initialize_is_rejected_without_ending_the_session
+    initialize_returns_actual_identity_and_capabilities_then_serves_requests
+    malformed_json_and_invalid_bytes_get_explicit_errors_and_the_stream_stays_in_sync
+    oversized_frames_are_rejected_whole_without_truncation_and_the_session_continues
+    requests_before_initialize_are_rejected_but_shutdown_is_allowed
+    several_frames_in_one_write_are_answered_in_order_and_nothing_after_shutdown_runs
+    shutdown_replies_then_exits_zero_with_no_children
+    unknown_and_not_yet_implemented_methods_return_a_typed_error_and_do_not_crash
+    unsupported_protocol_version_fixture_terminates_the_session
+    wrong_protocol_version_fails_explicitly_and_ends_the_session
+test result: FAILED. 1 passed; 21 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+error: test failed, to rerun pass `-p mini-helix-match-helper --test protocol`
+
+real	0m0.620s
+user	0m0.593s
+sys	0m0.626s

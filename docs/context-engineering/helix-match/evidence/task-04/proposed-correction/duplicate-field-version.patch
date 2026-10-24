@@ -1,0 +1,149 @@
+--- a/native/match-helper/src/protocol/envelope.rs
++++ b/native/match-helper/src/protocol/envelope.rs
+@@ -25,17 +25,61 @@
+     pub error: ProtocolError,
+ }
+ 
+-/// First pass: tolerant of unknown fields, so that a request from a different protocol version is reported
+-/// as a version error rather than as a malformed envelope.
+-#[derive(Deserialize)]
+-#[serde(rename_all = "camelCase")]
++/// First pass: borrow identity fields without enforcing the version-1 uniqueness rules. A different
++/// protocol version must be rejected fatally before unrelated duplicate metadata can mask it.
+ struct Probe<'a> {
+-    #[serde(borrow, default)]
+     protocol_version: Option<&'a RawValue>,
+-    #[serde(borrow, default)]
+     request_id: Option<&'a RawValue>,
+-    #[serde(borrow, default)]
+     helper_epoch: Option<&'a RawValue>,
++    duplicate_identity_fields: u8,
++}
++
++impl<'de> Deserialize<'de> for Probe<'de> {
++    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
++    where
++        D: serde::Deserializer<'de>,
++    {
++        struct ProbeVisitor;
++
++        impl<'de> serde::de::Visitor<'de> for ProbeVisitor {
++            type Value = Probe<'de>;
++
++            fn expecting(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
++                f.write_str("a request envelope object")
++            }
++
++            fn visit_map<A>(self, mut fields: A) -> Result<Self::Value, A::Error>
++            where
++                A: serde::de::MapAccess<'de>,
++            {
++                let mut probe = Probe { protocol_version: None, request_id: None, helper_epoch: None, duplicate_identity_fields: 0 };
++                let mut seen = 0u8;
++                while let Some(key) = fields.next_key::<std::borrow::Cow<'de, str>>()? {
++                    let bit = match key.as_ref() {
++                        "protocolVersion" => 1,
++                        "requestId" => 2,
++                        "helperEpoch" => 4,
++                        _ => 0,
++                    };
++                    if bit == 0 {
++                        fields.next_value::<IgnoredAny>()?;
++                        continue;
++                    }
++                    probe.duplicate_identity_fields |= seen & bit;
++                    seen |= bit;
++                    let value: Option<&'de RawValue> = fields.next_value()?;
++                    match bit {
++                        1 => probe.protocol_version = value,
++                        2 => probe.request_id = value,
++                        _ => probe.helper_epoch = value,
++                    }
++                }
++                Ok(probe)
++            }
++        }
++
++        deserializer.deserialize_map(ProbeVisitor)
++    }
+ }
+ 
+ /// Second pass: the exact version-1 envelope; unknown or duplicate fields are errors.
+@@ -91,9 +135,24 @@
+ 
+     // Identity fields that are readable and valid are echoed in every response to this frame, whatever
+     // else is wrong with it.
+-    let id = probe.request_id.and_then(safe_integer);
+-    let epoch = probe.helper_epoch.and_then(epoch_value);
++    let id = if probe.duplicate_identity_fields & 2 == 0 { probe.request_id.and_then(safe_integer) } else { None };
++    let epoch = if probe.duplicate_identity_fields & 4 == 0 { probe.helper_epoch.and_then(epoch_value) } else { None };
+     let reject = |error: ProtocolError| Rejected { request_id: id, helper_epoch: epoch, error };
++
++    // Preserve the established invalid-envelope response for duplicate identity fields, except that a
++    // readable unsupported version must still terminate the session. Ambiguous identity fields are never echoed.
++    if probe.duplicate_identity_fields != 0 {
++        let unsupported = probe.protocol_version.is_some_and(|raw| {
++            serde_json::from_str::<serde_json::Number>(raw.get())
++                .is_ok_and(|n| (n.is_u64() || n.is_i64()) && n.as_u64() != Some(PROTOCOL_VERSION))
++        });
++        if !unsupported {
++            return Err(bare(ProtocolError::invalid(
++                "invalid_envelope",
++                "the frame is not a request envelope object with known unique fields",
++            )));
++        }
++    }
+ 
+     // The protocol version is checked before any other field: a request from another protocol version is
+     // fatal for the session even when the rest of its envelope (for example `requestId`) is unreadable
+@@ -104,9 +163,12 @@
+             Ok(n) if n.is_u64() || n.is_i64() => {
+                 if n.as_u64() != Some(PROTOCOL_VERSION) {
+                     return Err(reject(
+-                        ProtocolError::invalid("unsupported_protocol_version", "the request protocol version is not supported by this helper")
+-                            .with_data(serde_json::json!({ "supported": PROTOCOL_VERSION }))
+-                            .fatal(),
++                        ProtocolError::invalid(
++                            "unsupported_protocol_version",
++                            "the request protocol version is not supported by this helper",
++                        )
++                        .with_data(serde_json::json!({ "supported": PROTOCOL_VERSION }))
++                        .fatal(),
+                     ));
+                 }
+             }
+--- a/native/match-helper/tests/protocol.rs
++++ b/native/match-helper/tests/protocol.rs
+@@ -1003,3 +1003,32 @@
+         serde_json::from_str::<Value>(line).unwrap_or_else(|_| panic!("stderr line is not a sanitized JSON record: {line}"));
+     }
+ }
++
++#[test]
++fn proposed_duplicate_metadata_cannot_mask_an_unknown_protocol_version() {
++    for (fields, id, epoch) in [
++        (r#""requestId":8,"helperEpoch":5,"helperEpoch":5"#, Some(8u64), None),
++        (r#""requestId":8,"requestId":8,"helperEpoch":5"#, None, Some(5u64)),
++        (r#""requestId":8,"helperEpoch":5,"params":{},"params":{}"#, Some(8), Some(5)),
++    ] {
++        let (_fixture, mut h, session_epoch) = started();
++        h.send_text(&format!(r#"{{"protocolVersion":2,{fields},"method":"x"}}"#));
++        let reply = h.recv();
++        assert_eq!(reply["error"]["detail"], "unsupported_protocol_version");
++        assert_eq!(reply["requestId"], json!(id));
++        assert_eq!(reply["helperEpoch"], json!(epoch.unwrap_or(session_epoch)));
++        assert_eq!(h.exit_code_only(), protocol::exit::PROTOCOL_FATAL);
++    }
++}
++
++#[test]
++fn proposed_tolerant_probe_does_not_relax_version_one_duplicate_rejection() {
++    let (_fixture, mut h, epoch) = started();
++    h.send_text(&format!(r#"{{"protocolVersion":1,"requestId":8,"helperEpoch":{epoch},"helperEpoch":{epoch},"method":"x"}}"#));
++    let reply = h.recv();
++    assert_eq!(reply["error"]["detail"], "invalid_envelope");
++    assert!(reply["requestId"].is_null());
++    assert_eq!(reply["helperEpoch"], json!(epoch));
++    shutdown_ok(&mut h, epoch, 9);
++    assert_eq!(h.exit_code_only(), 0);
++}

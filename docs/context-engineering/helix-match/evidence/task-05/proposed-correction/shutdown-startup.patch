@@ -1,0 +1,32 @@
+--- a/src/native/matchClient.ts
++++ b/src/native/matchClient.ts
+@@ -511,7 +511,7 @@
+     if (wasReady && error.kind !== 'stopped' && error.kind !== 'restarted' && error.kind !== 'disposed') this.recovery.recordHelperFailure();
+     if (this.current === session) {
+       this.current = undefined;
+-      if (wasReady) this.clientState = error.kind === 'stopped' ? 'stopped' : 'exited';
++      if (wasReady || error.kind === 'stopped') this.clientState = error.kind === 'stopped' ? 'stopped' : 'exited';
+     }
+     if (wasReady && !this.disposed) {
+       for (const listener of [...this.stopListeners]) {
+--- a/test/unit/matchClient.test.ts
++++ b/test/unit/matchClient.test.ts
+@@ -485,6 +485,18 @@
+     for (const kind of ['PipeWrap', 'ProcessWrap', 'Timeout']) {
+       assert.ok((after[kind] ?? 0) <= (baseline[kind] ?? 0), `${kind} handles leaked: before ${baseline[kind] ?? 0}, after ${after[kind] ?? 0}`);
+     }
++  });
++
++  it('shutdown during startup rejects the start, stops the client, and leaves no child', async () => {
++    const f = fake('hang-init');
++    const start = failure(f.client.ensureReady());
++    await new Promise((r) => setTimeout(r, 100));
++    const pid = f.client.pid;
++    assert.equal(f.client.state, 'starting');
++    await f.client.shutdown();
++    expectKind(await start, 'stopped');
++    await waitGone(pid, 'shutdown during startup');
++    assert.equal(f.client.state, 'stopped');
+   });
+ 
+   it('dispose during startup rejects the start and leaves no child', async () => {

@@ -1,0 +1,20 @@
+2:== toolchain
+3:rustc 1.90.0 (1159e78c4 2025-09-14)
+11:gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+12:g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+13:ldd (Debian GLIBC 2.36-9+deb12u13) 2.36
+14:== build helper + grammars bin (MODE=default RUSTFLAGS=)
+403:    Finished `release` profile [optimized] target(s) in 27.34s
+404:== fetch/build grammars with pinned helix_loader
+425:== stage
+428:-rwxr-xr-x. 1 root root 9985016 Oct 23 23:44 mini-helix-match-feasibility
+433:-rwxr-xr-x. 1 root root   33496 Oct 23 23:44 html.so
+434:-rwxr-xr-x. 1 root root  435368 Oct 23 23:44 javascript.so
+435:-rwxr-xr-x. 1 root root  375856 Oct 23 23:44 markdown.so
+436:-rwxr-xr-x. 1 root root  363088 Oct 23 23:44 markdown_inline.so
+437:-rwxr-xr-x. 1 root root 1136272 Oct 23 23:44 rust.so
+444:/out/stage/mini-helix-match-feasibility: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=da1425f3f00b092e765416c1a18a1eabc72f2816, not stripped
+445:/out/stage/runtime/grammars/rust.so:     ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=f7c77d876b66ee6d783784dda8dfb3dc8367435f, not stripped
+447:	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fec8b760000)
+448:	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fec8b680000)
+449:	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fec8b49e000)

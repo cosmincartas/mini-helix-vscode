@@ -1,0 +1,1341 @@
+[
+ {
+  "id": "plaintext-objects",
+  "title": "miw/maw/miW/mip on plaintext",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "miw text",
+    "pass": true,
+    "expected": [
+     "world"
+    ],
+    "actual": [
+     "world"
+    ]
+   },
+   {
+    "check": "miw range",
+    "pass": true,
+    "expected": [
+     [
+      6,
+      11
+     ]
+    ],
+    "actual": [
+     [
+      6,
+      11
+     ]
+    ]
+   },
+   {
+    "check": "maw text (trailing whitespace)",
+    "pass": true,
+    "expected": [
+     "world "
+    ],
+    "actual": [
+     "world "
+    ]
+   },
+   {
+    "check": "miw stops at punctuation",
+    "pass": true,
+    "expected": [
+     "bar"
+    ],
+    "actual": [
+     "bar"
+    ]
+   },
+   {
+    "check": "miW selects WORD",
+    "pass": true,
+    "expected": [
+     "foo-bar"
+    ],
+    "actual": [
+     "foo-bar"
+    ]
+   },
+   {
+    "check": "mip paragraph",
+    "pass": true,
+    "expected": [
+     "para one\nline two\n"
+    ],
+    "actual": [
+     "para one\nline two\n"
+    ]
+   },
+   {
+    "check": "count ignored by word object (upstream quirk)",
+    "pass": true,
+    "expected": [
+     "one"
+    ],
+    "actual": [
+     "one"
+    ]
+   },
+   {
+    "check": "unsupported alnum object is a no-op: selection unchanged width-1",
+    "pass": true,
+    "expected": [
+     [
+      2,
+      3
+     ]
+    ],
+    "actual": [
+     [
+      2,
+      3
+     ]
+    ]
+   },
+   {
+    "check": "non-char key is no_op",
+    "pass": true,
+    "expected": "no_op",
+    "actual": "no_op"
+   }
+  ],
+  "exchanges": [
+   0,
+   13
+  ]
+ },
+ {
+  "id": "rust-function",
+  "title": "mif/maf on Rust via tree-sitter",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "syntaxState",
+    "pass": true,
+    "expected": "available",
+    "actual": "available"
+   },
+   {
+    "check": "mif = function body block",
+    "pass": true,
+    "expected": [
+     "{\n    x + 1\n}"
+    ],
+    "actual": [
+     "{\n    x + 1\n}"
+    ]
+   },
+   {
+    "check": "mif layer",
+    "pass": true,
+    "expected": "rust",
+    "actual": "rust"
+   },
+   {
+    "check": "maf = whole function item",
+    "pass": true,
+    "expected": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ],
+    "actual": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ]
+   },
+   {
+    "check": "mif with the cursor on the 'fn' keyword: outside every function.inside node -> upstream no-op",
+    "pass": true,
+    "expected": [
+     "f"
+    ],
+    "actual": [
+     "f"
+    ]
+   },
+   {
+    "check": "upstream quirk: object ending exactly at EOF is a no-op (end_byte >= len)",
+    "pass": true,
+    "expected": [
+     [
+      15,
+      16
+     ]
+    ],
+    "actual": [
+     [
+      15,
+      16
+     ]
+    ]
+   },
+   {
+    "check": "   ... and not reported as an error",
+    "pass": true,
+    "expected": "proposal",
+    "actual": "proposal"
+   },
+   {
+    "check": "mac comment capture (around only exists in rust textobjects)",
+    "pass": true,
+    "expected": [
+     "// c"
+    ],
+    "actual": [
+     "// c"
+    ]
+   },
+   {
+    "check": "mic selects the comment (comment.inside exists in the pinned rust queries)",
+    "pass": true,
+    "expected": [
+     "// c"
+    ],
+    "actual": [
+     "// c"
+    ]
+   },
+   {
+    "check": "mix: xml-element capture is absent for rust -> reference no-op, no invented replacement",
+    "pass": true,
+    "expected": [
+     [
+      0,
+      1
+     ]
+    ],
+    "actual": [
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "check": "unknown language id -> plaintext behaviour (no_op)",
+    "pass": true,
+    "expected": [
+     [
+      3,
+      4
+     ]
+    ],
+    "actual": [
+     [
+      3,
+      4
+     ]
+    ]
+   }
+  ],
+  "exchanges": [
+   13,
+   27
+  ]
+ },
+ {
+  "id": "injected-object",
+  "title": "object selected through an injected-language layer",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "markdown syntaxState",
+    "pass": true,
+    "expected": "available",
+    "actual": "available"
+   },
+   {
+    "check": "mif inside fenced rust block",
+    "pass": true,
+    "expected": [
+     "{\n    1\n}"
+    ],
+    "actual": [
+     "{\n    1\n}"
+    ]
+   },
+   {
+    "check": "layer is injected rust (root is markdown)",
+    "pass": true,
+    "expected": "rust",
+    "actual": "rust"
+   },
+   {
+    "check": "maf inside fenced rust block",
+    "pass": true,
+    "expected": [
+     "fn gamma() {\n    1\n}"
+    ],
+    "actual": [
+     "fn gamma() {\n    1\n}"
+    ]
+   },
+   {
+    "check": "control: outside the fence the root layer markdown has no textobjects.scm -> no-op",
+    "pass": true,
+    "expected": [
+     [
+      39,
+      40
+     ]
+    ],
+    "actual": [
+     [
+      39,
+      40
+     ]
+    ]
+   },
+   {
+    "check": "control: layer is the markdown.inline layer injected into the paragraph (still no textobjects.scm)",
+    "pass": true,
+    "expected": "markdown.inline",
+    "actual": "markdown.inline"
+   },
+   {
+    "check": "html syntaxState",
+    "pass": true,
+    "expected": "available",
+    "actual": "available"
+   },
+   {
+    "check": "mif inside <script> (javascript inherits ecma textobjects)",
+    "pass": true,
+    "expected": [
+     "{\n  return 1;\n}"
+    ],
+    "actual": [
+     "{\n  return 1;\n}"
+    ]
+   },
+   {
+    "check": "layer is injected javascript",
+    "pass": true,
+    "expected": "javascript",
+    "actual": "javascript"
+   },
+   {
+    "check": "max xml-element in html layer",
+    "pass": true,
+    "expected": [
+     "<p>hi</p>"
+    ],
+    "actual": [
+     "<p>hi</p>"
+    ]
+   }
+  ],
+  "exchanges": [
+   27,
+   36
+  ]
+ },
+ {
+  "id": "surround",
+  "title": "ms/mr/md with ASCII, aliases, Unicode (non-BMP), Enter, failures",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "ms( text",
+    "pass": true,
+    "expected": "foo (hello) bar",
+    "actual": "foo (hello) bar"
+   },
+   {
+    "check": "ms( selection covers surrounded text",
+    "pass": true,
+    "expected": [
+     [
+      4,
+      11
+     ]
+    ],
+    "actual": [
+     [
+      4,
+      11
+     ]
+    ]
+   },
+   {
+    "check": "ms) alias gives open/close pair",
+    "pass": true,
+    "expected": "foo (hello) bar",
+    "actual": "foo (hello) bar"
+   },
+   {
+    "check": "literal m as new surround char (spec: m is literal during add)",
+    "pass": true,
+    "expected": "foo mhellom bar",
+    "actual": "foo mhellom bar"
+   },
+   {
+    "check": "ms\" same-char pair",
+    "pass": true,
+    "expected": "foo \"hello\" bar",
+    "actual": "foo \"hello\" bar"
+   },
+   {
+    "check": "ms😀 non-BMP char",
+    "pass": true,
+    "expected": "foo 😀hello😀 bar",
+    "actual": "foo 😀hello😀 bar"
+   },
+   {
+    "check": "ms😀 selection uses UTF-16 units (2+5+2 = 9)",
+    "pass": true,
+    "expected": [
+     [
+      4,
+      13
+     ]
+    ],
+    "actual": [
+     [
+      4,
+      13
+     ]
+    ]
+   },
+   {
+    "check": "ms😀 edits use UTF-16 base offsets",
+    "pass": true,
+    "expected": [
+     [
+      4,
+      4
+     ],
+     [
+      9,
+      9
+     ]
+    ],
+    "actual": [
+     [
+      4,
+      4
+     ],
+     [
+      9,
+      9
+     ]
+    ]
+   },
+   {
+    "check": "ms😀 debug char-length",
+    "pass": true,
+    "expected": 15,
+    "actual": 15
+   },
+   {
+    "check": "ms« (U+00AB) uses upstream BRACKETS pair U+00AB U+00BB",
+    "pass": true,
+    "expected": "foo «hello» bar",
+    "actual": "foo «hello» bar"
+   },
+   {
+    "check": "ms§ (U+00A7) arbitrary Unicode char: same char on both sides",
+    "pass": true,
+    "expected": "foo §hello§ bar",
+    "actual": "foo §hello§ bar"
+   },
+   {
+    "check": "ms é precomposed single scalar",
+    "pass": true,
+    "expected": "foo éhelloé bar",
+    "actual": "foo éhelloé bar"
+   },
+   {
+    "check": "two-scalar key (e + combining acute) rejected explicitly",
+    "pass": true,
+    "expected": [
+     false,
+     "invalid_request"
+    ],
+    "actual": [
+     false,
+     "invalid_request"
+    ]
+   },
+   {
+    "check": "modifiers on char keys are ignored (callback phase)",
+    "pass": true,
+    "expected": "foo ahelloa bar",
+    "actual": "foo ahelloa bar"
+   },
+   {
+    "check": "ms Enter on LF doc",
+    "pass": true,
+    "expected": "foo \nhello\n bar",
+    "actual": "foo \nhello\n bar"
+   },
+   {
+    "check": "ms Enter on CRLF doc uses CRLF",
+    "pass": true,
+    "expected": "foo \r\nhello\r\n bar",
+    "actual": "foo \r\nhello\r\n bar"
+   },
+   {
+    "check": "   selection widened by 2 line endings (4 UTF-16 units)",
+    "pass": true,
+    "expected": [
+     [
+      4,
+      13
+     ]
+    ],
+    "actual": [
+     [
+      4,
+      13
+     ]
+    ]
+   },
+   {
+    "check": "multi-selection ms[",
+    "pass": true,
+    "expected": "[ab] [cd]",
+    "actual": "[ab] [cd]"
+   },
+   {
+    "check": "   selections (offset-adjusted)",
+    "pass": true,
+    "expected": [
+     [
+      0,
+      4
+     ],
+     [
+      5,
+      9
+     ]
+    ],
+    "actual": [
+     [
+      0,
+      4
+     ],
+     [
+      5,
+      9
+     ]
+    ]
+   },
+   {
+    "check": "   primary preserved",
+    "pass": true,
+    "expected": 1,
+    "actual": 1
+   },
+   {
+    "check": "mr( preview status",
+    "pass": true,
+    "expected": "preview",
+    "actual": "preview"
+   },
+   {
+    "check": "mr( preview has no edits",
+    "pass": true,
+    "expected": [],
+    "actual": []
+   },
+   {
+    "check": "mr( preview selects the delimiters (width-1 each)",
+    "pass": true,
+    "expected": [
+     [
+      4,
+      5
+     ],
+     [
+      10,
+      11
+     ]
+    ],
+    "actual": [
+     [
+      4,
+      5
+     ],
+     [
+      10,
+      11
+     ]
+    ]
+   },
+   {
+    "check": "mr( original selection retained (normalised width-1)",
+    "pass": true,
+    "expected": [
+     [
+      7,
+      8
+     ]
+    ],
+    "actual": [
+     [
+      7,
+      8
+     ]
+    ]
+   },
+   {
+    "check": "mr( then [ -> text",
+    "pass": true,
+    "expected": "foo [hello] bar",
+    "actual": "foo [hello] bar"
+   },
+   {
+    "check": "   final selection = original mapped through the change",
+    "pass": true,
+    "expected": [
+     [
+      7,
+      8
+     ]
+    ],
+    "actual": [
+     [
+      7,
+      8
+     ]
+    ]
+   },
+   {
+    "check": "   continuation is single-use (stale_continuation)",
+    "pass": true,
+    "expected": "stale_continuation",
+    "actual": "stale_continuation"
+   },
+   {
+    "check": "mr( then 😀 replaces '(' and ')' by emoji",
+    "pass": true,
+    "expected": "foo 😀hello😀 bar",
+    "actual": "foo 😀hello😀 bar"
+   },
+   {
+    "check": "   final selection in new UTF-16 coordinates",
+    "pass": true,
+    "expected": [
+     [
+      8,
+      9
+     ]
+    ],
+    "actual": [
+     [
+      8,
+      9
+     ]
+    ]
+   },
+   {
+    "check": "non-char key restores original selections",
+    "pass": true,
+    "expected": [
+     "restored",
+     [
+      [
+       7,
+       8
+      ]
+     ],
+     []
+    ],
+    "actual": [
+     "restored",
+     [
+      [
+       7,
+       8
+      ]
+     ],
+     []
+    ]
+   },
+   {
+    "check": "failed mr{ lookup returns reference error (not an infrastructure error)",
+    "pass": true,
+    "expected": [
+     true,
+     "reference_error",
+     "Surround pair not found around all cursors"
+    ],
+    "actual": [
+     true,
+     "reference_error",
+     "Surround pair not found around all cursors"
+    ]
+   },
+   {
+    "check": "   selection unchanged and no continuation",
+    "pass": true,
+    "expected": [
+     true,
+     [],
+     [
+      [
+       7,
+       8
+      ]
+     ]
+    ],
+    "actual": [
+     true,
+     [],
+     [
+      [
+       7,
+       8
+      ]
+     ]
+    ]
+   },
+   {
+    "check": "continuation expires on document change",
+    "pass": true,
+    "expected": "stale_continuation",
+    "actual": "stale_continuation"
+   },
+   {
+    "check": "md( text",
+    "pass": true,
+    "expected": "foo hello bar",
+    "actual": "foo hello bar"
+   },
+   {
+    "check": "md( two single-char deletions against base",
+    "pass": true,
+    "expected": [
+     [
+      4,
+      5,
+      ""
+     ],
+     [
+      10,
+      11,
+      ""
+     ]
+    ],
+    "actual": [
+     [
+      4,
+      5,
+      ""
+     ],
+     [
+      10,
+      11,
+      ""
+     ]
+    ]
+   },
+   {
+    "check": "md( final selection = original width-1 selection (7,8) mapped through the two deletions",
+    "pass": true,
+    "expected": [
+     [
+      6,
+      7
+     ]
+    ],
+    "actual": [
+     [
+      6,
+      7
+     ]
+    ]
+   },
+   {
+    "check": "md[ with no pair -> reference_error",
+    "pass": true,
+    "expected": [
+     "reference_error",
+     "Surround pair not found around all cursors"
+    ],
+    "actual": [
+     "reference_error",
+     "Surround pair not found around all cursors"
+    ]
+   },
+   {
+    "check": "mdm closest pair",
+    "pass": true,
+    "expected": "foo hello bar",
+    "actual": "foo hello bar"
+   },
+   {
+    "check": "md count=2 reaches the outer pair",
+    "pass": true,
+    "expected": "a b (c) d e",
+    "actual": "a b (c) d e"
+   },
+   {
+    "check": "mi« selects inside the U+00AB/U+00BB pair",
+    "pass": true,
+    "expected": [
+     "note"
+    ],
+    "actual": [
+     "note"
+    ]
+   },
+   {
+    "check": "mi» (closing alias) selects the same pair",
+    "pass": true,
+    "expected": [
+     "note"
+    ],
+    "actual": [
+     "note"
+    ]
+   },
+   {
+    "check": "mi§ arbitrary non-ASCII char acts as a same-char pair",
+    "pass": true,
+    "expected": [
+     "sec"
+    ],
+    "actual": [
+     "sec"
+    ]
+   },
+   {
+    "check": "mi😀 non-BMP custom pair (non-ASCII-alphanumeric char acts as a pair)",
+    "pass": true,
+    "expected": [
+     "note"
+    ],
+    "actual": [
+     "note"
+    ]
+   }
+  ],
+  "exchanges": [
+   36,
+   78
+  ]
+ },
+ {
+  "id": "git-hunk",
+  "title": "mig/mag via helix-vcs against HEAD with unsaved replica text",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "diff available for tracked path",
+    "pass": true,
+    "expected": "available",
+    "actual": "available"
+   },
+   {
+    "check": "disk file untouched (replica is unsaved)",
+    "pass": true,
+    "expected": "one\ntwo\nthree\nfour\nfive\n",
+    "actual": "one\ntwo\nthree\nfour\nfive\n"
+   },
+   {
+    "check": "mig on modified line selects the whole line incl. newline",
+    "pass": true,
+    "expected": [
+     "TWO\n"
+    ],
+    "actual": [
+     "TWO\n"
+    ]
+   },
+   {
+    "check": "mag identical for hunks",
+    "pass": true,
+    "expected": [
+     "TWO\n"
+    ],
+    "actual": [
+     "TWO\n"
+    ]
+   },
+   {
+    "check": "mig outside any hunk is a no-op (width-1 cursor)",
+    "pass": true,
+    "expected": [
+     [
+      0,
+      1
+     ]
+    ],
+    "actual": [
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "check": "mig with cursor mid-line on the line holding a pure deletion (after = 3..3): the empty hunk range (line start, normalised width-1) is selected, not the cursor",
+    "pass": true,
+    "expected": [
+     [
+      14,
+      15
+     ]
+    ],
+    "actual": [
+     [
+      14,
+      15
+     ]
+    ]
+   },
+   {
+    "check": "mag on the pure-deletion hunk is identical",
+    "pass": true,
+    "expected": [
+     [
+      14,
+      15
+     ]
+    ],
+    "actual": [
+     [
+      14,
+      15
+     ]
+    ]
+   },
+   {
+    "check": "mig on line 2 (unchanged) is a no-op: removal hunk is not 'at' that line",
+    "pass": true,
+    "expected": [
+     [
+      12,
+      13
+     ]
+    ],
+    "actual": [
+     [
+      12,
+      13
+     ]
+    ]
+   },
+   {
+    "check": "baseline refreshed per evaluation: HEAD now equals replica -> no hunk",
+    "pass": true,
+    "expected": [
+     [
+      5,
+      6
+     ]
+    ],
+    "actual": [
+     [
+      5,
+      6
+     ]
+    ]
+   },
+   {
+    "check": "after a replica change the settled diff reflects the edit",
+    "pass": true,
+    "expected": [
+     "ONE\n"
+    ],
+    "actual": [
+     "ONE\n"
+    ]
+   },
+   {
+    "check": "untracked file -> reference unavailable, no invented baseline",
+    "pass": true,
+    "expected": [
+     "reference_unavailable",
+     "Diff is not available in current buffer"
+    ],
+    "actual": [
+     "reference_unavailable",
+     "Diff is not available in current buffer"
+    ]
+   },
+   {
+    "check": "document without a path -> reference unavailable",
+    "pass": true,
+    "expected": "reference_unavailable",
+    "actual": "reference_unavailable"
+   },
+   {
+    "check": "trusted=true also loads a baseline",
+    "pass": true,
+    "expected": "available",
+    "actual": "available"
+   }
+  ],
+  "exchanges": [
+   78,
+   95
+  ]
+ },
+ {
+  "id": "protocol-stale-delay",
+  "title": "stale evaluate, resync, debug delay, validation and limits",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "evaluate against an old version -> resync_required",
+    "pass": true,
+    "expected": [
+     false,
+     "resync_required"
+    ],
+    "actual": [
+     false,
+     "resync_required"
+    ]
+   },
+   {
+    "check": "change with wrong base version -> resync_required",
+    "pass": true,
+    "expected": "resync_required",
+    "actual": "resync_required"
+   },
+   {
+    "check": "overlapping edits rejected",
+    "pass": true,
+    "expected": "invalid_request",
+    "actual": "invalid_request"
+   },
+   {
+    "check": "edit beyond document rejected",
+    "pass": true,
+    "expected": "invalid_request",
+    "actual": "invalid_request"
+   },
+   {
+    "check": "rejected change did not mutate replica",
+    "pass": true,
+    "expected": true,
+    "actual": true
+   },
+   {
+    "check": "debugDelayMs delays the answer (>= 400 ms)",
+    "pass": true,
+    "detail": 400.2
+   },
+   {
+    "check": "delayed evaluate still returns a proposal for its base version",
+    "pass": true,
+    "expected": [
+     true,
+     2
+    ],
+    "actual": [
+     true,
+     2
+    ]
+   },
+   {
+    "check": "in-flight proposal answered first, bound to baseVersion 2",
+    "pass": true,
+    "expected": [
+     2,
+     3
+    ],
+    "actual": [
+     2,
+     3
+    ]
+   },
+   {
+    "check": "applying the stale proposal against the newer text would corrupt it (client must reject by version)",
+    "pass": true,
+    "detail": {
+     "v3": ">>> HOWDY world\n",
+     "naive": ">>> HOW(D)Y world\n"
+    }
+   },
+   {
+    "check": "re-evaluating the stale base afterwards -> resync_required",
+    "pass": true,
+    "expected": "resync_required",
+    "actual": "resync_required"
+   },
+   {
+    "check": "primary index out of range -> invalid_request",
+    "pass": true,
+    "expected": "invalid_request",
+    "actual": "invalid_request"
+   },
+   {
+    "check": "range beyond document -> invalid_request",
+    "pass": true,
+    "expected": "invalid_request",
+    "actual": "invalid_request"
+   },
+   {
+    "check": "offset inside a surrogate pair rejected explicitly",
+    "pass": true,
+    "expected": [
+     false,
+     "invalid_request"
+    ],
+    "actual": [
+     false,
+     "invalid_request"
+    ]
+   },
+   {
+    "check": "NUL accepted as ordinary scalar",
+    "pass": true,
+    "expected": true,
+    "actual": true
+   },
+   {
+    "check": "lone surrogate in text -> unsupported_text (no lossy replacement)",
+    "pass": true,
+    "expected": [
+     false,
+     "unsupported_text"
+    ],
+    "actual": [
+     false,
+     "unsupported_text"
+    ]
+   },
+   {
+    "check": "malformed JSON -> invalid_request, helper survives",
+    "pass": true,
+    "expected": [
+     false,
+     "invalid_request"
+    ],
+    "actual": [
+     false,
+     "invalid_request"
+    ]
+   },
+   {
+    "check": "unknown method -> invalid_request",
+    "pass": true,
+    "expected": "invalid_request",
+    "actual": "invalid_request"
+   },
+   {
+    "check": "missing/incorrect helperEpoch -> invalid_request",
+    "pass": true,
+    "expected": "invalid_request",
+    "actual": "invalid_request"
+   },
+   {
+    "check": "unknown protocolVersion rejected",
+    "pass": true,
+    "expected": "invalid_request",
+    "actual": "invalid_request"
+   },
+   {
+    "check": "frame above MAX_FRAME_BYTES (32 MiB) -> invalid_request",
+    "pass": true,
+    "expected": [
+     false,
+     "invalid_request"
+    ],
+    "actual": [
+     false,
+     "invalid_request"
+    ]
+   },
+   {
+    "check": "helper alive and consistent after oversized frame",
+    "pass": true,
+    "expected": true,
+    "actual": true
+   },
+   {
+    "check": "debugStats peak RSS after 33 MiB frame stays bounded (< 256 MiB)",
+    "pass": true,
+    "detail": {
+     "documents": 3,
+     "peakRssKb": 46576,
+     "rssKb": 46576
+    }
+   },
+   {
+    "check": "evaluate on closed document -> resync_required",
+    "pass": true,
+    "expected": "resync_required",
+    "actual": "resync_required"
+   },
+   {
+    "check": "graceful shutdown",
+    "pass": true,
+    "expected": true,
+    "actual": true
+   },
+   {
+    "check": "stderr is sanitized: contains no document text",
+    "pass": true,
+    "detail": "{\"code\":null,\"log\":\"request\",\"method\":\"initialize\",\"ms\":9.801041,\"ok\":true}\n{\"code\":null,\"log\":\"request\",\"method\":\"open\",\"ms\":0.015439,\"ok\":true}\n{\"code\":\"resync_required\",\"log\":\"request\",\"method\":\"evaluate\",\"ms\":0.008436,\"ok\":false}\n{\"code\":\"resync_required\",\"log\":\"request\",\"method\":\"change\",\"ms\":0.003437,\"ok\":false}\n{\"code\":\"invalid_request\",\"log\":\"request\",\"method\":\"change\",\"ms\":0.00505,\"ok\":fa"
+   },
+   {
+    "check": "stderr lines are structured JSON logs",
+    "pass": true,
+    "detail": null
+   }
+  ],
+  "exchanges": [
+   95,
+   121
+  ]
+ },
+ {
+  "id": "runtime-isolation",
+  "title": "only the packaged root is consulted; ambient Helix runtime/config is ignored",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "isolated helper ignores XDG_CONFIG_HOME decoy",
+    "pass": true,
+    "expected": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ],
+    "actual": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ]
+   },
+   {
+    "check": "   runtimeDirs contain only an empty scratch config dir + the packaged runtime",
+    "pass": true,
+    "detail": [
+     "/tmp/mini-helix-match-feasibility-iso-735843/helix/runtime",
+     "/home/cosmincartas/work/projects/vscode-extension-helix-match/native/feasibility/build/stage/runtime"
+    ]
+   },
+   {
+    "check": "negative control (--ambient): decoy IS picked up for XDG_CONFIG_HOME decoy (proves the decoy can affect results)",
+    "pass": true,
+    "detail": {
+     "runtimeDirs": [
+      "/tmp/hm-t1a-decoy-fs20stj5/helix/runtime",
+      "/home/cosmincartas/work/projects/vscode-extension-helix-match/native/feasibility/build/stage/runtime"
+     ],
+     "selection": [
+      [
+       30,
+       31
+      ]
+     ]
+    }
+   },
+   {
+    "check": "isolated helper ignores HELIX_RUNTIME decoy",
+    "pass": true,
+    "expected": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ],
+    "actual": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ]
+   },
+   {
+    "check": "   runtimeDirs contain only an empty scratch config dir + the packaged runtime",
+    "pass": true,
+    "detail": [
+     "/tmp/mini-helix-match-feasibility-iso-735851/helix/runtime",
+     "/home/cosmincartas/work/projects/vscode-extension-helix-match/native/feasibility/build/stage/runtime"
+    ]
+   },
+   {
+    "check": "negative control (--ambient): decoy IS picked up for HELIX_RUNTIME decoy (proves the decoy can affect results)",
+    "pass": true,
+    "detail": {
+     "runtimeDirs": [
+      "/home/cosmincartas/.config/helix/runtime",
+      "/tmp/hm-t1a-decoy-fs20stj5/hr",
+      "/home/cosmincartas/work/projects/vscode-extension-helix-match/native/feasibility/build/stage/runtime"
+     ],
+     "selection": [
+      [
+       30,
+       31
+      ]
+     ]
+    }
+   },
+   {
+    "check": "isolated helper ignores CARGO_MANIFEST_DIR decoy",
+    "pass": true,
+    "expected": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ],
+    "actual": [
+     "fn alpha(x: i32) -> i32 {\n    x + 1\n}"
+    ]
+   },
+   {
+    "check": "   runtimeDirs contain only an empty scratch config dir + the packaged runtime",
+    "pass": true,
+    "detail": [
+     "/tmp/mini-helix-match-feasibility-iso-735859/helix/runtime",
+     "/home/cosmincartas/work/projects/vscode-extension-helix-match/native/feasibility/build/stage/runtime"
+    ]
+   },
+   {
+    "check": "negative control (--ambient): decoy IS picked up for CARGO_MANIFEST_DIR decoy (proves the decoy can affect results)",
+    "pass": true,
+    "detail": {
+     "runtimeDirs": [
+      "/tmp/hm-t1a-decoy-fs20stj5/crate/runtime",
+      "/home/cosmincartas/.config/helix/runtime",
+      "/home/cosmincartas/work/projects/vscode-extension-helix-match/native/feasibility/build/stage/runtime"
+     ],
+     "selection": [
+      [
+       30,
+       31
+      ]
+     ]
+    }
+   },
+   {
+    "check": "user languages.toml decoy not merged (language unknown)",
+    "pass": true,
+    "expected": "no_language",
+    "actual": "no_language"
+   }
+  ],
+  "exchanges": [
+   121,
+   148
+  ]
+ },
+ {
+  "id": "offline-runtime",
+  "title": "helper + staged runtime run with Rust/Helix absent from PATH and HOME",
+  "status": "pass",
+  "checks": [
+   {
+    "check": "mif works with PATH=/nonexistent HOME=/nonexistent",
+    "pass": true,
+    "expected": [
+     "{\n    x + 1\n}"
+    ],
+    "actual": [
+     "{\n    x + 1\n}"
+    ]
+   },
+   {
+    "check": "note: which helix / rustc on this host (informational)",
+    "pass": true,
+    "detail": {
+     "hx": "/home/cosmincartas/.cargo/bin/hx",
+     "helix": null,
+     "rustc_on_path": true
+    }
+   }
+  ],
+  "exchanges": [
+   148,
+   152
+  ]
+ }
+]

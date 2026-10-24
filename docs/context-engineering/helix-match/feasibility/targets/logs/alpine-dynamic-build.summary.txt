@@ -1,0 +1,21 @@
+1:== toolchain
+2:rustc 1.90.0 (1159e78c4 2025-09-14)
+6:host: x86_64-unknown-linux-musl
+10:gcc (Alpine 14.2.0) 14.2.0
+11:g++ (Alpine 14.2.0) 14.2.0
+12:musl libc (x86_64)
+13:== build helper + grammars bin (MODE=dynamic RUSTFLAGS=-C target-feature=-crt-static)
+402:    Finished `release` profile [optimized] target(s) in 1m 37s
+403:== fetch/build grammars with pinned helix_loader
+424:== stage
+427:-rwxr-xr-x    1 root     root       9775952 Oct 23 23:45 mini-helix-match-feasibility
+432:-rwxr-xr-x    1 root     root         34544 Oct 23 23:45 html.so
+433:-rwxr-xr-x    1 root     root        436528 Oct 23 23:45 javascript.so
+434:-rwxr-xr-x    1 root     root        372800 Oct 23 23:45 markdown.so
+435:-rwxr-xr-x    1 root     root        360152 Oct 23 23:45 markdown_inline.so
+436:-rwxr-xr-x    1 root     root       1141464 Oct 23 23:45 rust.so
+443:/out/stage/mini-helix-match-feasibility: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-x86_64.so.1, BuildID[sha1]=9074f4436d3b9553d07bfde717ba6408924fe517, not stripped
+444:/out/stage/runtime/grammars/rust.so:     ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=cc7e8bc632233a4b87563ca3e67e5012940fe359, with debug_info, not stripped
+445:	/lib/ld-musl-x86_64.so.1 (0x7fa886f43000)
+446:	libgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x7fa886780000)
+447:	libc.musl-x86_64.so.1 => /lib/ld-musl-x86_64.so.1 (0x7fa886f43000)

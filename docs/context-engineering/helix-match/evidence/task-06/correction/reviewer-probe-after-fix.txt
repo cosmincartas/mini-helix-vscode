@@ -1,0 +1,3 @@
+change rejected: invalid_request overlapping_edits
+ensureSynced synchronized: ["d"] failures: 0
+replica version 2 text "aXYbc\n" | host version 2 text "aXYbc\n" | needsSnapshot false

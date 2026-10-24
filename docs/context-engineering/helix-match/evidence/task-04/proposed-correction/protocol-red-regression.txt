@@ -1,0 +1,34 @@
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/tmp/helix-vr4-proposal-gr70d58z/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.90s
+     Running tests/protocol.rs (/tmp/helix-vr4-proposal-gr70d58z/native/target/debug/deps/protocol-c5818780b634f292)
+
+running 2 tests
+test proposed_duplicate_metadata_cannot_mask_an_unknown_protocol_version ... FAILED
+test proposed_tolerant_probe_does_not_relax_version_one_duplicate_rejection ... ok
+
+failures:
+
+---- proposed_duplicate_metadata_cannot_mask_an_unknown_protocol_version stdout ----
+
+thread 'proposed_duplicate_metadata_cannot_mask_an_unknown_protocol_version' panicked at match-helper/tests/protocol.rs:1017:9:
+assertion `left == right` failed
+  left: String("invalid_envelope")
+ right: "unsupported_protocol_version"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    proposed_duplicate_metadata_cannot_mask_an_unknown_protocol_version
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 25 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p mini-helix-match-helper --test protocol`

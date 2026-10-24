@@ -1,0 +1,40 @@
+   Compiling tempfile v3.27.0
+   Compiling thiserror-impl v2.0.18
+   Compiling serde_derive v1.0.228
+   Compiling toml v1.1.2+spec-1.1.0
+   Compiling regex-cursor v0.1.5
+   Compiling regex v1.12.4
+   Compiling globset v0.4.18
+   Compiling helix-stdx v25.7.1 (/native/feasibility/upstream/helix/helix-stdx)
+   Compiling tree-house v0.4.0
+   Compiling hm-cross-grammars v0.0.0 (/native/feasibility/targets/cross-grammars)
+    Finished `release` profile [optimized] target(s) in 29.04s
+== [x86_64-pc-windows-msvc/grammars] fetch
+== [x86_64-pc-windows-msvc/grammars] build for x86_64-pc-windows-msvc (compiler env: CC_x86_64_pc_windows_msvc=unset)
+Building 5 grammars
+Building grammars (1/5): rust
+Building grammars (2/5): javascript
+Building grammars (4/5): markdown
+Building grammars (3/5): html
+Building grammars (5/5): markdown_inline
+cargo:warning=GNU compiler is not supported for this target
+cargo:warning=GNU compiler is not supported for this target
+cargo:warning=GNU compiler is not supported for this target
+cargo:warning=GNU compiler is not supported for this target
+cargo:warning=GNU compiler is not supported for this target
+5 grammars built now
+	["html", "javascript", "markdown", "markdown_inline", "rust"]
+== [x86_64-pc-windows-msvc/grammars] exit code: 0
+total 2300
+-rwxr-xr-x. 1 root root   33496 Oct 23 23:53 html.so
+-rwxr-xr-x. 1 root root  435368 Oct 23 23:53 javascript.so
+-rwxr-xr-x. 1 root root  375856 Oct 23 23:53 markdown.so
+-rwxr-xr-x. 1 root root  363088 Oct 23 23:53 markdown_inline.so
+-rwxr-xr-x. 1 root root 1136272 Oct 23 23:53 rust.so
+drwxr-xr-x. 7 root root     140 Oct 23 23:53 sources
+/out/xdg-x86_64-pc-windows-msvc/config/helix/runtime/grammars/html.so:            ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=22c17cdd088fa32a3e0bb9b2eeed2bef16936f98, not stripped
+/out/xdg-x86_64-pc-windows-msvc/config/helix/runtime/grammars/javascript.so:      ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=2b34b6dfb916efc6ed240ae12221fb7570483e17, not stripped
+/out/xdg-x86_64-pc-windows-msvc/config/helix/runtime/grammars/markdown.so:        ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=93d3c1e8bb48aeca2c64ab69288721eeb316b6bc, not stripped
+/out/xdg-x86_64-pc-windows-msvc/config/helix/runtime/grammars/markdown_inline.so: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=c2c8635600816dadc2a1c53f08ff5fa2f56fadd8, not stripped
+/out/xdg-x86_64-pc-windows-msvc/config/helix/runtime/grammars/rust.so:            ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=f7c77d876b66ee6d783784dda8dfb3dc8367435f, not stripped
+exit 0

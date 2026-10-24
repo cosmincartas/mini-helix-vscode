@@ -1,0 +1,15 @@
+host: Linux 7.2.5-200.fc44.x86_64 x86_64; 24 cpus
+== /home/cosmincartas/work/projects/vscode-extension-helix-match/native/target/debug/mini-helix-match-helper
+initialize ok=True in 4.315s
+warm request unsupported_method in 0.000126s
+64MiB frame unsupported_method in 0.737s
+True
+exit 0
+helper max RSS KiB (children): 71980
+== /home/cosmincartas/work/projects/vscode-extension-helix-match/native/target/release/mini-helix-match-helper
+initialize ok=True in 0.144s
+warm request unsupported_method in 0.000115s
+64MiB frame unsupported_method in 0.052s
+True
+exit 0
+helper max RSS KiB (children): 70424

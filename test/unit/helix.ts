@@ -3,6 +3,8 @@
  * notation and a key-sequence session that drives the same core functions as
  * the VS Code commands, with VS Code-style typing for INSERT text.
  */
+import { moveHorizontally, moveVertically, textLines } from '../../src/core/charMotion';
+import { Count } from '../../src/core/count';
 import { append, changeSelection, deleteSelection, EditResult, restoreAppendCursor } from '../../src/core/editing';
 import { moveWord, OffsetRange, WordMotionTarget, WordMotionText } from '../../src/core/wordMotion';
 
@@ -96,6 +98,8 @@ const motions: Readonly<Record<string, WordMotionTarget>> = {
   W: 'nextLongWordStart', B: 'prevLongWordStart', E: 'nextLongWordEnd',
 };
 
+const charMotions = { h: 'backward', l: 'forward', j: 'forward', k: 'backward' } as const;
+
 /** Indentation of a new Helix document, which its integration tests use. */
 export const HELIX_INDENT = { unit: '\t', tabSize: 4 } as const;
 
@@ -103,6 +107,9 @@ export const HELIX_INDENT = { unit: '\t', tabSize: 4 } as const;
 export class Session {
   mode: 'normal' | 'insert' = 'normal';
   private restoreCursor = false;
+  private readonly count = new Count();
+  /** Columns kept between `j`/`k` presses, like Helix's `old_visual_position`. */
+  private columns: (number | undefined)[] | undefined;
 
   constructor(public text: string, public ranges: readonly OffsetRange[], private readonly eol = '\n') {}
 
@@ -141,8 +148,28 @@ export class Session {
       return;
     }
 
+    if (/^[0-9]$/.test(key)) {
+      this.count.digit(Number(key));
+      return;
+    }
+    // Every other key uses the count and drops the remembered columns.
+    const count = this.count.take();
+    const columns = this.columns;
+    this.columns = undefined;
     if (key in motions) {
-      this.ranges = this.ranges.map(range => moveWord(text, range, motions[key]));
+      this.ranges = this.ranges.map(range => moveWord(text, range, motions[key], count));
+    } else if (key === 'h' || key === 'l') {
+      this.ranges = merged(this.ranges.map(range => moveHorizontally(text, range, charMotions[key], count)));
+    } else if (key === 'j' || key === 'k') {
+      const lines = textLines(this.text);
+      const moves = this.ranges.map((range, index) =>
+        moveVertically(lines, range, charMotions[key], count, HELIX_INDENT.tabSize, columns?.[index]));
+      this.ranges = merged(moves.map(move => move.range));
+      // A merged cursor has no column, as in Helix; the others keep theirs.
+      this.columns = this.ranges.map(range => {
+        const sources = moves.filter(move => move.range.anchor === range.anchor && move.range.head === range.head);
+        return sources.length === 1 ? sources[0].column : undefined;
+      });
     } else if (key === 'i') {
       // prepareInsert: a caret at the start of each selection.
       this.ranges = this.ranges.map(range => {
@@ -158,7 +185,8 @@ export class Session {
       this.enterInsert(false);
     } else if (key === 'd') {
       this.apply(deleteSelection(text, this.ranges));
-    } else if (key !== '<esc>') {
+    } else if (key !== '<esc>' && key !== '-') {
+      // `-` is unbound in Helix and blocked here: it only clears the count.
       throw new Error(`Unsupported NORMAL key ${key}`);
     }
   }
@@ -181,6 +209,12 @@ export class Session {
     this.text = applyEdits(this.text, sorted);
     this.ranges = this.ranges.map(({ head }) => ({ anchor: moved(head), head: moved(head) }));
   }
+}
+
+/** Cursors that land on the same position become one, as in both editors. */
+function merged(ranges: readonly OffsetRange[]): OffsetRange[] {
+  return ranges.filter((range, index) => ranges.findIndex(other =>
+    other.anchor === range.anchor && other.head === range.head) === index);
 }
 
 export function applyEdits(text: string, edits: readonly { from: number; to: number; text: string }[]): string {

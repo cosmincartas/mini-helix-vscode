@@ -1,0 +1,70 @@
+▶ MatchClient protocol constants (one compatibility check)
+  ✔ mirrors native/match-helper/tests/fixtures/protocol/constants.json (0.800644ms)
+  ✔ emits request frames byte-identical to the shared fixtures (31.569077ms)
+✔ MatchClient protocol constants (one compatibility check) (32.993332ms)
+▶ MatchClient handshake
+  ✔ returns the epoch, capabilities and identity of a ready helper (18.099107ms)
+  ✔ coalesces concurrent ensureReady calls into one helper (17.774172ms)
+  ✔ rejects when the helper reports an identity error and exits 10 (39.893174ms)
+  ✔ rejects a helper that answers with a different runtime identity (41.547102ms)
+  ✔ rejects a helper that exits before answering initialize (19.175553ms)
+  ✔ rejects an initialize response that is malformed or carries no epoch (76.339828ms)
+  ✔ times out a helper that never answers initialize and kills it (173.011936ms)
+  ✔ reports a missing helper or unsupported target as unavailable without spawning (F-9) (0.503673ms)
+  ✔ never runs a shell: hostile characters in paths arrive verbatim as arguments (22.705721ms)
+  ✔ does not pass inherited runtime overrides to the helper (F-10) (17.835718ms)
+✔ MatchClient handshake (427.635613ms)
+▶ MatchClient requests
+  ✔ resolves typed results and passes helper error responses as remote_error without ending the session (17.3979ms)
+  ✔ matches concurrent responses to their requests and reassembles frames split inside UTF-8 sequences (234.279713ms)
+  ✔ rejects requests while no helper is ready (0.295199ms)
+  ✔ refuses an outgoing frame over the limit without sending or truncating it (20.452239ms)
+  ✔ rejects a request carrying an epoch from a previous helper without sending it (34.704889ms)
+✔ MatchClient requests (307.519016ms)
+▶ MatchClient failure model F-6 (crash, hang, malformed frame)
+  ✔ rejects every pending request when the helper process exits, and reports the stop once (18.019887ms)
+  ✔ times out a hung request, rejects all pending requests and kills the helper (241.477099ms)
+  ✔ terminates the session on malformed, non-object, invalid UTF-8, mismatched or oversized frames (235.635789ms)
+  ✔ delivers nothing from a replaced helper to a newer session (F-1) (35.858321ms)
+✔ MatchClient failure model F-6 (crash, hang, malformed frame) (531.244054ms)
+▶ MatchClient recovery policy
+  ✔ starts one new helper on the next explicit action after a crash, with a new epoch (37.386321ms)
+  ✔ does not retry the failed request automatically (19.601739ms)
+  ✔ allows one new start after a first startup failure, then stops until an explicit restart (no restart loop) (71.21843ms)
+  ✔ recovers on the next explicit action when only the first startup failed (39.925825ms)
+  ✔ disables automatic restart when the helper started after a crash fails its own startup (34.635919ms)
+  ✔ serializes restart(): a restart replaces the helper and a start in progress is superseded (18.576621ms)
+✔ MatchClient recovery policy (221.651786ms)
+▶ MatchClient shutdown and dispose
+  ✔ shuts the helper down gracefully (27.752437ms)
+  ✔ kills a helper that ignores shutdown after the grace period and ends in a deterministic stopped state (188.739327ms)
+  ✔ dispose rejects pending requests, kills the child, releases pipes and listeners, and is idempotent (138.040463ms)
+  ✔ dispose during startup rejects the start and leaves no child (123.492082ms)
+✔ MatchClient shutdown and dispose (478.33066ms)
+▶ MatchClient diagnostics (NFR-3)
+  ✔ keeps only bounded, allow-listed fields of stderr records and never request text (20.9285ms)
+  ✔ keeps request text out of error messages and stop events (18.266704ms)
+✔ MatchClient diagnostics (NFR-3) (39.363933ms)
+▶ Helper layout and target detection
+  ✔ defines the installed extension root layout (0.165834ms)
+  ✔ maps host platform, architecture and libc to the declared target matrix (0.157868ms)
+  ▶ host libc detection never resolves names (NFR-3)
+    ✔ uses the report only with excludeNetwork set during the call, and restores the setting (0.233752ms)
+    ✔ does not call getReport on a runtime without excludeNetwork (Node 18) and still detects the target (0.553978ms)
+  ✔ host libc detection never resolves names (NFR-3) (0.852192ms)
+  ✔ reads the expected identity from the compatibility lock (1.056629ms)
+✔ Helper layout and target detection (2.342722ms)
+▶ MatchClient with the real current-host helper
+  ✔ initializes against the real runtime, opens no sockets, answers a typed error and shuts down (4315.337743ms)
+  ✔ fails startup with the helper identity error and exit 10 when the expected runtime hash is wrong (8572.945441ms)
+  ✔ rejects a pending request when the helper is killed, then restarts explicitly with a new epoch (8707.899225ms)
+  ✔ resolves the helper under the installed extension root layout (4296.811578ms)
+✔ MatchClient with the real current-host helper (25893.244029ms)
+ℹ tests 42
+ℹ suites 10
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 27977.226207

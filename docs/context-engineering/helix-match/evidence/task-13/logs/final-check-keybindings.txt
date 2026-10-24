@@ -1,0 +1,6 @@
+$ npm run check:keybindings
+
+> mini-helix@0.1.0 check:keybindings
+> node scripts/keybindings.cjs --check
+
+exit: 0

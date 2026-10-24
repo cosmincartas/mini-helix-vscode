@@ -1,0 +1,10 @@
+     16725 1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5  HELIX-LICENSE-MPL-2.0.txt
+   7946704 33d3aa359e7f5529df7f6d19a5c7456bee486839a3c0e34f0991fc313b089846  mini-helix-match-feasibility
+     33880 97ad144219dc4d60dd96e8602f932204a07846029bb3c0cc417d85bffb22d4b5  runtime/grammars/html.so
+    431576 ce4d572bd4b5a0eeee446229de219974e76ffdf122ce38f5c2864c7c8331b0d6  runtime/grammars/javascript.so
+    409136 fb7c346e85e3c5b78b781600ed5cc93bc3390c5864cc7a220033827ef7fd9ed0  runtime/grammars/markdown.so
+    404376 43b3dcb99435588687f3f3467dff4672a010f96d0dc5b9190dbef737663ef6fd  runtime/grammars/markdown_inline.so
+   1140656 843efa282fc8b4c71056959ccbfe52f6da35ffe57d3090af314b72479b3e8bf1  runtime/grammars/rust.so
+      2844 55ffdd09887447e4e13fd58617697f3f2b4ffc67ae48008dd0eaf2e2c913dd28  runtime/manifest.json
+runtime/queries: 1193 files, 1087532 bytes (per-file SHA-256 in the packaged asset-manifest.json)
+unstripped helper: 10024408 bytes sha256 63ad0231ed4233abc5f8a52198f99683f0c97a6f70b0376bcdac74e696191336

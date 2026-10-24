@@ -1,0 +1,71 @@
+// Scratch generator for Task 10 oracle case INPUTS (expected is produced only by the oracle with --update).
+const fs = require('fs');
+const path = require('path');
+const out = process.argv[2];
+const G = 'git-hunks-2';
+const cases = [];
+const P = 'src/a.txt';
+function add(id, description, source, input) { cases.push({ id, description, source, input }); }
+const git = (head, trust = 'trusted', extra = {}, p = P) => Object.assign({ head, path: p, trust }, extra);
+const cur = (at) => ({ selections: [{ anchor: at, head: at }] });
+
+const HEAD4 = 'line1\nline2\nline3\nline4\n';
+const TEXT5 = 'line1\nLINE2\nline3\nline4\nline5\n';
+
+// pure removals at the edges of the document
+add('pure-removal-first-line-mig', 'first line removed: the removal hunk starts at line 0 and selects an empty range at the document start', 'plan Task 10 (pure removals)',
+  { text: 'b\nc\n', ...cur(0), steps: ['mig', '<esc>mag'], git: git('a\nb\nc\n') });
+add('pure-removal-eof-mig', 'last line removed: the removal hunk sits after the final line break', 'plan Task 10 (pure removals)',
+  { text: 'a\nb\n', ...cur(4), steps: ['mig', '<esc>mag'], git: git('a\nb\nc\n') });
+add('pure-removal-cursor-before', 'cursor on the line before a pure removal selects nothing (hunk starts on the next line)', 'plan Task 10 (pure removals)',
+  { text: 'a\nc\nd\n', ...cur(0), steps: ['mig'], git: git('a\nb\nc\nd\n') });
+add('whole-file-removed', 'every line removed: empty working text against a non-empty baseline', 'plan Task 10 (pure removals)',
+  { text: '', steps: ['mig', '<esc>mag'], git: git('a\nb\n') });
+// added multi-line hunk, direction, counts, several cursors
+add('added-block-around', 'three added lines form one hunk; mag selects all three lines', 'spec Git baseline contract (line-to-character conversion)',
+  { text: 'a\nx\ny\nz\nb\n', ...cur(4), steps: ['mag'], git: git('a\nb\n') });
+add('backward-selection-keeps-direction', 'a backward range inside a hunk stays backward after the hunk selection', 'upstream textobject_change (with_direction)',
+  { text: 'line1\nLINE2\nline3\n', selections: [{ anchor: 9, head: 7 }], steps: ['mig'], git: git('line1\nline2\nline3\n') });
+add('count-is-ignored', 'a count before mig has no effect on the hunk object', 'upstream textobject_change (count unused)',
+  { text: TEXT5, ...cur(8), steps: ['2mig'], git: git(HEAD4) });
+add('two-cursors-one-hunk', 'two cursors in the same hunk give the same range, merged by normalization', 'spec Verification Design (multiple selections)',
+  { text: 'a\nX\nY\nb\n', selections: [{ anchor: 2, head: 2 }, { anchor: 4, head: 4 }], primary: 1, steps: ['mig'], git: git('a\nb\n') });
+add('multi-line-selection-uses-cursor-line', 'a range spanning several lines selects the hunk of its cursor (head) line only', 'upstream textobject_change (cursor_line)',
+  { text: TEXT5, selections: [{ anchor: 0, head: 8 }], steps: ['mig'], git: git(HEAD4) });
+// tracked empty baseline is not "unavailable"
+add('tracked-empty-baseline', 'a tracked EMPTY file is an available baseline (not the unavailable status): the whole text is one added hunk', 'spec Git baseline contract (do not confuse empty and unavailable)',
+  { text: 'x\ny\n', ...cur(0), steps: ['mig'], git: git('') });
+// astral characters and non-ASCII path
+add('astral-characters', 'hunk selection over a line with astral characters (UTF-16 export)', 'spec Models: Document and selection identity',
+  { text: 'a\u{1F600}\nB\u{1F600}\nc\n', ...cur(3), steps: ['mig'], git: git('a\u{1F600}\nb\u{1F600}\nc\n') });
+add('path-with-space-and-unicode', 'repository path with a space and a non-ASCII character', 'spec Git baseline contract (path)',
+  { text: 'x\nY\nz\n', ...cur(2), steps: ['mig'], git: git('x\ny\nz\n', 'trusted', {}, 'dir with space/ü file.txt') });
+// HEAD changes: two static states of the same document (the helper test moves HEAD from the first to the second)
+add('head-change-first', 'state before HEAD moves: baseline H1', 'plan Task 10 (HEAD changes), spec F-7',
+  { text: TEXT5, ...cur(8), steps: ['mig'], git: git(HEAD4) });
+add('head-change-second', 'state after HEAD moves: baseline H2 (the hunk under the cursor is gone, another appears)', 'plan Task 10 (HEAD changes), spec F-7',
+  { text: TEXT5, ...cur(8), steps: ['mig', '<esc>mag'], git: git('line1\nLINE2\nline3\nline4\nOLD5\n') });
+// CRLF and worktree conversions
+add('crlf-autocrlf-trusted', 'core.autocrlf=true in repository-local config: the LF blob converts to CRLF before the diff (trusted)', 'plan Task 10 (CRLF conversion); spec Git baseline contract (worktree conversions)',
+  { text: 'a\r\nB\r\nc\r\n', eol: 'crlf', ...cur(4), steps: ['mig'], git: git('a\nb\nc\n', 'trusted', { config: '[core]\n\tautocrlf = true\n' }) });
+add('crlf-autocrlf-untrusted', 'the same case in an untrusted workspace (what upstream does with repository-local core.autocrlf under reduced trust)', 'spec Git baseline contract (trust-dependent inherited behavior)',
+  { text: 'a\r\nB\r\nc\r\n', eol: 'crlf', ...cur(4), steps: ['mig'], git: git('a\nb\nc\n', 'untrusted', { config: '[core]\n\tautocrlf = true\n' }) });
+add('crlf-gitattributes-trusted', '.gitattributes `* text eol=crlf`: the LF blob converts to CRLF (trusted)', 'plan Task 10 (CRLF conversion)',
+  { text: 'a\r\nB\r\nc\r\n', eol: 'crlf', ...cur(4), steps: ['mig'], git: git('a\nb\nc\n', 'trusted', { attributes: '* text eol=crlf\n' }) });
+add('crlf-gitattributes-untrusted', '.gitattributes `* text eol=crlf` in an untrusted workspace (built-in conversion, not a program)', 'plan Task 10 (CRLF conversion); spec F-10',
+  { text: 'a\r\nB\r\nc\r\n', eol: 'crlf', ...cur(4), steps: ['mig'], git: git('a\nb\nc\n', 'untrusted', { attributes: '* text eol=crlf\n' }) });
+add('crlf-working-text-lf-baseline', 'CRLF working text against an LF baseline without any conversion: every line differs', 'plan Task 10 (CRLF conversion)',
+  { text: 'a\r\nB\r\nc\r\n', eol: 'crlf', ...cur(4), steps: ['mig'], git: git('a\nb\nc\n') });
+// repository-local filter drivers (smudge upper-cases the baseline); clean is the identity
+const FILTER = '[filter "up"]\n\tclean = cat\n\tsmudge = tr a-z A-Z\n';
+add('filter-smudge-trusted', 'repository-local filter driver runs in a trusted workspace: baseline A,B,C', 'plan Task 10 (filters); spec F-10',
+  { text: 'A\nX\nC\n', ...cur(2), steps: ['mig'], git: git('a\nb\nc\n', 'trusted', { config: FILTER, attributes: 'src/a.txt filter=up\n' }) });
+add('filter-smudge-untrusted', 'the same driver in an untrusted workspace does not run: baseline a,b,c (every line differs)', 'plan Task 10 (filters); spec F-10',
+  { text: 'A\nX\nC\n', ...cur(2), steps: ['mig'], git: git('a\nb\nc\n', 'untrusted', { config: FILTER, attributes: 'src/a.txt filter=up\n' }) });
+// BOM + CRLF combined
+add('bom-and-crlf-baseline', 'UTF-8 BOM baseline with CRLF lines', 'review P3R-1; plan Task 10',
+  { text: 'a\r\nB\r\nc\r\n', eol: 'crlf', ...cur(4), steps: ['mig'], git: git('﻿a\r\nb\r\nc\r\n') });
+
+const doc = { schemaVersion: 1, group: G, provenance: { generator: 'mini-helix-match-oracle (native/oracle) driving helix-term key dispatch; expected results are never produced by extension code', reference: 'native/helix-lock.json: helix revision, patched source tree hash, runtime hash (also recorded in every expected.reference)', regenerate: 'npm run test:match:oracle -- --update, then review the diff' }, cases };
+fs.writeFileSync(path.join(out, G + '.json'), JSON.stringify(doc, null, 2) + '\n');
+console.log(G, cases.length);

@@ -1,0 +1,32 @@
+== mutation: snapshot re-enables syntax (sticky failure rule removed)
+ℹ pass 18
+ℹ fail 0
+== mutation: generation never checked
+  ✖ releases a closed replica and rejects messages for old generations of a reused document ID (4426.483357ms)
+  ✖ never puts document text into helper diagnostics or error details (4382.347616ms)
+ℹ pass 16
+ℹ fail 2
+== mutation: lone surrogate replaced lossily
+  ✖ rejects malformed UTF-16 as unsupported_text without lossy replacement and without touching the replica (4525.777572ms)
+ℹ pass 17
+ℹ fail 1
+== mutation: edits applied sequentially (each against the previous result) instead of the base snapshot
+  ✖ applies all edits of one event against the base snapshot, in any order, as one changeset (4808.066147ms)
+  ✖ rejects overlapping, ambiguous, out-of-range and pair-splitting edits and keeps the replica unchanged (4612.433058ms)
+  ✖ mirrors CRLF and LF text exactly, including an offset between CR and LF (4415.07739ms)
+ℹ pass 15
+ℹ fail 3
+== mutation (re-run after adding the direct-snapshot assertion): snapshot re-enables syntax
+  ✖ keeps update_failure through further changes, snapshots and a helper restart of the same generation (4647.931221ms)
+ℹ pass 17
+ℹ fail 1
+== mutation (client): duplicate/stale events are sent instead of ignored
+  ✖ answers a version gap with resync_required and recovers with a complete snapshot; duplicates are never applied twice (4512.138751ms)
+  ✖ resends complete snapshots of every open document after a helper restart, without starting a helper by itself (9192.259706ms)
+ℹ pass 16
+ℹ fail 2
+== mutation (client): retained syntax state never sent to open/snapshot
+  ✖ keeps update_failure through further changes, snapshots and a helper restart of the same generation (9282.538355ms)
+  ✖ keeps initial_failure through changes and restarts, and validates retained state against language and identity (9073.163102ms)
+ℹ pass 16
+ℹ fail 2

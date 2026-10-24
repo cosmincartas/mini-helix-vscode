@@ -1,0 +1,29 @@
+$ cargo +1.90.0 build --locked --manifest-path native/Cargo.toml -p mini-helix-match-helper
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.45s
+exit=0
+$ cargo +1.90.0 test --locked --manifest-path native/Cargo.toml -p mini-helix-match-helper
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 4 tests
+test intact_runtime_verifies_and_excluded_grammars_are_not_missing ... ok
+test lock_mismatches_are_reported ... ok
+test tampering_is_reported_with_the_right_installation_error_class ... ok
+test ambient_helix_state_does_not_change_runtime_resolution ... ok
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+exit=0
+$ cargo +1.90.0 build --release --locked ... (release helper, used by npm check)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `release` profile [optimized] target(s) in 5.87s
+{"helixRevision":"ba40e547426b0f9896c8bdc699a4ab11f2b37dbc","helixVersion":"25.07.1 (0b2f3aea)","helper":"mini-helix-match-helper"}
+$ cargo +1.90.0 build --locked --manifest-path native/Cargo.toml -p mini-helix-match-helper
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s

@@ -1,0 +1,493 @@
+{
+ "pass": true,
+ "shapes": 6,
+ "rows": [
+  {
+   "transition": 95,
+   "doc": "eof-no-newline",
+   "text": " ",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 1
+   },
+   "cases": {
+    "control": {
+     "source": "retained",
+     "ranges": [
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "primary": 1,
+     "ok": true
+    },
+    "realArrowRight": {
+     "source": "readback",
+     "reason": "external selection event(s): 1",
+     "ranges": [
+      [
+       1,
+       1
+      ]
+     ],
+     "primary": 0,
+     "editorSelections": [
+      [
+       1,
+       1
+      ]
+     ],
+     "ok": true
+    },
+    "externalChangeThenRestoreEqualSelections": {
+     "selectionsEqualToRetainedReadback": true,
+     "source": "readback",
+     "reason": "external selection event(s): 2",
+     "ok": true
+    },
+    "realTypeThenUndo": {
+     "versionDelta": 2,
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    },
+    "versionOnlyChange": {
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    }
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "lossReproduced": true,
+   "pass": true
+  },
+  {
+   "transition": 453,
+   "doc": "crlf-lines",
+   "text": "\r\n\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      4
+     ],
+     [
+      4,
+      4
+     ]
+    ],
+    "primary": 1
+   },
+   "cases": {
+    "control": {
+     "source": "retained",
+     "ranges": [
+      [
+       2,
+       4
+      ],
+      [
+       4,
+       4
+      ]
+     ],
+     "primary": 1,
+     "ok": true
+    },
+    "realArrowRight": {
+     "source": "readback",
+     "reason": "external selection event(s): 1",
+     "ranges": [
+      [
+       4,
+       4
+      ]
+     ],
+     "primary": 0,
+     "editorSelections": [
+      [
+       4,
+       4
+      ]
+     ],
+     "ok": true
+    },
+    "externalChangeThenRestoreEqualSelections": {
+     "selectionsEqualToRetainedReadback": true,
+     "source": "readback",
+     "reason": "external selection event(s): 2",
+     "ok": true
+    },
+    "realTypeThenUndo": {
+     "versionDelta": 2,
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    },
+    "versionOnlyChange": {
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    }
+   },
+   "vscodeReadback": [
+    [
+     2,
+     4
+    ]
+   ],
+   "lossReproduced": true,
+   "pass": true
+  },
+  {
+   "transition": 567,
+   "doc": "crlf-no-final-eol",
+   "text": "\r\n\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      4
+     ],
+     [
+      4,
+      4
+     ]
+    ],
+    "primary": 1
+   },
+   "cases": {
+    "control": {
+     "source": "retained",
+     "ranges": [
+      [
+       2,
+       4
+      ],
+      [
+       4,
+       4
+      ]
+     ],
+     "primary": 1,
+     "ok": true
+    },
+    "realArrowRight": {
+     "source": "readback",
+     "reason": "external selection event(s): 1",
+     "ranges": [
+      [
+       4,
+       4
+      ]
+     ],
+     "primary": 0,
+     "editorSelections": [
+      [
+       4,
+       4
+      ]
+     ],
+     "ok": true
+    },
+    "externalChangeThenRestoreEqualSelections": {
+     "selectionsEqualToRetainedReadback": true,
+     "source": "readback",
+     "reason": "external selection event(s): 2",
+     "ok": true
+    },
+    "realTypeThenUndo": {
+     "versionDelta": 2,
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    },
+    "versionOnlyChange": {
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    }
+   },
+   "vscodeReadback": [
+    [
+     2,
+     4
+    ]
+   ],
+   "lossReproduced": true,
+   "pass": true
+  },
+  {
+   "transition": 771,
+   "doc": "only-crlf",
+   "text": "\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      2
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 1
+   },
+   "cases": {
+    "control": {
+     "source": "retained",
+     "ranges": [
+      [
+       0,
+       2
+      ],
+      [
+       2,
+       2
+      ]
+     ],
+     "primary": 1,
+     "ok": true
+    },
+    "realArrowRight": {
+     "source": "readback",
+     "reason": "external selection event(s): 1",
+     "ranges": [
+      [
+       2,
+       2
+      ]
+     ],
+     "primary": 0,
+     "editorSelections": [
+      [
+       2,
+       2
+      ]
+     ],
+     "ok": true
+    },
+    "externalChangeThenRestoreEqualSelections": {
+     "selectionsEqualToRetainedReadback": true,
+     "source": "readback",
+     "reason": "external selection event(s): 2",
+     "ok": true
+    },
+    "realTypeThenUndo": {
+     "versionDelta": 2,
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    },
+    "versionOnlyChange": {
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    }
+   },
+   "vscodeReadback": [
+    [
+     0,
+     2
+    ]
+   ],
+   "lossReproduced": true,
+   "pass": true
+  },
+  {
+   "transition": 885,
+   "doc": "combining-marks",
+   "text": "\n\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 1
+   },
+   "cases": {
+    "control": {
+     "source": "retained",
+     "ranges": [
+      [
+       1,
+       2
+      ],
+      [
+       2,
+       2
+      ]
+     ],
+     "primary": 1,
+     "ok": true
+    },
+    "realArrowRight": {
+     "source": "readback",
+     "reason": "external selection event(s): 1",
+     "ranges": [
+      [
+       2,
+       2
+      ]
+     ],
+     "primary": 0,
+     "editorSelections": [
+      [
+       2,
+       2
+      ]
+     ],
+     "ok": true
+    },
+    "externalChangeThenRestoreEqualSelections": {
+     "selectionsEqualToRetainedReadback": true,
+     "source": "readback",
+     "reason": "external selection event(s): 2",
+     "ok": true
+    },
+    "realTypeThenUndo": {
+     "versionDelta": 2,
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    },
+    "versionOnlyChange": {
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    }
+   },
+   "vscodeReadback": [
+    [
+     1,
+     2
+    ]
+   ],
+   "lossReproduced": true,
+   "pass": true
+  },
+  {
+   "transition": 1103,
+   "doc": "emoji-zwj-sequence",
+   "text": "\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 1
+   },
+   "cases": {
+    "control": {
+     "source": "retained",
+     "ranges": [
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "primary": 1,
+     "ok": true
+    },
+    "realArrowRight": {
+     "source": "readback",
+     "reason": "external selection event(s): 1",
+     "ranges": [
+      [
+       1,
+       1
+      ]
+     ],
+     "primary": 0,
+     "editorSelections": [
+      [
+       1,
+       1
+      ]
+     ],
+     "ok": true
+    },
+    "externalChangeThenRestoreEqualSelections": {
+     "selectionsEqualToRetainedReadback": true,
+     "source": "readback",
+     "reason": "external selection event(s): 2",
+     "ok": true
+    },
+    "realTypeThenUndo": {
+     "versionDelta": 2,
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    },
+    "versionOnlyChange": {
+     "textRestored": true,
+     "source": "readback",
+     "reason": "document version changed",
+     "ok": true
+    }
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "lossReproduced": true,
+   "pass": true
+  }
+ ],
+ "note": "external events = real CDP ArrowRight/typing/Ctrl+Z; own() brackets our edit and selection installation. A real CDP mouse click was not used (needs renderer coordinates); an arrow key is an external selection change through the real input path."
+}

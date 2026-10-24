@@ -1,0 +1,49 @@
+## Mutation A: swap inside/around in the dispatcher (evaluate/mod.rs)
+176c176
+<             let object = if action == Action::Inside { helix_core::textobject::TextObject::Inside } else { helix_core::textobject::TextObject::Around };
+---
+>             let object = if action == Action::Inside { helix_core::textobject::TextObject::Around } else { helix_core::textobject::TextObject::Inside };
+test scope_accounting ... ok
+test non_character_keys_do_nothing_like_the_upstream_callback ... ok
+test evaluate_rejects_bad_requests_with_stable_errors_and_never_touches_the_replica ... ok
+test proposal_has_the_exact_wire_shape ... FAILED
+test evaluate_normalizes_the_input_selection_exactly_like_the_oracle_initial_snapshot ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains ... FAILED
+thread 'proposal_has_the_exact_wire_shape' panicked at match-helper/tests/textobjects_plain.rs:209:5:
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains' panicked at match-helper/tests/textobjects_plain.rs:151:17:
+assertion `left == right` failed: counts-pending/m3i-brace step 0 [Pending, Pending, Pending, Evaluate { action: "inside", count: Some(3), key: Char('{', []) }]: selections or primary differ from the oracle
+test result: FAILED. 4 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.78s
+
+## Mutation B: W treated as w (long=false)
+64c64
+<         'W' => textobject::textobject_word(text, range, objtype, count, true),
+---
+>         'W' => textobject::textobject_word(text, range, objtype, count, false),
+test scope_accounting ... ok
+test proposal_has_the_exact_wire_shape ... ok
+test evaluate_rejects_bad_requests_with_stable_errors_and_never_touches_the_replica ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains ... FAILED
+test non_character_keys_do_nothing_like_the_upstream_callback ... ok
+test evaluate_normalizes_the_input_selection_exactly_like_the_oracle_initial_snapshot ... ok
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains' panicked at match-helper/tests/textobjects_plain.rs:151:17:
+assertion `left == right` failed: plaintext-objects-2/miW-underscore-hyphen step 0 [Pending, Pending, Evaluate { action: "inside", count: None, key: Char('W', []) }]: selections or primary differ from the oracle
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.74s
+
+## Mutation C: count ignored for pairs (count forced to 1)
+68c68
+<         ch if !ch.is_ascii_alphanumeric() => textobject::textobject_pair_surround(syntax, text, range, objtype, ch, count),
+---
+>         ch if !ch.is_ascii_alphanumeric() => textobject::textobject_pair_surround(syntax, text, range, objtype, ch, 1),
+test scope_accounting ... ok
+test proposal_has_the_exact_wire_shape ... ok
+test non_character_keys_do_nothing_like_the_upstream_callback ... ok
+test evaluate_rejects_bad_requests_with_stable_errors_and_never_touches_the_replica ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains ... FAILED
+test evaluate_normalizes_the_input_selection_exactly_like_the_oracle_initial_snapshot ... ok
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains' panicked at match-helper/tests/textobjects_plain.rs:151:17:
+assertion `left == right` failed: counts-pending/m3i-brace step 0 [Pending, Pending, Pending, Evaluate { action: "inside", count: Some(3), key: Char('{', []) }]: selections or primary differ from the oracle
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.90s
+
+## Restored
+native/match-helper/src/evaluate/mod.rs: OK
+native/match-helper/src/evaluate/textobjects.rs: OK

@@ -1,0 +1,40 @@
+   23 | void tree_sitter_javascript_external_scanner_deserialize(void *p, const char *b, unsigned n) {}
+      |                                                          ~~~~~~^
+/out/xdg-x86_64-pc-windows-gnu/config/helix/runtime/grammars/sources/javascript/src/scanner.c:23:79: warning: unused parameter 'b' [-Wunused-parameter]
+   23 | void tree_sitter_javascript_external_scanner_deserialize(void *p, const char *b, unsigned n) {}
+      |                                                                   ~~~~~~~~~~~~^
+/out/xdg-x86_64-pc-windows-gnu/config/helix/runtime/grammars/sources/javascript/src/scanner.c:23:91: warning: unused parameter 'n' [-Wunused-parameter]
+   23 | void tree_sitter_javascript_external_scanner_deserialize(void *p, const char *b, unsigned n) {}
+      |                                                                                  ~~~~~~~~~^
+/out/xdg-x86_64-pc-windows-gnu/config/helix/runtime/grammars/sources/javascript/src/scanner.c: In function 'tree_sitter_javascript_external_scanner_scan':
+/out/xdg-x86_64-pc-windows-gnu/config/helix/runtime/grammars/sources/javascript/src/scanner.c:333:57: warning: unused parameter 'payload' [-Wunused-parameter]
+  333 | bool tree_sitter_javascript_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols) {
+      |                                                   ~~~~~~^~~~~~~
+/usr/bin/x86_64-w64-mingw32-ld: unrecognized option '-z'
+/usr/bin/x86_64-w64-mingw32-ld: use the --help option for usage information
+collect2: error: ld returned 1 exit status
+
+Failure 3/5: markdown_inline Parser compilation failed.
+Stdout: 
+Stderr: /usr/bin/x86_64-w64-mingw32-ld: unrecognized option '-z'
+/usr/bin/x86_64-w64-mingw32-ld: use the --help option for usage information
+collect2: error: ld returned 1 exit status
+
+Failure 4/5: rust Parser compilation failed.
+Stdout: 
+Stderr: /usr/bin/x86_64-w64-mingw32-ld: unrecognized option '-z'
+/usr/bin/x86_64-w64-mingw32-ld: use the --help option for usage information
+collect2: error: ld returned 1 exit status
+
+Failure 5/5: markdown Parser compilation failed.
+Stdout: 
+Stderr: /usr/bin/x86_64-w64-mingw32-ld: unrecognized option '-z'
+/usr/bin/x86_64-w64-mingw32-ld: use the --help option for usage information
+collect2: error: ld returned 1 exit status
+
+Error: 5 grammars failed to build
+== [x86_64-pc-windows-gnu/grammars] exit code: 1
+total 0
+drwxr-xr-x. 7 root root 140 Oct 23 23:50 sources
+/out/xdg-x86_64-pc-windows-gnu/config/helix/runtime/grammars/*.so: cannot open `/out/xdg-x86_64-pc-windows-gnu/config/helix/runtime/grammars/*.so' (No such file or directory)
+exit 1

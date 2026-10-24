@@ -1,0 +1,63 @@
+# RED 1: tests written, helper still at the Task 12 state (evaluate replace -> action_not_implemented; continue/cancel unsupported_method)
+# The Task 13 helper sources (continuation.rs, evaluate/surround_replace.rs and the edits of lib.rs, evaluate/mod.rs, protocol/session.rs) were set aside by reversing them; restored by sha256 afterwards (see red-restore-hashes.txt)
+$ cargo +1.90.0 test --locked --manifest-path native/Cargo.toml -p mini-helix-match-helper --test surround_preview
+5 | use helix_stdx::{env::current_working_dir, path};
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.72s
+     Running tests/surround_preview.rs (target/debug/deps/surround_preview-4d58000239bd38a0)
+running 8 tests
+test scope_accounting ... ok
+test the_continuation_is_released_by_change_snapshot_configure_close_supersession_and_restart ... FAILED
+test the_token_is_bound_to_document_generation_version_and_session ... FAILED
+test a_replacement_character_is_validated_but_not_implemented_and_does_not_consume_the_token ... FAILED
+test preview_continue_cancel_and_failures_have_the_exact_wire_shapes ... FAILED
+test a_bad_replace_request_creates_no_continuation_and_leaves_the_replica_alone ... FAILED
+test every_in_scope_oracle_case_matches_the_intermediate_observation_after_mr_old ... FAILED
+test a_syntax_lookup_that_panics_in_a_debug_build_is_a_plain_failure_and_the_helper_survives ... FAILED
+failures:
+---- the_continuation_is_released_by_change_snapshot_configure_close_supersession_and_restart stdout ----
+thread 'the_continuation_is_released_by_change_snapshot_configure_close_supersession_and_restart' panicked at match-helper/tests/common/mod.rs:229:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"this match action is not implemented by this helper version"},"helperEpoch":3976085651749117,"ok":false,"protocolVersion":1,"requestId":4}
+  left: Bool(false)
+ right: Bool(true)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---- the_token_is_bound_to_document_generation_version_and_session stdout ----
+thread 'the_token_is_bound_to_document_generation_version_and_session' panicked at match-helper/tests/common/mod.rs:229:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"this match action is not implemented by this helper version"},"helperEpoch":1209065934763090,"ok":false,"protocolVersion":1,"requestId":4}
+  left: Bool(false)
+ right: Bool(true)
+---- a_replacement_character_is_validated_but_not_implemented_and_does_not_consume_the_token stdout ----
+thread 'a_replacement_character_is_validated_but_not_implemented_and_does_not_consume_the_token' panicked at match-helper/tests/common/mod.rs:229:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"this match action is not implemented by this helper version"},"helperEpoch":4727150513565639,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+---- preview_continue_cancel_and_failures_have_the_exact_wire_shapes stdout ----
+thread 'preview_continue_cancel_and_failures_have_the_exact_wire_shapes' panicked at match-helper/tests/common/mod.rs:229:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"this match action is not implemented by this helper version"},"helperEpoch":4425369479461912,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+---- a_bad_replace_request_creates_no_continuation_and_leaves_the_replica_alone stdout ----
+thread 'a_bad_replace_request_creates_no_continuation_and_leaves_the_replica_alone' panicked at match-helper/tests/common/mod.rs:237:9:
+assertion `left == right` failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"this match action is not implemented by this helper version"},"helperEpoch":624383500407765,"ok":false,"protocolVersion":1,"requestId":3}
+  left: String("action_not_implemented")
+ right: String("invalid_keys")
+---- every_in_scope_oracle_case_matches_the_intermediate_observation_after_mr_old stdout ----
+thread 'every_in_scope_oracle_case_matches_the_intermediate_observation_after_mr_old' panicked at match-helper/tests/common/mod.rs:229:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"this match action is not implemented by this helper version"},"helperEpoch":4765480580024516,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+---- a_syntax_lookup_that_panics_in_a_debug_build_is_a_plain_failure_and_the_helper_survives stdout ----
+thread 'a_syntax_lookup_that_panics_in_a_debug_build_is_a_plain_failure_and_the_helper_survives' panicked at match-helper/tests/common/mod.rs:229:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"this match action is not implemented by this helper version"},"helperEpoch":5453633511782726,"ok":false,"protocolVersion":1,"requestId":4}
+  left: Bool(false)
+ right: Bool(true)
+failures:
+    a_bad_replace_request_creates_no_continuation_and_leaves_the_replica_alone
+    a_replacement_character_is_validated_but_not_implemented_and_does_not_consume_the_token
+    a_syntax_lookup_that_panics_in_a_debug_build_is_a_plain_failure_and_the_helper_survives
+    every_in_scope_oracle_case_matches_the_intermediate_observation_after_mr_old
+    preview_continue_cancel_and_failures_have_the_exact_wire_shapes
+    the_continuation_is_released_by_change_snapshot_configure_close_supersession_and_restart
+    the_token_is_bound_to_document_generation_version_and_session
+test result: FAILED. 1 passed; 7 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.22s
+error: test failed, to rerun pass `-p mini-helix-match-helper --test surround_preview`

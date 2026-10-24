@@ -1,0 +1,212 @@
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.55s
+     Running unittests src/lib.rs (native/target/debug/deps/mini_helix_match_helper-85aacaaf82528af2)
+
+running 14 tests
+test documents::language::tests::document_paths ... ok
+test documents::selection::tests::astral_scalars_convert_both_ways ... ok
+test documents::selection::tests::point_cursor_widens_and_primary_follows_sorting ... ok
+test documents::selection::tests::rejects_without_rounding ... ok
+test documents::text::tests::lone_surrogates_are_unsupported_not_replaced ... ok
+test documents::text::tests::mistyped_literals_are_not_strings ... ok
+test documents::tests::syntax_state_names_are_the_spec_names ... ok
+test documents::text::tests::decodes_escapes_and_astral_pairs_exactly ... ok
+test documents::text::tests::utf16_offsets_convert_to_scalar_indices_and_reject_pair_interiors ... ok
+test documents::language::tests::no_alias_key_is_a_helix_language_name ... ok
+test documents::language::tests::every_helix_lsp_language_id_is_resolvable_and_unambiguous ... ok
+test documents::language::tests::every_alias_target_exists_in_the_pinned_loader ... ok
+test documents::language::tests::file_detection_uses_the_pinned_glob_then_extension_rules ... ok
+test documents::language::tests::resolution_order_alias_name_path_shebang_plaintext ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running unittests src/main.rs (native/target/debug/deps/mini_helix_match_helper-0f3ae2676ca49ce7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/test_helper.rs (native/target/debug/deps/mini_helix_match_helper_test-bcc4b3876ff1007c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/runtime_builder.rs (native/target/debug/deps/mini_helix_runtime_builder-fd3984b821b05b2c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/brackets.rs (native/target/debug/deps/brackets-124dfd7c68f2bc89)
+
+running 7 tests
+test scope_accounting ... ok
+test proposal_has_the_exact_wire_shape_for_brackets ... ok
+test brackets_takes_no_input_keys_and_validates_the_request_like_evaluate ... ok
+test a_whitespace_only_syntax_document_is_a_no_match_and_the_helper_survives ... ok
+test syntax_and_plaintext_documents_answer_independently ... ok
+test aliases_reach_the_same_answers_as_the_helix_language_id ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_brackets ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 40.70s
+
+     Running tests/documents.rs (native/target/debug/deps/documents-8b53941dabb8d357)
+
+running 6 tests
+test malformed_utf16_in_raw_frames_is_unsupported_text_and_never_replaced ... ok
+test diagnostics_on_stderr_never_contain_document_text_uri_or_ids ... ok
+test open_acknowledges_exact_metadata_and_the_replica_matches_the_text ... ok
+test edits_of_one_event_refer_to_the_base_snapshot_in_any_order ... ok
+test many_documents_are_independent_and_close_releases_only_its_own_replica ... ok
+test syntax_states_follow_the_upstream_lifecycle ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.26s
+
+     Running tests/protocol.rs (native/target/debug/deps/protocol-3cc597ea48086ce7)
+
+running 25 tests
+test constants_fixtures_and_implementation_agree_on_one_compatibility_check ... ok
+test epoch_mismatch_echoes_the_request_epoch_and_reports_the_helper_epoch_in_data ... ok
+test non_integer_protocol_version_stays_a_non_fatal_field_error ... ok
+test eof_in_the_middle_of_a_frame_is_an_explicit_failure_and_the_partial_frame_is_never_executed ... ok
+test requests_before_initialize_are_rejected_but_shutdown_is_allowed ... ok
+test initialize_params_are_validated_and_second_initialize_is_rejected_without_ending_the_session ... ok
+test envelope_fields_are_validated_with_precise_stable_errors ... ok
+test initialize_returns_actual_identity_and_capabilities_then_serves_requests ... ok
+test unsupported_protocol_version_fixture_terminates_the_session ... ok
+test several_frames_in_one_write_are_answered_in_order_and_nothing_after_shutdown_runs ... ok
+test unknown_and_not_yet_implemented_methods_return_a_typed_error_and_do_not_crash ... ok
+test shutdown_replies_then_exits_zero_with_no_children ... ok
+test malformed_json_and_invalid_bytes_get_explicit_errors_and_the_stream_stays_in_sync ... ok
+test clean_eof_exits_zero_without_output_before_and_after_initialize ... ok
+test diagnostics_never_contain_request_or_document_text ... ok
+test identity_mismatches_fail_explicitly_and_end_the_session ... ok
+test wrong_protocol_version_fails_explicitly_and_ends_the_session ... ok
+test corrupted_runtime_is_runtime_unavailable_and_no_library_is_loaded ... ok
+test fragmented_frames_including_mid_utf8_and_mid_json_are_reassembled ... ok
+test unsupported_protocol_version_is_fatal_even_when_request_id_is_missing_or_invalid ... ok
+test eof_after_oversize_discard_is_reported_once_and_exits ... ok
+test oversized_frames_are_rejected_whole_without_truncation_and_the_session_continues ... ok
+test fixtures_round_trip_through_the_real_helper_with_the_real_runtime ... ok
+test corrupted_or_missing_assets_in_a_scratch_copy_of_the_real_runtime_are_runtime_unavailable ... ok
+test a_stalled_partial_frame_times_out_explicitly_instead_of_hanging ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.01s
+
+     Running tests/runtime_isolation.rs (native/target/debug/deps/runtime_isolation-2d205138f0aa9af9)
+
+running 4 tests
+test intact_runtime_verifies_and_excluded_grammars_are_not_missing ... ok
+test lock_mismatches_are_reported ... ok
+test tampering_is_reported_with_the_right_installation_error_class ... ok
+test ambient_helix_state_does_not_change_runtime_resolution ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/surround_add.rs (native/target/debug/deps/surround_add-4b87370768b2111e)
+
+running 6 tests
+test scope_accounting ... ok
+test enter_uses_the_documents_configured_line_ending_not_the_texts ... ok
+test add_rejects_bad_requests_and_never_touches_the_replica ... ok
+test proposal_has_the_exact_wire_shape_for_add ... ok
+test callback_keys_use_the_character_value_and_non_characters_do_not_edit ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.64s
+
+     Running tests/surround_preview.rs (native/target/debug/deps/surround_preview-d161fe584cf3035d)
+
+running 8 tests
+test scope_accounting ... ok
+test the_token_is_bound_to_document_generation_version_and_session ... ok
+test a_bad_replace_request_creates_no_continuation_and_leaves_the_replica_alone ... ok
+test a_replacement_character_is_validated_answered_by_the_proposal_and_consumes_the_token ... ok
+test preview_continue_cancel_and_failures_have_the_exact_wire_shapes ... ok
+test a_syntax_lookup_that_panics_in_a_debug_build_is_a_plain_failure_and_the_helper_survives ... ok
+test every_in_scope_oracle_case_matches_the_intermediate_observation_after_mr_old ... ok
+test the_continuation_is_released_by_change_snapshot_configure_close_supersession_and_restart ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.54s
+
+     Running tests/surround_replace.rs (native/target/debug/deps/surround_replace-e451d263664a15f0)
+
+running 9 tests
+test scope_accounting ... ok
+test the_token_is_consumed_once_and_other_sessions_are_unaffected ... ok
+test the_replacement_proposal_has_the_exact_wire_shape ... ok
+test the_proposal_never_edits_the_replica_and_only_a_mirrored_change_commits ... ok
+test a_rejected_replacement_attempt_never_edits_and_keeps_the_token ... ok
+test every_modifier_combination_of_a_replacement_character_is_the_same_character ... ok
+test nested_pairs_give_sorted_edits_and_utf16_base_coordinates ... ok
+test every_in_scope_oracle_case_matches_the_final_transaction_and_selections ... ok
+test every_release_event_makes_a_replacement_attempt_stale ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.39s
+
+     Running tests/textobjects_git.rs (native/target/debug/deps/textobjects_git-40d93b6ae218f0c4)
+
+running 15 tests
+test scope_accounting ... ok
+test baseline_identity_is_refreshed_and_the_cache_is_valid_only_while_it_holds ... ok
+test settled_hunks_equal_the_oracle_diff ... ok
+test a_document_outside_any_repository_is_unavailable ... ok
+test staged_changes_do_not_move_the_baseline ... ok
+test deleted_working_file_still_uses_the_head_baseline ... ok
+test symlinked_checkouts_and_files_resolve_to_the_real_baseline ... ok
+test head_changes_refresh_the_baseline_before_each_evaluation ... ok
+test evaluate_accepts_and_validates_the_baseline_identity_and_returns_the_helper_derived_token ... ok
+test a_diff_that_is_not_published_in_time_fails_with_diff_timeout_and_the_session_continues ... ok
+test untitled_virtual_relative_and_directory_paths_have_no_baseline ... ok
+test every_git_oracle_case_matches_step_by_step_through_the_helper ... ok
+test unsaved_edits_in_the_session_are_diffed_against_head ... ok
+test linked_worktrees_use_their_own_head ... ok
+test untrusted_workspaces_never_run_repository_local_filter_programs ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.07s
+
+     Running tests/textobjects_plain.rs (native/target/debug/deps/textobjects_plain-ea57e1ba3a9b5aab)
+
+running 6 tests
+test scope_accounting ... ok
+test proposal_has_the_exact_wire_shape ... ok
+test evaluate_rejects_bad_requests_with_stable_errors_and_never_touches_the_replica ... ok
+test non_character_keys_do_nothing_like_the_upstream_callback ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains ... ok
+test evaluate_normalizes_the_input_selection_exactly_like_the_oracle_initial_snapshot ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.09s
+
+     Running tests/textobjects_syntax.rs (native/target/debug/deps/textobjects_syntax-14971a008c14e889)
+
+running 10 tests
+test positive_fixture_coverage_per_capture_family ... ok
+test scope_accounting ... ok
+test update_failure_disables_syntax_for_good_and_only_a_language_change_recovers ... ok
+test language_changes_rebuild_the_syntax_and_objects_follow ... ok
+test plaintext_with_a_detectable_path_reaches_the_same_objects_as_the_language ... ok
+test aliases_reach_the_same_objects_as_the_helix_language_id ... ok
+test language_mapping_end_to_end ... ok
+test every_configured_language_is_in_the_capture_inventory_and_the_loader_agrees ... ok
+test every_language_opens_through_the_protocol_with_the_inventory_state ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_the_helper has been running for over 60 seconds
+test every_in_scope_oracle_case_matches_step_by_step_through_the_helper ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 75.37s
+
+   Doc-tests mini_helix_match_helper
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

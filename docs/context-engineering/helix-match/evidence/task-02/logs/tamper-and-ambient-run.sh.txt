@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Corrupt/remove/add assets and seed ambient overrides; each must make check:helix-runtime fail (or, for ambient, still pass unchanged).
+cd /home/cosmincartas/work/projects/vscode-extension-helix-match
+R=native/runtime/out/linux-x64/runtime
+LOCK=native/helix-lock.json
+cp -a $LOCK /tmp/hm-p2-lock.bak; cp -a $R/manifest.json /tmp/hm-p2-manifest.bak
+run() { echo; echo "### $1"; shift; "$@" 2>&1 | sed -n '1,12p'; echo "exit=${PIPESTATUS[0]}"; }
+chk() { node scripts/check-helix-runtime.cjs; }
+echo "### baseline"; chk; echo "exit=$?"
+# 1 altered query
+cp -a $R/queries/rust/textobjects.scm /tmp/hm-p2-q.bak; echo "; tampered" >> $R/queries/rust/textobjects.scm
+run "altered query (queries/rust/textobjects.scm)" chk; cp -a /tmp/hm-p2-q.bak $R/queries/rust/textobjects.scm
+# 2 removed grammar library
+cp -a $R/grammars/rust.so /tmp/hm-p2-g.bak; rm $R/grammars/rust.so
+run "removed grammar library (grammars/rust.so)" chk; cp -a /tmp/hm-p2-g.bak $R/grammars/rust.so
+# 3 stray asset
+echo "; stray" > $R/queries/rust/stray.scm
+run "stray query asset" chk; rm $R/queries/rust/stray.scm
+# 4 stray library for an excluded grammar
+cp $R/grammars/rust.so $R/grammars/wren.so
+run "stray grammars/wren.so (excluded grammar)" chk; rm $R/grammars/wren.so
+# 5 altered grammar library
+cp -a $R/grammars/python.so /tmp/hm-p2-py.bak; printf '\x00' | dd of=$R/grammars/python.so bs=1 seek=5000 conv=notrunc 2>/dev/null
+run "altered grammar library (1 byte of grammars/python.so)" chk; cp -a /tmp/hm-p2-py.bak $R/grammars/python.so
+# 6 removed asset (injections query)
+cp -a $R/queries/markdown/injections.scm /tmp/hm-p2-inj.bak; rm $R/queries/markdown/injections.scm
+run "removed injections query (queries/markdown/injections.scm)" chk; cp -a /tmp/hm-p2-inj.bak $R/queries/markdown/injections.scm
+# 7 removed manifest
+rm $R/manifest.json; run "removed manifest.json" chk; cp -a /tmp/hm-p2-manifest.bak $R/manifest.json
+# 8 manifest + asset both altered consistently (lock must catch it)
+python3 - <<'PY'
+import json,hashlib
+R='native/runtime/out/linux-x64/runtime'
+p=R+'/queries/rust/textobjects.scm'; open(p,'a').write('; consistent tamper\n')
+m=json.load(open(R+'/manifest.json'))
+for a in m['assets']:
+    if a['path']=='queries/rust/textobjects.scm':
+        d=open(p,'rb').read(); a['sha256']=hashlib.sha256(d).hexdigest(); a['size']=len(d)
+# recompute hashes as the builder would
+def rh(assets):
+    t=''.join(a['path']+'\0'+a['sha256']+'\n' for a in assets); return hashlib.sha256(t.encode()).hexdigest()
+m['runtimeHash']=rh(m['assets']); m['queriesTreeSha256']=rh([a for a in m['assets'] if a['kind']=='query'])
+json.dump(m,open(R+'/manifest.json','w'),indent=2)
+PY
+run "asset + manifest + hashes rewritten consistently (only the lock can catch it)" chk
+cp -a /tmp/hm-p2-q.bak $R/queries/rust/textobjects.scm; cp -a /tmp/hm-p2-manifest.bak $R/manifest.json
+# 9 lock altered
+python3 - <<'PY'
+import json
+p='native/helix-lock.json'; l=json.load(open(p)); l['targets']['linux-x64']['runtimeHash']='0'*64; json.dump(l,open(p,'w'),indent=2)
+PY
+run "lock runtimeHash altered" chk; cp -a /tmp/hm-p2-lock.bak $LOCK
+echo; echo "### restored"; chk; echo "exit=$?"
+sha256sum $LOCK /tmp/hm-p2-lock.bak $R/manifest.json /tmp/hm-p2-manifest.bak | awk '{print $1}' | uniq -c
+# ambient overrides on the real check
+H=/tmp/hm-p2-hostile; rm -rf $H; mkdir -p $H/home/.config/helix/runtime/queries/rust $H/xdg/helix/runtime/queries/rust $H/hx/queries/rust $H/ws/.helix
+for d in $H/home/.config/helix/runtime $H/xdg/helix/runtime $H/hx; do echo "; DECOY" > $d/queries/rust/textobjects.scm; echo "; DECOY" > $d/queries/rust/highlights.scm; echo junk > $d/rust.so; mkdir -p $d/grammars; echo junk > $d/grammars/rust.so; done
+echo '[[language]]
+name = "rust"
+grammar = "nonexistent"' > $H/ws/.helix/languages.toml
+echo; echo "### ambient overrides on the whole check (HOME, XDG_CONFIG_HOME, HELIX_RUNTIME, cwd with .helix)"
+( cd $H/ws && HOME=$H/home XDG_CONFIG_HOME=$H/xdg HELIX_RUNTIME=$H/hx node /home/cosmincartas/work/projects/vscode-extension-helix-match/scripts/check-helix-runtime.cjs; echo "exit=$?" )
+echo; echo "### helper directly under the same ambient state"
+( cd $H/ws && HOME=$H/home XDG_CONFIG_HOME=$H/xdg HELIX_RUNTIME=$H/hx /home/cosmincartas/work/projects/vscode-extension-helix-match/native/target/release/mini-helix-match-helper resolve-report --runtime-root /home/cosmincartas/work/projects/vscode-extension-helix-match/$R --language rust | head -12 )

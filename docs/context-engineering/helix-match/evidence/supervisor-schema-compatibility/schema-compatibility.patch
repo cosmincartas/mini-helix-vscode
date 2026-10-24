@@ -1,0 +1,32 @@
+--- a/test/fixtures/helix-match/schema/case-file.schema.json
++++ b/test/fixtures/helix-match/schema/case-file.schema.json
+@@ -31,7 +31,7 @@
+         "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+         "description": { "type": "string" },
+         "source": { "type": "string", "description": "Spec section, Task 1 finding or oracle finding that motivates the case." },
+-        "tags": { "type": "array", "items": { "enum": ["quirk", "quirk-control"] } },
++        "tags": { "type": "array", "items": { "enum": ["quirk", "quirk-control", "selection-identity"] } },
+         "input": { "$ref": "#/definitions/input" },
+         "expected": { "$ref": "result.schema.json" }
+       }
+@@ -59,7 +59,7 @@
+         "mode": { "enum": ["normal", "select"], "default": "normal" },
+         "steps": {
+           "type": "array",
+-          "minItems": 1,
++          "minItems": 0,
+           "items": { "type": "string" },
+           "description": "Helix key notation (helix_view::input::parse_macro): characters, <esc>, <ret>, <lt>, <A-w>, <C-x>, ... Counts are digits. The editor runs to idle after each step and a snapshot is recorded, so a step boundary is an observation point (e.g. after `mr(` for the replacement preview)."
+         },
+--- a/test/fixtures/helix-match/README.md
++++ b/test/fixtures/helix-match/README.md
+@@ -21,7 +21,8 @@
+ 
+ `{ "schemaVersion": 1, "group": "...", "provenance": {...}, "cases": [ { "id", "description", "source", "tags", "input", "expected" } ] }`.
+ Case ids are unique as `group/id`. `source` names the spec section, Task 1 finding or oracle finding that motivated the case.
+-Tag `quirk` marks an intentional upstream quirk; `quirk-control` marks the control case for it.
++Tag `quirk` marks an intentional upstream quirk; `quirk-control` marks the control case for it. Tag `selection-identity` marks initial-state selection normalization cases.
++An empty `steps` array observes only the initialized document and its normalized selections, without dispatching a key.
+ 
+ ### `input`
+ 

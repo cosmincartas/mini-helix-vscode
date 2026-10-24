@@ -1,0 +1,43 @@
+# MUTATION: Enter ignores the document EOL (Eol::Crlf mapped to LF in evaluate/surround_add.rs); the tests must fail
+$ cargo +1.90.0 test --locked --manifest-path native/Cargo.toml -p mini-helix-match-helper --test surround_add
+5 | use helix_stdx::{env::current_working_dir, path};
+
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.69s
+     Running tests/surround_add.rs (target/debug/deps/surround_add-da098b293d627608)
+
+running 6 tests
+test scope_accounting ... ok
+test enter_uses_the_documents_configured_line_ending_not_the_texts ... FAILED
+test add_rejects_bad_requests_and_never_touches_the_replica ... ok
+test proposal_has_the_exact_wire_shape_for_add ... ok
+test callback_keys_use_the_character_value_and_non_characters_do_not_edit ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add ... FAILED
+
+failures:
+
+---- enter_uses_the_documents_configured_line_ending_not_the_texts stdout ----
+
+thread 'enter_uses_the_documents_configured_line_ending_not_the_texts' panicked at match-helper/tests/surround_add.rs:412:9:
+assertion `left == right` failed: crlf
+  left: Array [Object {"end": Number(0), "start": Number(0), "text": String("\n")}, Object {"end": Number(2), "start": Number(2), "text": String("\n")}]
+ right: Array [Object {"end": Number(0), "start": Number(0), "text": String("\r\n")}, Object {"end": Number(2), "start": Number(2), "text": String("\r\n")}]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add stdout ----
+
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add' panicked at match-helper/tests/surround_add.rs:211:21:
+assertion `left == right` failed: surround-add/add-enter-crlf step 0: text after applying the proposal edits
+  left: "say \nhello\n now\r\nnext line\r\n"
+ right: "say \r\nhello\r\n now\r\nnext line\r\n"
+
+
+failures:
+    enter_uses_the_documents_configured_line_ending_not_the_texts
+    every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add
+
+test result: FAILED. 4 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.97s
+
+error: test failed, to rerun pass `-p mini-helix-match-helper --test surround_add`
+exit: 0
+restored: 0e84dd187f42c3f63f310f313286a61b140e03ff5962ddcac3fe7dd8669131b5 expected 0e84dd187f42c3f63f310f313286a61b140e03ff5962ddcac3fe7dd8669131b5

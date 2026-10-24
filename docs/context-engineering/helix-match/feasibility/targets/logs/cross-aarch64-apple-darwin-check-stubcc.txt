@@ -1,0 +1,10 @@
+== [aarch64-apple-darwin/check-stubcc] cargo check --release --locked -p mini-helix-match-feasibility --target aarch64-apple-darwin
+   Compiling tree-house-bindings v0.3.2
+    Checking tree-house v0.4.0
+    Checking helix-loader v25.7.1 (/native/feasibility/upstream/helix/helix-loader)
+    Checking helix-core v25.7.1 (/native/feasibility/upstream/helix/helix-core)
+    Checking helix-vcs v25.7.1 (/native/feasibility/upstream/helix/helix-vcs)
+    Checking mini-helix-match-feasibility v0.0.0 (/native/feasibility/helper)
+    Finished `release` profile [optimized] target(s) in 1.85s
+== [aarch64-apple-darwin/check-stubcc] cargo exit code: 0
+exit 0

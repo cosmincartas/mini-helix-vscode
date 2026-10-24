@@ -1,0 +1,60 @@
+9eedb4e3a3ebb3a30e84352a9e16ed845446195a32f8fc42648a5a6549e7ad8c  native/match-helper/src/evaluate/brackets.rs
+MUTATION: 'let syntax = if true { None } else { syntax };' - the plaintext branch is used even when the document has a syntax tree
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.98s
+     Running tests/brackets.rs (native/target/debug/deps/brackets-c7437ad7c04c5b81)
+
+running 7 tests
+test scope_accounting ... ok
+test brackets_takes_no_input_keys_and_validates_the_request_like_evaluate ... ok
+test proposal_has_the_exact_wire_shape_for_brackets ... ok
+test a_whitespace_only_syntax_document_is_a_no_match_and_the_helper_survives ... ok
+test syntax_and_plaintext_documents_answer_independently ... FAILED
+test aliases_reach_the_same_answers_as_the_helix_language_id ... FAILED
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_brackets ... FAILED
+
+failures:
+
+---- syntax_and_plaintext_documents_answer_independently stdout ----
+
+thread 'syntax_and_plaintext_documents_answer_independently' panicked at match-helper/tests/brackets.rs:640:5:
+assertion `left != right` failed
+  left: Array [Object {"anchor": Number(12), "head": Number(13)}]
+ right: Array [Object {"anchor": Number(12), "head": Number(13)}]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- aliases_reach_the_same_answers_as_the_helix_language_id stdout ----
+
+thread 'aliases_reach_the_same_answers_as_the_helix_language_id' panicked at match-helper/tests/brackets.rs:363:13:
+assertion `left == right` failed: brackets/tsx-return-type-generic-inside step 0 String("mm"): selections or primary differ from the oracle
+  left: ([(70, 71)], 0)
+ right: ([(71, 72)], 0)
+
+---- every_in_scope_oracle_case_matches_step_by_step_through_evaluate_brackets stdout ----
+
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_evaluate_brackets' panicked at match-helper/tests/brackets.rs:363:13:
+assertion `left == right` failed: brackets/rust-inside-body step 0 String("mm"): selections or primary differ from the oracle
+  left: ([(16, 17)], 0)
+ right: ([(90, 91)], 0)
+
+
+failures:
+    aliases_reach_the_same_answers_as_the_helix_language_id
+    every_in_scope_oracle_case_matches_step_by_step_through_evaluate_brackets
+    syntax_and_plaintext_documents_answer_independently
+
+test result: FAILED. 4 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.42s
+
+error: test failed, to rerun pass `-p mini-helix-match-helper --test brackets`
+rc=101
+--- restored
+9eedb4e3a3ebb3a30e84352a9e16ed845446195a32f8fc42648a5a6549e7ad8c  native/match-helper/src/evaluate/brackets.rs

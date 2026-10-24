@@ -1,0 +1,64 @@
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.25s
+     Running tests/surround_delete.rs (target/debug/deps/surround_delete-26798d262830548b)
+
+running 7 tests
+test scope_accounting ... ok
+test proposal_has_the_exact_wire_shape_for_delete ... FAILED
+test callback_keys_use_the_character_value_and_non_characters_do_not_edit ... ok
+test delete_rejects_bad_requests_and_never_touches_the_replica ... ok
+test one_invalid_selection_fails_the_whole_command_without_partial_deletion ... FAILED
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_delete ... FAILED
+test aliases_reach_the_same_answers_as_the_helix_language_id ... FAILED
+
+failures:
+
+---- proposal_has_the_exact_wire_shape_for_delete stdout ----
+
+thread 'proposal_has_the_exact_wire_shape_for_delete' panicked at match-helper/tests/surround_delete.rs:550:5:
+assertion `left == right` failed
+  left: Array [Object {"end": Number(1), "start": Number(0), "text": String("")}, Object {"end": Number(4), "start": Number(3), "text": String("")}]
+ right: Array []
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- one_invalid_selection_fails_the_whole_command_without_partial_deletion stdout ----
+
+thread 'one_invalid_selection_fails_the_whole_command_without_partial_deletion' panicked at match-helper/tests/surround_delete.rs:572:9:
+assertion `left == right` failed: stray selection last of four
+  left: String("none")
+ right: String("error")
+
+---- every_in_scope_oracle_case_matches_step_by_step_through_evaluate_delete stdout ----
+
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_evaluate_delete' panicked at match-helper/tests/surround_delete.rs:237:21:
+assertion `left == right` failed: surround-delete/nested-multi-explicit-count-2 step 0 String("2md("): text after applying the proposal edits differs from the oracle
+  left: "a x (b y) c\n"
+ right: "(a x (b y) c)\n"
+
+---- aliases_reach_the_same_answers_as_the_helix_language_id stdout ----
+
+thread 'aliases_reach_the_same_answers_as_the_helix_language_id' panicked at match-helper/tests/surround_delete.rs:237:21:
+assertion `left == right` failed: surround-delete/bash-string-brackets step 0 String("mdm"): text after applying the proposal edits differs from the oracle
+  left: "echo a (b c) d $(ls )\n"
+ right: "echo \"a (b c) d\" $(ls )\n"
+
+
+failures:
+    aliases_reach_the_same_answers_as_the_helix_language_id
+    every_in_scope_oracle_case_matches_step_by_step_through_evaluate_delete
+    one_invalid_selection_fails_the_whole_command_without_partial_deletion
+    proposal_has_the_exact_wire_shape_for_delete
+
+test result: FAILED. 3 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.79s
+
+error: test failed, to rerun pass `-p mini-helix-match-helper --test surround_delete`
+exit 101

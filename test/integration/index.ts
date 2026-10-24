@@ -1,13 +1,17 @@
 import assert from 'node:assert/strict';
 import * as vscode from 'vscode';
 import type { MiniHelixApi } from '../../src/extension';
+import { Count } from '../../src/core/count';
 import { ModeController } from '../../src/core/mode';
 import { registerMotion } from '../../src/core/registerMotion';
 import { Keyboard } from './keyboard';
 import { checkEditing } from './editing';
 import { checkHistory } from './history';
+import { checkCharMotions } from './hjkl';
 import { checkWordJump } from './wordJump';
 import { checkWordMotions } from './wordMotion';
+import { checkNavigation } from './navigation';
+import { checkMatch } from './match';
 
 async function until(predicate: () => boolean, message: string): Promise<void> {
   const deadline = Date.now() + 5000;
@@ -204,10 +208,13 @@ export async function run(): Promise<void> {
       await until(() => api.getState().enabled, 'enabled setting was not reapplied');
     });
 
+    await checkNavigation(api, keyboard);
     await checkWordJump(api, keyboard);
     await checkWordMotions(api, keyboard);
     await checkEditing(api, keyboard);
     await checkHistory(api, keyboard);
+    await checkCharMotions(api, keyboard);
+    await check('match: text objects and surround replacement', () => checkMatch(api, keyboard));
     editor = await vscode.window.showTextDocument(document, vscode.ViewColumn.One);
 
     await check('motion runner supports multiple selections and guards INSERT/disabled states', async () => {
@@ -219,7 +226,7 @@ export async function run(): Promise<void> {
         calls++;
         const next = doc.positionAt(doc.offsetAt(selection.active) + 1);
         return new vscode.Selection(next, next);
-      }, modes);
+      }, modes, new Count());
       try {
         editor.selections = [new vscode.Selection(0, 0, 0, 0), new vscode.Selection(1, 0, 1, 0)];
         await vscode.commands.executeCommand('miniHelix.testMotion');

@@ -1,0 +1,72 @@
+# RED: evaluate action add answers action_not_implemented (the pre-Task-12 dispatcher behaviour; the add arm of evaluate/mod.rs temporarily replaced by that error; restored by SHA-256 below)
+$ cargo +1.90.0 test --locked --manifest-path native/Cargo.toml -p mini-helix-match-helper --test surround_add
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.70s
+     Running tests/surround_add.rs (target/debug/deps/surround_add-da098b293d627608)
+
+running 6 tests
+test scope_accounting ... ok
+test add_rejects_bad_requests_and_never_touches_the_replica ... FAILED
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add ... FAILED
+test enter_uses_the_documents_configured_line_ending_not_the_texts ... FAILED
+test proposal_has_the_exact_wire_shape_for_add ... FAILED
+test callback_keys_use_the_character_value_and_non_characters_do_not_edit ... FAILED
+
+failures:
+
+---- add_rejects_bad_requests_and_never_touches_the_replica stdout ----
+
+thread 'add_rejects_bad_requests_and_never_touches_the_replica' panicked at match-helper/tests/common/mod.rs:221:9:
+assertion `left == right` failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"RED: add arm disabled"},"helperEpoch":2164679415996997,"ok":false,"protocolVersion":1,"requestId":3}
+  left: String("action_not_implemented")
+ right: String("invalid_keys")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add stdout ----
+
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add' panicked at match-helper/tests/common/mod.rs:213:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"RED: add arm disabled"},"helperEpoch":6777236503497197,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+
+---- enter_uses_the_documents_configured_line_ending_not_the_texts stdout ----
+
+thread 'enter_uses_the_documents_configured_line_ending_not_the_texts' panicked at match-helper/tests/common/mod.rs:213:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"RED: add arm disabled"},"helperEpoch":1682970951209067,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+
+---- proposal_has_the_exact_wire_shape_for_add stdout ----
+
+thread 'proposal_has_the_exact_wire_shape_for_add' panicked at match-helper/tests/common/mod.rs:213:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"RED: add arm disabled"},"helperEpoch":1615097046041322,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+
+---- callback_keys_use_the_character_value_and_non_characters_do_not_edit stdout ----
+
+thread 'callback_keys_use_the_character_value_and_non_characters_do_not_edit' panicked at match-helper/tests/common/mod.rs:213:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"action_not_implemented","message":"RED: add arm disabled"},"helperEpoch":5069428081889322,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+
+
+failures:
+    add_rejects_bad_requests_and_never_touches_the_replica
+    callback_keys_use_the_character_value_and_non_characters_do_not_edit
+    enter_uses_the_documents_configured_line_ending_not_the_texts
+    every_in_scope_oracle_case_matches_step_by_step_through_evaluate_add
+    proposal_has_the_exact_wire_shape_for_add
+
+test result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.64s
+
+error: test failed, to rerun pass `-p mini-helix-match-helper --test surround_add`

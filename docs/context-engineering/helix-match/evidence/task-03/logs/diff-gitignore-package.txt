@@ -1,0 +1,25 @@
+$ git diff --stat -- .gitignore package.json
+ .gitignore   |   14 +
+ package.json | 1296 +++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 1161 insertions(+), 149 deletions(-)
+
+--- a/.gitignore
++++ b/.gitignore
++
++# native feasibility build outputs
++native/target/
++native/feasibility/upstream/
++native/feasibility/build/
++native/**/__pycache__/
++
++# native production runtime build outputs (plan Task 2)
++native/upstream/helix/
++native/upstream/cache/
++native/runtime/out/
++
++# Task 3 oracle build outputs
++native/oracle/target/
+
++    "build:match": "node scripts/build-match.cjs",
++    "check:helix-runtime": "node scripts/check-helix-runtime.cjs",
++    "test:match:oracle": "node scripts/test-match-oracle.cjs",

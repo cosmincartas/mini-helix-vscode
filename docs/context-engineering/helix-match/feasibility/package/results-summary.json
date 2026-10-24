@@ -1,0 +1,826 @@
+{
+ "package": {
+  "vsixBytes": 4359810,
+  "vsixSha256": "bcbfe6375c6b2d81d811eeece0f3f32b0fba1e6b9c727d60a69b64bb6238ae2b",
+  "entries": 1225,
+  "uncompressedBytes": 11880792,
+  "installedDirBytesNote": "see README"
+ },
+ "environment": {
+  "extensionPath": "/tmp/hm-t1b1-run/extensions/local.mini-helix-0.99.0",
+  "version": "0.99.0",
+  "isActive": true,
+  "uid": 0,
+  "vscodeVersion": "1.143.1",
+  "env": {
+   "HOME": "/tmp/hm-t1b1-run/home",
+   "PATH": "/tmp/hm-t1b1-run/bin",
+   "DISPLAY": ":0",
+   "XAUTHORITY": "/run/user/1000/xauth_cDpLWt"
+  },
+  "onPath": {
+   "cargo": [],
+   "rustc": [],
+   "rustup": [],
+   "hx": [],
+   "helix": [],
+   "git": [],
+   "gcc": [],
+   "cc": []
+  },
+  "dirsPresent": {
+   "~/.cargo": false,
+   "~/.rustup": false,
+   "~/.config/helix": false,
+   "~/.helix": false
+  },
+  "network": {
+   "interfaces": [
+    "lo"
+   ],
+   "externalTcpConnect": "error ENETUNREACH",
+   "dnsLookup": "RESOLVED (network is not disabled)"
+  },
+  "assetManifest": {
+   "target": "linux-x64",
+   "files": 1201,
+   "shaOrSizeMismatches": []
+  },
+  "notWorktreeCopy": true
+ },
+ "helperInit": {
+  "ok": true,
+  "coldStartSpawnToInitializeMs": 11.09,
+  "helixRevision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+  "languageCount": 342
+ },
+ "commands": {
+  "miw-plaintext": {
+   "pass": true,
+   "reps": 20,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "bar"
+    ],
+    "finalText": "foo bar baz",
+    "layer": null,
+    "undo": null
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.05,
+     "p50": 0.098,
+     "p95": 0.209,
+     "max": 0.209
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.559,
+     "p50": 0.874,
+     "p95": 1.56,
+     "max": 1.56
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.038,
+     "p50": 0.075,
+     "p95": 0.135,
+     "max": 0.135
+    },
+    "openFirst": 0.13538600000003953,
+    "helperEvaluateFirst": 0.11988700000006247,
+    "typeEventToAppliedFirst": 0.9285570000001826
+   },
+   "failures": []
+  },
+  "mif-rust": {
+   "pass": true,
+   "reps": 20,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "{\n    let x = 1;\n    x\n}"
+    ],
+    "finalText": "fn alpha() {\n    let x = 1;\n    x\n}\n\nfn beta() {\n    2\n}\n",
+    "layer": "rust",
+    "undo": null
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.114,
+     "p50": 0.14,
+     "p95": 10.104,
+     "max": 10.104
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.649,
+     "p50": 0.761,
+     "p95": 10.851,
+     "max": 10.851
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.112,
+     "p50": 0.135,
+     "p95": 53.689,
+     "max": 53.689
+    },
+    "openFirst": 53.68949299999986,
+    "helperEvaluateFirst": 10.10437600000023,
+    "typeEventToAppliedFirst": 10.850908999999774
+   },
+   "failures": []
+  },
+  "mif-injected-markdown-rust": {
+   "pass": true,
+   "reps": 20,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "{\n    3\n}"
+    ],
+    "finalText": "# Title\n\nSome prose here.\n\n```rust\nfn gamma() {\n    3\n}\n```\n",
+    "layer": "rust",
+    "undo": null
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.067,
+     "p50": 0.112,
+     "p95": 0.149,
+     "max": 0.149
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.644,
+     "p50": 0.723,
+     "p95": 0.934,
+     "max": 0.934
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.124,
+     "p50": 0.209,
+     "p95": 6.412,
+     "max": 6.412
+    },
+    "openFirst": 6.411540000000059,
+    "helperEvaluateFirst": 0.10187300000052346,
+    "typeEventToAppliedFirst": 0.7455700000000434
+   },
+   "failures": []
+  },
+  "mif-injected-control-prose": {
+   "pass": true,
+   "reps": 5,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "p"
+    ],
+    "finalText": "# Title\n\nSome prose here.\n\n```rust\nfn gamma() {\n    3\n}\n```\n",
+    "layer": "markdown.inline",
+    "undo": null
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 5,
+     "min": 0.055,
+     "p50": 0.064,
+     "p95": 0.112,
+     "max": 0.112
+    },
+    "typeEventToApplied": {
+     "n": 5,
+     "min": 0.555,
+     "p50": 0.636,
+     "p95": 0.831,
+     "max": 0.831
+    },
+    "helperOpen": {
+     "n": 5,
+     "min": 0.112,
+     "p50": 0.172,
+     "p95": 0.29,
+     "max": 0.29
+    },
+    "openFirst": 0.2904889999990701,
+    "helperEvaluateFirst": 0.08053199999994831,
+    "typeEventToAppliedFirst": 0.6360430000004271
+   },
+   "failures": []
+  },
+  "ms-emoji-insertText": {
+   "pass": true,
+   "reps": 20,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "😀bar😀"
+    ],
+    "finalText": "foo 😀bar😀",
+    "layer": null,
+    "undo": {
+     "how": "cdp ctrl+z",
+     "restored": true
+    }
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.092,
+     "p50": 0.134,
+     "p95": 0.247,
+     "max": 0.247
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 1.356,
+     "p50": 1.549,
+     "p95": 3.201,
+     "max": 3.201
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.061,
+     "p50": 0.079,
+     "p95": 0.135,
+     "max": 0.135
+    },
+    "openFirst": 0.08472099999926286,
+    "helperEvaluateFirst": 0.24705700000049546,
+    "typeEventToAppliedFirst": 3.200906000000032
+   },
+   "failures": []
+  },
+  "ms-cjk-ime": {
+   "pass": true,
+   "reps": 5,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "日bar日"
+    ],
+    "finalText": "foo 日bar日",
+    "layer": null,
+    "undo": {
+     "how": "cdp ctrl+z",
+     "restored": true
+    }
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 5,
+     "min": 0.069,
+     "p50": 0.123,
+     "p95": 0.147,
+     "max": 0.147
+    },
+    "typeEventToApplied": {
+     "n": 5,
+     "min": 1.109,
+     "p50": 1.421,
+     "p95": 1.532,
+     "max": 1.532
+    },
+    "helperOpen": {
+     "n": 5,
+     "min": 0.059,
+     "p50": 0.076,
+     "p95": 0.087,
+     "max": 0.087
+    },
+    "openFirst": 0.08712499999819556,
+    "helperEvaluateFirst": 0.10441799999898649,
+    "typeEventToAppliedFirst": 1.1090079999994487
+   },
+   "failures": []
+  },
+  "ms-guillemet-insertText": {
+   "pass": true,
+   "reps": 5,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "«bar»"
+    ],
+    "finalText": "foo «bar»",
+    "layer": null,
+    "undo": {
+     "how": "cdp ctrl+z",
+     "restored": true
+    }
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 5,
+     "min": 0.081,
+     "p50": 0.097,
+     "p95": 0.15,
+     "max": 0.15
+    },
+    "typeEventToApplied": {
+     "n": 5,
+     "min": 1.192,
+     "p50": 1.307,
+     "p95": 1.504,
+     "max": 1.504
+    },
+    "helperOpen": {
+     "n": 5,
+     "min": 0.061,
+     "p50": 0.072,
+     "p95": 0.077,
+     "max": 0.077
+    },
+    "openFirst": 0.07733700000244426,
+    "helperEvaluateFirst": 0.0967930000006163,
+    "typeEventToAppliedFirst": 1.4113599999982398
+   },
+   "failures": []
+  },
+  "md-paren": {
+   "pass": true,
+   "reps": 20,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "a"
+    ],
+    "finalText": "foo bar baz",
+    "layer": null,
+    "undo": null
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.06,
+     "p50": 0.116,
+     "p95": 0.132,
+     "max": 0.132
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 1.543,
+     "p50": 1.881,
+     "p95": 7.655,
+     "max": 7.655
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.041,
+     "p50": 0.066,
+     "p95": 0.108,
+     "max": 0.108
+    },
+    "openFirst": 0.10804500000085682,
+    "helperEvaluateFirst": 0.09435899999880348,
+    "typeEventToAppliedFirst": 2.0519920000006096
+   },
+   "failures": []
+  },
+  "mr-paren-bracket": {
+   "pass": true,
+   "reps": 20,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "a"
+    ],
+    "finalText": "foo [bar] baz",
+    "layer": null,
+    "undo": null
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.055,
+     "p50": 0.103,
+     "p95": 0.12,
+     "max": 0.12
+    },
+    "helperContinue": {
+     "n": 20,
+     "min": 0.044,
+     "p50": 0.056,
+     "p95": 0.098,
+     "max": 0.098
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 1.168,
+     "p50": 1.323,
+     "p95": 3.766,
+     "max": 3.766
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.037,
+     "p50": 0.052,
+     "p95": 0.119,
+     "max": 0.119
+    },
+    "openFirst": 0.11924499999804539,
+    "helperEvaluateFirst": 0.11780300000100397,
+    "typeEventToAppliedFirst": 1.6095450000029814
+   },
+   "failures": []
+  },
+  "mig-git-hunk-unsaved": {
+   "pass": true,
+   "reps": 20,
+   "first": {
+    "status": "proposal",
+    "selectedText": [
+     "TWO\n"
+    ],
+    "finalText": "one\nTWO\nthree\nfive\n",
+    "layer": null,
+    "undo": null
+   },
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.356,
+     "p50": 0.381,
+     "p95": 0.744,
+     "max": 0.744
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.782,
+     "p50": 0.908,
+     "p95": 1.453,
+     "max": 1.453
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.594,
+     "p50": 0.631,
+     "p95": 1.195,
+     "max": 1.195
+    },
+    "openFirst": 1.1951410000001488,
+    "helperEvaluateFirst": 0.38096999999834225,
+    "typeEventToAppliedFirst": 0.7963459999991755
+   },
+   "failures": []
+  }
+ },
+ "grammarsMappedFromPackage": true,
+ "stderrContainsDocumentText": false,
+ "race": {
+  "pass": true,
+  "trialCount": 90,
+  "tally": {
+   "A": {
+    "n": 60,
+    "syncCheckCaught": 60,
+    "editCalled": 0,
+    "corrupted": 0,
+    "nativeBeforeResponse": 60,
+    "recovered": 20,
+    "staleEvalRejected": 20,
+    "undoRestored": 40
+   },
+   "B": {
+    "n": 30,
+    "syncCheckCaught": 0,
+    "editCalled": 30,
+    "editRejected": 30,
+    "editServial": 0,
+    "corrupted": 0,
+    "undoRestored": 30
+   }
+  },
+  "corrupted": 0,
+  "staleApplied": 0
+ },
+ "projection": {
+  "coverage": {
+   "transitionsVisited": 1108,
+   "chainsRun": 455,
+   "steps": 2013,
+   "startChecks": 473,
+   "resultChecks": 1979,
+   "editsApplied": 1097,
+   "editRejected": 0,
+   "resyncs": 18,
+   "chainedNextInputsMatchingFixture": 1514,
+   "nextInputsThatChangedHelperResult": 22
+  },
+  "resultProjectionChecked": 1979,
+  "resultProjectionDiffs": 7,
+  "distinctLossTransitions": 6,
+  "commandsWhoseOutputDiffers": [
+   "inside:w",
+   "around:w",
+   "add:(",
+   "delete:("
+  ],
+  "commandsIdenticalOnEveryLossRow": [
+   "inside:p",
+   "debugDelete:null"
+  ],
+  "classes": {
+   "zero_width_at_eof": [
+    454,
+    447
+   ],
+   "selects_exactly_one_lf": [
+    102,
+    100
+   ],
+   "multi_range": [
+    145,
+    138
+   ],
+   "primary_not_first": [
+    145,
+    138
+   ],
+   "touching_ranges": [
+    46,
+    39
+   ],
+   "selects_exactly_one_crlf": [
+    254,
+    251
+   ],
+   "plain": [
+    1094,
+    1094
+   ]
+  },
+  "inputClasses": {
+   "zero_width_at_eof": [
+    63,
+    60
+   ],
+   "zero_width_not_at_eof": [
+    309,
+    279
+   ],
+   "multi_range": [
+    60,
+    51
+   ],
+   "inside_crlf": [
+    58,
+    0
+   ],
+   "inside_grapheme_cluster": [
+    21,
+    21
+   ],
+   "plain": [
+    97,
+    97
+   ]
+  },
+  "helperNextResultMismatches": 22,
+  "mismatchCauses": {
+   "input lost a range (VS Code merged zero-width EOF cursor into the touching range)": 10,
+   "chain start the fixture placed inside CRLF (VS Code cannot hold it)": 12
+  },
+  "textMismatches": 3,
+  "nonAuthoritativeReadbacks": [
+   92,
+   0
+  ]
+ },
+ "retained": {
+  "replay": {
+   "coverage": {
+    "transitionsVisited": 1108,
+    "chainsRun": 455,
+    "steps": 2013,
+    "startChecks": 467,
+    "resultChecks": 1979,
+    "editsApplied": 1097,
+    "editRejected": 0,
+    "resyncs": 12,
+    "chainedNextInputsMatchingFixture": 1524,
+    "nextInputsThatChangedHelperResult": 12
+   },
+   "retention": {
+    "used": 1546,
+    "fallbacks": {}
+   },
+   "mismatchClasses": {
+    "crlfGapChainStart": 12,
+    "readbackMergeLoss": 0,
+    "other": 0
+   },
+   "helperNextResultMismatches": 12,
+   "textMismatches": 0,
+   "readbackStillMergesDiffs": 14
+  },
+  "invalidation": {
+   "pass": true,
+   "shapes": 6,
+   "cases": {
+    "95": {
+     "control": [
+      true,
+      "retained",
+      null
+     ],
+     "realArrowRight": [
+      true,
+      "readback",
+      "external selection event(s): 1"
+     ],
+     "externalChangeThenRestoreEqualSelections": [
+      true,
+      "readback",
+      "external selection event(s): 2"
+     ],
+     "realTypeThenUndo": [
+      true,
+      "readback",
+      "document version changed"
+     ],
+     "versionOnlyChange": [
+      true,
+      "readback",
+      "document version changed"
+     ]
+    },
+    "453": {
+     "control": [
+      true,
+      "retained",
+      null
+     ],
+     "realArrowRight": [
+      true,
+      "readback",
+      "external selection event(s): 1"
+     ],
+     "externalChangeThenRestoreEqualSelections": [
+      true,
+      "readback",
+      "external selection event(s): 2"
+     ],
+     "realTypeThenUndo": [
+      true,
+      "readback",
+      "document version changed"
+     ],
+     "versionOnlyChange": [
+      true,
+      "readback",
+      "document version changed"
+     ]
+    },
+    "567": {
+     "control": [
+      true,
+      "retained",
+      null
+     ],
+     "realArrowRight": [
+      true,
+      "readback",
+      "external selection event(s): 1"
+     ],
+     "externalChangeThenRestoreEqualSelections": [
+      true,
+      "readback",
+      "external selection event(s): 2"
+     ],
+     "realTypeThenUndo": [
+      true,
+      "readback",
+      "document version changed"
+     ],
+     "versionOnlyChange": [
+      true,
+      "readback",
+      "document version changed"
+     ]
+    },
+    "771": {
+     "control": [
+      true,
+      "retained",
+      null
+     ],
+     "realArrowRight": [
+      true,
+      "readback",
+      "external selection event(s): 1"
+     ],
+     "externalChangeThenRestoreEqualSelections": [
+      true,
+      "readback",
+      "external selection event(s): 2"
+     ],
+     "realTypeThenUndo": [
+      true,
+      "readback",
+      "document version changed"
+     ],
+     "versionOnlyChange": [
+      true,
+      "readback",
+      "document version changed"
+     ]
+    },
+    "885": {
+     "control": [
+      true,
+      "retained",
+      null
+     ],
+     "realArrowRight": [
+      true,
+      "readback",
+      "external selection event(s): 1"
+     ],
+     "externalChangeThenRestoreEqualSelections": [
+      true,
+      "readback",
+      "external selection event(s): 2"
+     ],
+     "realTypeThenUndo": [
+      true,
+      "readback",
+      "document version changed"
+     ],
+     "versionOnlyChange": [
+      true,
+      "readback",
+      "document version changed"
+     ]
+    },
+    "1103": {
+     "control": [
+      true,
+      "retained",
+      null
+     ],
+     "realArrowRight": [
+      true,
+      "readback",
+      "external selection event(s): 1"
+     ],
+     "externalChangeThenRestoreEqualSelections": [
+      true,
+      "readback",
+      "external selection event(s): 2"
+     ],
+     "realTypeThenUndo": [
+      true,
+      "readback",
+      "document version changed"
+     ],
+     "versionOnlyChange": [
+      true,
+      "readback",
+      "document version changed"
+     ]
+    }
+   }
+  },
+  "cd": {
+   "pass": true,
+   "lossyRows": 12,
+   "dTextDiverges": 0,
+   "cTextDiverges": 5,
+   "cNoMergeLineBreakControlsDiverge": "3/3",
+   "helperOutputsIdenticalForSemanticAndMergedInput": true,
+   "cursorProxyDiverges": 0,
+   "controlsTextEqual": {
+    "control-abc-def:d": true,
+    "control-abc-def:c": true,
+    "control-crlf-line:d": true,
+    "control-crlf-line:c": true,
+    "control-single-range-one-LF:d": true,
+    "control-single-range-one-LF:c": true,
+    "control-single-range-one-CRLF:d": true,
+    "control-single-range-one-CRLF:c": true,
+    "control-single-range-LF-at-EOF:d": true,
+    "control-single-range-LF-at-EOF:c": true,
+    "control-single-range-CRLF-at-EOF:d": true,
+    "control-single-range-CRLF-at-EOF:c": true,
+    "control-blank-line-break-after-text:d": true,
+    "control-blank-line-break-after-text:c": false,
+    "control-blank-line-break-only-LF:d": true,
+    "control-blank-line-break-only-LF:c": false,
+    "control-blank-line-break-only-CRLF:d": true,
+    "control-blank-line-break-only-CRLF:c": false
+   }
+  },
+  "cdPending": [
+   "The helper has no `c` action: INSERT cursor positions for `c` are compared only against the start of the helper post-delete selections (proxy); a Helix-exact `c` expectation needs a helper change action (pending).",
+   "The extension is the existing production `d`/`c` (not Helix code); a divergence from the helper in a control row would be an extension-vs-Helix difference, not projection loss."
+  ]
+ }
+}

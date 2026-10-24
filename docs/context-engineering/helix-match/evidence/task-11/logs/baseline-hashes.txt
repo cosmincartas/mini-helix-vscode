@@ -1,0 +1,26 @@
+<class 'dict'> 24
+OK  README.md
+DIFF package.json
+OK  scripts/keybindings.cjs
+OK  src/core/count.ts
+OK  src/core/registerMotion.ts
+OK  src/extension.ts
+OK  src/motions/hjkl.ts
+OK  test/integration/index.ts
+OK  test/integration/keyboard.ts
+OK  test/unit/helix.ts
+OK  test/unit/keybindings.test.ts
+OK  test/unit/wordMotion.test.ts
+OK  docs/context-engineering/helix-match/plan.md
+OK  docs/context-engineering/helix-match/review.md
+OK  docs/context-engineering/helix-match/reviews/claude-final.md
+OK  docs/context-engineering/helix-match/reviews/claude-followup.md
+OK  docs/context-engineering/helix-match/reviews/claude-initial.md
+OK  docs/context-engineering/helix-match/spec.md
+OK  src/vscode/navigation.ts
+OK  test/integration/hjkl.ts
+OK  test/integration/navigation.ts
+OK  test/unit/charMotion.test.ts
+OK  test/unit/charMotionCases.ts
+OK  test/unit/helixMovement.test.ts
+different: 1

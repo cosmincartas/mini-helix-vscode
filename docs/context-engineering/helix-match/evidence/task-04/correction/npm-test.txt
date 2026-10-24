@@ -1,0 +1,25 @@
+✔ disabled mode commands do not consume transitions or prepare selections (0.139474ms)
+✔ suspending and resuming preserves the previous mode (0.122852ms)
+✔ INSERT can be the initial mode without changing existing selections (0.117162ms)
+✔ state snapshots are immutable and do not change after transitions (0.43331ms)
+✔ rapid transitions render and publish in invocation order (0.196352ms)
+✔ labels alternate after/before the primary cursor, skipping its current word (1.042652ms)
+✔ word under cursor is skipped at its start, middle, and final character (0.183828ms)
+✔ cursor on whitespace or punctuation does not skip a neighboring word (0.119947ms)
+✔ punctuation separates words; underscores, digits, and camelCase stay together (0.125618ms)
+✔ labels require two graphemes, not two UTF-16 units (0.869835ms)
+✔ only supplied visible regions get targets; overlaps are deduplicated (0.124475ms)
+✔ label pairs roll over at az and stop at zz (1.415859ms)
+✔ empty content, single-letter words, and a lone current word have no targets (0.11624ms)
+✔ all words may precede or follow an off-viewport cursor (3.342213ms)
+✔ W, B, and E treat punctuation and word characters as one WORD (1.642737ms)
+✔ motions never split grapheme clusters or CRLF line endings (0.220087ms)
+✔ moving forward from the end of the text keeps the selection (0.090391ms)
+ℹ tests 77
+ℹ suites 0
+ℹ pass 77
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67.586043

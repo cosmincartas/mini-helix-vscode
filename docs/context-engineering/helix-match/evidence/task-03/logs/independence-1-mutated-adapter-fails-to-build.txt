@@ -1,0 +1,15 @@
+# adapter mutation proof (scratch copy /tmp/hm-p3-indep): the mutated production adapter does not compile
+$ cargo +1.90.0 check --manifest-path /tmp/hm-p3-indep/native/Cargo.toml -p mini-helix-match-helper
+4 + //
+error[E0753]: expected outer doc comment
+5 | //! No Helix algorithm is implemented here; everything Helix-specific is a call into the pinned crates.
+6 |
+7 | pub mod inventory;
+help: to annotate the module, change the doc comment from inner to outer style
+5 - //! No Helix algorithm is implemented here; everything Helix-specific is a call into the pinned crates.
+5 + /// No Helix algorithm is implemented here; everything Helix-specific is a call into the pinned crates.
+error: MUTATED ADAPTER: must not affect the oracle
+1 | compile_error!("MUTATED ADAPTER: must not affect the oracle");
+For more information about this error, try `rustc --explain E0753`.
+error: could not compile `mini-helix-match-helper` (lib) due to 5 previous errors
+exit=101

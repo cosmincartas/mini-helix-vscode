@@ -1,0 +1,70 @@
+$ HELIX_MATCH_REQUIRE_REAL_HELPER=1 node --test out/test/unit/matchSelections.test.js   # codec present, helper binaries NOT rebuilt (no test_normalize_selection yet)
+  Error [MatchClientError]: match helper remote_error: unsupported_method
+    detail: 'unsupported_method',
+  Error [MatchClientError]: match helper remote_error: unsupported_method
+    detail: 'unsupported_method',
+  Error [MatchClientError]: match helper remote_error: unsupported_method
+    detail: 'unsupported_method',
+  + 'unsupported_method'
+    actual: 'unsupported_method',
+  + 'unsupported_method'
+    actual: 'unsupported_method',
+  + 'unsupported_method'
+    actual: 'unsupported_method',
+  Error [MatchClientError]: match helper remote_error: unsupported_method
+    detail: 'unsupported_method',
+$ (same command) summary
+      at Readable.push (node:internal/streams/readable:406:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+    kind: 'remote_error',
+    cause: undefined,
+    helperCode: 'invalid_request',
+    detail: 'unsupported_method',
+    data: undefined,
+    exitCode: undefined,
+    signal: undefined
+  }
+ℹ tests 23
+ℹ pass 11
+ℹ fail 12
+ℹ skipped 0
+  ✖ accepts scalar boundaries and rejects everything else without rounding (0.696327ms)
+  ✖ rejects an offset beside a lone surrogate as malformed UTF-16 (never replaced) (0.583353ms)
+  ✖ converts VS Code selections to wire offsets in editor order with primary index 0, keeping direction (0.27524ms)
+✖ selectionCodec offsets (2.178711ms)
+  ✔ puts the primary first and keeps the canonical order for the rest; back-mapping recovers the canonical index (0.690757ms)
+  ✖ validates before projecting: bad primary, empty set and offsets inside pairs are rejected (0.276303ms)
+✖ selectionCodec projection (1.160085ms)
+  ✔ reproduces the lossy class and restores the semantic set while nothing external happened (0.575298ms)
+  ✔ does not report a lossless projection as lossy but still retains canonical state (0.20061ms)
+  ✔ is invalidated by a document version change, a different document or generation (0.244242ms)
+  ✔ is invalidated by ANY external selection event, even when the selections are equal again (0.198887ms)
+  ✔ is invalidated when the editor selections differ although no event was delivered (0.179179ms)
+  ✔ command-owned events update the tracked projection without invalidating their owner (0.226298ms)
+  ✔ own scopes nest and close even when the command throws (0.22187ms)
+  ✔ retain() starts a fresh epoch and invalidate() drops the record and advances the generation (0.141026ms)
+✔ RetainedSelection (2.294992ms)
+  ✔ exists with the required classes (regenerated only by the oracle) (0.16885ms)
+✔ oracle fixture for selection identity (0.228041ms)
+  ✖ advertises the test-only method and keeps evaluate/continue/cancel unsupported (4338.245933ms)
+  ✖ normalizes every oracle selection-identity case exactly as pinned Helix does (UTF-16 wire, scalar view, primary) (4474.362103ms)
+  ✖ round-trips every oracle selection-identity case through the codec: projection, VS Code read-back, retained state, helper import (4347.527482ms)
+  ✖ feeds consecutive oracle states (every initial and step snapshot of every fixture) through projection and retention unchanged (4568.065248ms)
+  ✖ rejects offsets inside surrogate pairs, beyond the document, unsafe numbers and invalid shapes; the helper stays usable (4890.710608ms)
+  ✖ applies the document freshness checks: unknown document, stale generation, version mismatch (4581.346943ms)
+  ✖ refuses malformed UTF-16 document text with a controlled result and creates no replica to select in (4272.60215ms)
+  ✖ keeps selections valid across document changes: a new version is addressed by its own version (4555.276094ms)
+✖ selection import/export with the real helper (36028.727799ms)
+  ✔ does not expose the test-only selection method (4305.587581ms)
+✔ production helper (4305.705915ms)
+✖ failing tests:
+✖ accepts scalar boundaries and rejects everything else without rounding (0.696327ms)
+✖ rejects an offset beside a lone surrogate as malformed UTF-16 (never replaced) (0.583353ms)
+✖ converts VS Code selections to wire offsets in editor order with primary index 0, keeping direction (0.27524ms)
+✖ validates before projecting: bad primary, empty set and offsets inside pairs are rejected (0.276303ms)
+✖ advertises the test-only method and keeps evaluate/continue/cancel unsupported (4338.245933ms)
+✖ normalizes every oracle selection-identity case exactly as pinned Helix does (UTF-16 wire, scalar view, primary) (4474.362103ms)
+✖ round-trips every oracle selection-identity case through the codec: projection, VS Code read-back, retained state, helper import (4347.527482ms)
+✖ feeds consecutive oracle states (every initial and step snapshot of every fixture) through projection and retention unchanged (4568.065248ms)
+✖ rejects offsets inside surrogate pairs, beyond the document, unsafe numbers and invalid shapes; the helper stays usable (4890.710608ms)
+✖ applies the document freshness checks: unknown document, stale generation, version mismatch (4581.346943ms)

@@ -1,0 +1,20 @@
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+running 4 tests
+test intact_runtime_verifies_and_excluded_grammars_are_not_missing ... ok
+test lock_mismatches_are_reported ... ok
+test tampering_is_reported_with_the_right_installation_error_class ... ok
+test ambient_helix_state_does_not_change_runtime_resolution ... FAILED
+failures:
+---- ambient_helix_state_does_not_change_runtime_resolution stdout ----
+thread 'ambient_helix_state_does_not_change_runtime_resolution' panicked at match-helper/tests/runtime_isolation.rs:64:5:
+assertion `left == right` failed
+  left: Array [String("OUTSIDE:/tmp/.tmpBEKFwJ/clean-home/.config/helix/runtime"), String("OUTSIDE:/home/cosmincartas/work/projects/vscode-extension-helix-match/native/target/debug/runtime")]
+ right: Array [String("<runtime>/")]
+failures:
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+error: test failed, to rerun pass `-p mini-helix-match-helper --test runtime_isolation`

@@ -1,0 +1,56 @@
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.63s
+     Running tests/textobjects_syntax.rs (target/debug/deps/textobjects_syntax-6a5a27bddc2cf00c)
+
+running 8 tests
+test positive_fixture_coverage_per_capture_family ... ok
+test scope_accounting ... ok
+test language_changes_rebuild_the_syntax_and_objects_follow ... FAILED
+test every_in_scope_oracle_case_matches_step_by_step_through_the_helper ... FAILED
+test aliases_reach_the_same_objects_as_the_helix_language_id ... FAILED
+test language_mapping_end_to_end ... ok
+test every_configured_language_is_in_the_capture_inventory_and_the_loader_agrees ... ok
+test every_language_opens_through_the_protocol_with_the_inventory_state ... ok
+
+failures:
+
+---- language_changes_rebuild_the_syntax_and_objects_follow stdout ----
+
+thread 'language_changes_rebuild_the_syntax_and_objects_follow' panicked at match-helper/tests/textobjects_syntax.rs:528:5:
+assertion `left == right` failed: rust: mif matches the oracle
+  left: ([(40, 41)], 0)
+ right: ([(30, 43)], 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- every_in_scope_oracle_case_matches_step_by_step_through_the_helper stdout ----
+
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_the_helper' panicked at match-helper/tests/textobjects_syntax.rs:249:13:
+assertion `left == right` failed: syntax-failure-2/incremental-failure-control-no-failure step 2 String("mif"): selections or primary differ from the oracle
+  left: ([(15, 16)], 0)
+ right: ([(7, 19)], 0)
+
+---- aliases_reach_the_same_objects_as_the_helix_language_id stdout ----
+
+thread 'aliases_reach_the_same_objects_as_the_helix_language_id' panicked at match-helper/tests/textobjects_syntax.rs:249:13:
+assertion `left == right` failed: syntax-objects-2/function-tsx-inherited-chain step 0 String("mif"): selections or primary differ from the oracle
+  left: ([(44, 45)], 0)
+ right: ([(25, 57)], 0)
+
+
+failures:
+    aliases_reach_the_same_objects_as_the_helix_language_id
+    every_in_scope_oracle_case_matches_step_by_step_through_the_helper
+    language_changes_rebuild_the_syntax_and_objects_follow
+
+test result: FAILED. 5 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.68s
+
+error: test failed, to rerun pass `-p mini-helix-match-helper --test textobjects_syntax`

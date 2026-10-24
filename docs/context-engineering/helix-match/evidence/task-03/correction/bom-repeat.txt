@@ -1,0 +1,8 @@
+PASS git-hunks/mig-bom-baseline
+OK: oracle fixtures match the pinned upstream results
+PASS git-hunks/mig-bom-baseline
+OK: oracle fixtures match the pinned upstream results
+PASS git-hunks/mig-bom-baseline
+OK: oracle fixtures match the pinned upstream results
+PASS git-hunks/mig-bom-baseline
+OK: oracle fixtures match the pinned upstream results

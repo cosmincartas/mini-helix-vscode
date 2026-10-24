@@ -1,0 +1,699 @@
+{
+ "pass": true,
+ "scenarios": [
+  {
+   "id": "miw-plaintext",
+   "title": "miw on plaintext",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [],
+    "selectionsUtf16": [
+     {
+      "anchor": 4,
+      "head": 7
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "bar"
+    ],
+    "finalText": "foo bar baz",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"i\"",
+     "type:\"w\""
+    ],
+    "received": [
+     "m",
+     "i",
+     "w"
+    ],
+    "layer": null
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.05,
+     "p50": 0.098,
+     "p95": 0.209,
+     "max": 0.209
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.559,
+     "p50": 0.874,
+     "p95": 1.56,
+     "max": 1.56
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.038,
+     "p50": 0.075,
+     "p95": 0.135,
+     "max": 0.135
+    },
+    "openFirst": 0.13538600000003953,
+    "helperEvaluateFirst": 0.11988700000006247,
+    "typeEventToAppliedFirst": 0.9285570000001826
+   }
+  },
+  {
+   "id": "mif-rust",
+   "title": "mif on Rust (function.inside = body block)",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [],
+    "selectionsUtf16": [
+     {
+      "anchor": 11,
+      "head": 35
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "{\n    let x = 1;\n    x\n}"
+    ],
+    "finalText": "fn alpha() {\n    let x = 1;\n    x\n}\n\nfn beta() {\n    2\n}\n",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"i\"",
+     "type:\"f\""
+    ],
+    "received": [
+     "m",
+     "i",
+     "f"
+    ],
+    "layer": "rust"
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.114,
+     "p50": 0.14,
+     "p95": 10.104,
+     "max": 10.104
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.649,
+     "p50": 0.761,
+     "p95": 10.851,
+     "max": 10.851
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.112,
+     "p50": 0.135,
+     "p95": 53.689,
+     "max": 53.689
+    },
+    "openFirst": 53.68949299999986,
+    "helperEvaluateFirst": 10.10437600000023,
+    "typeEventToAppliedFirst": 10.850908999999774
+   }
+  },
+  {
+   "id": "mif-injected-markdown-rust",
+   "title": "mif on Rust injected in a markdown fence",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [],
+    "selectionsUtf16": [
+     {
+      "anchor": 46,
+      "head": 55
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "{\n    3\n}"
+    ],
+    "finalText": "# Title\n\nSome prose here.\n\n```rust\nfn gamma() {\n    3\n}\n```\n",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"i\"",
+     "type:\"f\""
+    ],
+    "received": [
+     "m",
+     "i",
+     "f"
+    ],
+    "layer": "rust"
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.067,
+     "p50": 0.112,
+     "p95": 0.149,
+     "max": 0.149
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.644,
+     "p50": 0.723,
+     "p95": 0.934,
+     "max": 0.934
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.124,
+     "p50": 0.209,
+     "p95": 6.412,
+     "max": 6.412
+    },
+    "openFirst": 6.411540000000059,
+    "helperEvaluateFirst": 0.10187300000052346,
+    "typeEventToAppliedFirst": 0.7455700000000434
+   }
+  },
+  {
+   "id": "mif-injected-control-prose",
+   "title": "control: mif on the markdown prose is a no-op",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [],
+    "selectionsUtf16": [
+     {
+      "anchor": 14,
+      "head": 15
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "p"
+    ],
+    "finalText": "# Title\n\nSome prose here.\n\n```rust\nfn gamma() {\n    3\n}\n```\n",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"i\"",
+     "type:\"f\""
+    ],
+    "received": [
+     "m",
+     "i",
+     "f"
+    ],
+    "layer": "markdown.inline"
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 5,
+     "min": 0.055,
+     "p50": 0.064,
+     "p95": 0.112,
+     "max": 0.112
+    },
+    "typeEventToApplied": {
+     "n": 5,
+     "min": 0.555,
+     "p50": 0.636,
+     "p95": 0.831,
+     "max": 0.831
+    },
+    "helperOpen": {
+     "n": 5,
+     "min": 0.112,
+     "p50": 0.172,
+     "p95": 0.29,
+     "max": 0.29
+    },
+    "openFirst": 0.2904889999990701,
+    "helperEvaluateFirst": 0.08053199999994831,
+    "typeEventToAppliedFirst": 0.6360430000004271
+   }
+  },
+  {
+   "id": "ms-emoji-insertText",
+   "title": "ms with U+1F600 delivered by CDP Input.insertText, then one native undo",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [
+     {
+      "end": 4,
+      "start": 4,
+      "text": "😀"
+     },
+     {
+      "end": 7,
+      "start": 7,
+      "text": "😀"
+     }
+    ],
+    "selectionsUtf16": [
+     {
+      "anchor": 4,
+      "head": 11
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "😀bar😀"
+    ],
+    "finalText": "foo 😀bar😀",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"s\"",
+     "type:\"😀\""
+    ],
+    "received": [
+     "m",
+     "s",
+     "😀"
+    ],
+    "layer": null,
+    "undo": {
+     "how": "cdp ctrl+z",
+     "restored": true
+    }
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.092,
+     "p50": 0.134,
+     "p95": 0.247,
+     "max": 0.247
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 1.356,
+     "p50": 1.549,
+     "p95": 3.201,
+     "max": 3.201
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.061,
+     "p50": 0.079,
+     "p95": 0.135,
+     "max": 0.135
+    },
+    "openFirst": 0.08472099999926286,
+    "helperEvaluateFirst": 0.24705700000049546,
+    "typeEventToAppliedFirst": 3.200906000000032
+   }
+  },
+  {
+   "id": "ms-cjk-ime",
+   "title": "ms with U+65E5 delivered by CDP IME composition (commit), then one native undo",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [
+     {
+      "end": 4,
+      "start": 4,
+      "text": "日"
+     },
+     {
+      "end": 7,
+      "start": 7,
+      "text": "日"
+     }
+    ],
+    "selectionsUtf16": [
+     {
+      "anchor": 4,
+      "head": 9
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "日bar日"
+    ],
+    "finalText": "foo 日bar日",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"s\"",
+     "compositionStart:null",
+     "type:\"に\"",
+     "replacePreviousChar:\"日\"",
+     "replacePreviousChar:\"日\"",
+     "compositionEnd:null"
+    ],
+    "received": [
+     "m",
+     "s",
+     "日"
+    ],
+    "layer": null,
+    "undo": {
+     "how": "cdp ctrl+z",
+     "restored": true
+    }
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 5,
+     "min": 0.069,
+     "p50": 0.123,
+     "p95": 0.147,
+     "max": 0.147
+    },
+    "typeEventToApplied": {
+     "n": 5,
+     "min": 1.109,
+     "p50": 1.421,
+     "p95": 1.532,
+     "max": 1.532
+    },
+    "helperOpen": {
+     "n": 5,
+     "min": 0.059,
+     "p50": 0.076,
+     "p95": 0.087,
+     "max": 0.087
+    },
+    "openFirst": 0.08712499999819556,
+    "helperEvaluateFirst": 0.10441799999898649,
+    "typeEventToAppliedFirst": 1.1090079999994487
+   }
+  },
+  {
+   "id": "ms-guillemet-insertText",
+   "title": "ms with U+00AB (bracket pair) by insertText",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [
+     {
+      "end": 4,
+      "start": 4,
+      "text": "«"
+     },
+     {
+      "end": 7,
+      "start": 7,
+      "text": "»"
+     }
+    ],
+    "selectionsUtf16": [
+     {
+      "anchor": 4,
+      "head": 9
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "«bar»"
+    ],
+    "finalText": "foo «bar»",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"s\"",
+     "type:\"«\""
+    ],
+    "received": [
+     "m",
+     "s",
+     "«"
+    ],
+    "layer": null,
+    "undo": {
+     "how": "cdp ctrl+z",
+     "restored": true
+    }
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 5,
+     "min": 0.081,
+     "p50": 0.097,
+     "p95": 0.15,
+     "max": 0.15
+    },
+    "typeEventToApplied": {
+     "n": 5,
+     "min": 1.192,
+     "p50": 1.307,
+     "p95": 1.504,
+     "max": 1.504
+    },
+    "helperOpen": {
+     "n": 5,
+     "min": 0.061,
+     "p50": 0.072,
+     "p95": 0.077,
+     "max": 0.077
+    },
+    "openFirst": 0.07733700000244426,
+    "helperEvaluateFirst": 0.0967930000006163,
+    "typeEventToAppliedFirst": 1.4113599999982398
+   }
+  },
+  {
+   "id": "md-paren",
+   "title": "md( deletes the surrounding parentheses",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [
+     {
+      "end": 5,
+      "start": 4,
+      "text": ""
+     },
+     {
+      "end": 9,
+      "start": 8,
+      "text": ""
+     }
+    ],
+    "selectionsUtf16": [
+     {
+      "anchor": 5,
+      "head": 6
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "a"
+    ],
+    "finalText": "foo bar baz",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"d\"",
+     "type:\"(\""
+    ],
+    "received": [
+     "m",
+     "d",
+     "("
+    ],
+    "layer": null
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.06,
+     "p50": 0.116,
+     "p95": 0.132,
+     "max": 0.132
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 1.543,
+     "p50": 1.881,
+     "p95": 7.655,
+     "max": 7.655
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.041,
+     "p50": 0.066,
+     "p95": 0.108,
+     "max": 0.108
+    },
+    "openFirst": 0.10804500000085682,
+    "helperEvaluateFirst": 0.09435899999880348,
+    "typeEventToAppliedFirst": 2.0519920000006096
+   }
+  },
+  {
+   "id": "mr-paren-bracket",
+   "title": "mr( then [ (preview, continuation, final edit)",
+   "reps": [],
+   "failures": [],
+   "first": {
+    "status": "proposal",
+    "edits": [
+     {
+      "end": 5,
+      "start": 4,
+      "text": "["
+     },
+     {
+      "end": 9,
+      "start": 8,
+      "text": "]"
+     }
+    ],
+    "selectionsUtf16": [
+     {
+      "anchor": 6,
+      "head": 7
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "a"
+    ],
+    "finalText": "foo [bar] baz",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"r\"",
+     "type:\"(\"",
+     "type:\"[\""
+    ],
+    "received": [
+     "m",
+     "r",
+     "("
+    ],
+    "layer": null
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.055,
+     "p50": 0.103,
+     "p95": 0.12,
+     "max": 0.12
+    },
+    "helperContinue": {
+     "n": 20,
+     "min": 0.044,
+     "p50": 0.056,
+     "p95": 0.098,
+     "max": 0.098
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 1.168,
+     "p50": 1.323,
+     "p95": 3.766,
+     "max": 3.766
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.037,
+     "p50": 0.052,
+     "p95": 0.119,
+     "max": 0.119
+    },
+    "openFirst": 0.11924499999804539,
+    "helperEvaluateFirst": 0.11780300000100397,
+    "typeEventToAppliedFirst": 1.6095450000029814
+   }
+  },
+  {
+   "id": "mig-git-hunk-unsaved",
+   "title": "mig on an unsaved edit of a tracked file (HEAD baseline from the repository)",
+   "reps": [],
+   "failures": [],
+   "diskUnchangedBefore": true,
+   "first": {
+    "status": "proposal",
+    "edits": [],
+    "selectionsUtf16": [
+     {
+      "anchor": 4,
+      "head": 8
+     }
+    ],
+    "primary": 0,
+    "selectedText": [
+     "TWO\n"
+    ],
+    "finalText": "one\nTWO\nthree\nfive\n",
+    "typedEvents": [
+     "type:\"m\"",
+     "type:\"i\"",
+     "type:\"g\""
+    ],
+    "received": [
+     "m",
+     "i",
+     "g"
+    ],
+    "layer": null,
+    "diskUnchangedAfter": true,
+    "isDirty": true
+   },
+   "pass": true,
+   "latencyMs": {
+    "helperEvaluate": {
+     "n": 20,
+     "min": 0.356,
+     "p50": 0.381,
+     "p95": 0.744,
+     "max": 0.744
+    },
+    "typeEventToApplied": {
+     "n": 20,
+     "min": 0.782,
+     "p50": 0.908,
+     "p95": 1.453,
+     "max": 1.453
+    },
+    "helperOpen": {
+     "n": 20,
+     "min": 0.594,
+     "p50": 0.631,
+     "p95": 1.195,
+     "max": 1.195
+    },
+    "openFirst": 1.1951410000001488,
+    "helperEvaluateFirst": 0.38096999999834225,
+    "typeEventToAppliedFirst": 0.7963459999991755
+   }
+  }
+ ],
+ "helperOpenFileDescriptorTargets": {
+  "socket:[N]": 4,
+  "/home/cosmincartas/work/projects/vscode-extension-helix-match/.vscode-test/vscode-linux-xN-N.N.N/vN_context_snapshot.bin": 1,
+  "anon_inode:inotify": 1,
+  "/home/cosmincartas/work/projects/vscode-extension-helix-match/.vscode-test/vscode-linux-xN-N.N.N/resources/app/node_modules.asar": 1,
+  "/tmp/hm-tNbN-results/vscode-logs/windowN/exthost/exthost.log": 1,
+  "/tmp/hm-tNbN-results/vscode-logs/windowN/exthost/extHostTelemetry.log": 1,
+  "/tmp/hm-tNbN-results/vscode-logs/windowN/exthost/vscode.github-authentication/GitHub Authentication.log": 1,
+  "/tmp/hm-tNbN-results/vscode-logs/windowN/exthost/vscode.git/Git.log": 1,
+  "/tmp/hm-tNbN-results/vscode-logs/windowN/exthost/vscode.github/GitHub.log": 1
+ },
+ "helperMappedFiles": [
+  "/tmp/hm-t1b1-run/extensions/local.mini-helix-0.99.0/native/linux-x64/runtime/grammars/markdown_inline.so",
+  "/tmp/hm-t1b1-run/extensions/local.mini-helix-0.99.0/native/linux-x64/runtime/grammars/markdown.so",
+  "/tmp/hm-t1b1-run/extensions/local.mini-helix-0.99.0/native/linux-x64/runtime/grammars/rust.so"
+ ],
+ "grammarsMappedFromPackage": true,
+ "grammarsMapped": 3,
+ "stderrSampleKeys": [
+  "code,log,method,ms,ok"
+ ],
+ "stderrContainsDocumentText": false
+}

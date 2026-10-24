@@ -1,0 +1,21 @@
+# P2R-1 correction: feasibility workspace root restored
+## command (from worktree root)
+native/feasibility/grammars/stage-helper.sh   # cd native/feasibility && cargo build --release --locked -p mini-helix-match-feasibility (CARGO_TARGET_DIR default native/target)
+## result: exit 0; 'Finished release profile'; Cargo.lock unchanged by cargo (sha256 below equals snapshot Cargo.lock.txt)
+2e1ef6eac284803a5c1f56d07e7e95a78b7fdbe9b9dacd2f3044667dc2c2eb61  native/feasibility/Cargo.toml
+f282abcfd9cf1341de5c29f88c71ec214bb54bebf39c2cf027e0f6a231294c4b  native/feasibility/Cargo.lock
+f282abcfd9cf1341de5c29f88c71ec214bb54bebf39c2cf027e0f6a231294c4b  docs/context-engineering/helix-match/evidence/task-02/task1-workspace-snapshot/Cargo.lock.txt
+## binaries (stage-helper.sh overwrote build/stage; old copy kept in /tmp/hm-p2cr-old and restored afterwards)
+old Task 1 stage binary  63ad0231ed4233abc5f8a52198f99683f0c97a6f70b0376bcdac74e696191336 (10024408 bytes)
+new build, native/target 4fa0d93ffbe83ed2d068bb21c2ec7b60030a5aed9870499e48e14fe218171cad (10024624 bytes)
+new build, CARGO_TARGET_DIR=/tmp/hm-p2cr-target 07b1a78cb2c27449eac1fba188c5228a18cb96c2b960bc7c8516d8f39aa33a66
+Not byte-identical: Cargo package ids / workspace root changed (members helper vs feasibility/helper), which changes crate metadata hashes, symbol hashes and string ordering; the dependency set (lock) is identical. Even the target dir changes the hash.
+## probes: run_probes.py on new binary: 8 groups, 0 failed, 124/124 checks pass; on restored old binary: 8 groups, 0 failed, 124/124
+## production (unchanged): sha256 native/Cargo.toml 64368d50..., Cargo.lock 01b15f23..., helix-lock.json 0e9b8538..., match-helper tree hash equal to post-task02 snapshot
+cargo test -p mini-helix-match-helper: 4 passed; build:match OK; check:helix-runtime OK runtimeHash=fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b
+npm test: 77 pass 0 fail; bash -n OK on grammars/*.sh targets/*.sh
+baseline files 24 differing ['package.json']
+## git status --short --ignored native: only existing ignored dirs (build, upstream, runtime/out, target, upstream/cache, upstream/helix); no new target dir
+before 64368d506ceda3b219309e85a0a8648fed1f0d194b3c44cc18b38e0d0fcbe636  Cargo.toml
+before 01b15f238e6a9afbf01731bb5aaebf3b49ab736fcabb3ea2ea9add37aa508615  Cargo.lock
+before 0e9b85388f9770befc48d6ab8505bc69dec4a31c2f81a502517fd9d32860692b  helix-lock.json

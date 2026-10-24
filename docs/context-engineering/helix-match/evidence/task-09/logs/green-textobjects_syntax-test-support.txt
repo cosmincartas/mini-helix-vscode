@@ -1,0 +1,45 @@
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.50s
+     Running tests/textobjects_syntax.rs (target/debug/deps/textobjects_syntax-b179c24788ca7efa)
+
+running 9 tests
+in scope: 315 cases; excluded: 2
+excluded syntax-failure/incremental-failure-disables-for-good: command outside inside/around: Char('s', []) in AfterM
+excluded syntax-failure/incremental-no-failure-control: command outside inside/around: Char('s', []) in AfterM
+test (T): 7 languages (smallest layer) with a positive fixture: dart elixir go julia python rust zig
+parameter (a): 19 languages (smallest layer) with a positive fixture: bash c c-sharp go haskell java javascript kotlin lua nix ocaml php python ruby rust swift tsx typescript zig
+comment (c): 10 languages (smallest layer) with a positive fixture: clojure crystal eiffel elm env hocon prisma rust solidity sql
+entry (e): 20 languages (smallest layer) with a positive fixture: bash c css docker-compose git-config graphql hcl java javascript json json5 lua nix python ruby rust toml tsx typescript yaml
+function (f): 29 languages (smallest layer) with a positive fixture: bash c c-sharp cmake cpp dart elixir fish glsl go haskell java javascript jsx julia kotlin lua nix ocaml perl php python ruby rust scala swift tsx typescript zig
+class (t): 23 languages (smallest layer) with a positive fixture: c c-sharp cpp css dart elixir go haskell java javascript jsx julia kotlin php protobuf python ruby rust scala swift tsx typescript zig
+xml-element (x): 8 languages (smallest layer) with a positive fixture: blade html jsx svelte templ tsx vue xml
+test positive_fixture_coverage_per_capture_family ... ok
+test scope_accounting ... ok
+test update_failure_disables_syntax_for_good_and_only_a_language_change_recovers ... ok
+test language_changes_rebuild_the_syntax_and_objects_follow ... ok
+alias replays: 24 cases; aliases exercised with a fixture: {"csharp", "cuda-cpp", "dockercompose", "dotenv", "javascriptreact", "proto3", "shellscript", "terraform", "typescriptreact"}
+test aliases_reach_the_same_objects_as_the_helix_language_id ... ok
+test language_mapping_end_to_end ... ok
+languages: 342; with a compiled textobjects query: 154 (154 with at least one of the 14 captures); without a query: 180; without a tree (no grammar library): 8; (language, capture) pairs compared with the loader: 2156
+test every_configured_language_is_in_the_capture_inventory_and_the_loader_agrees ... ok
+languages opened: 342 (334 with a tree, 8 without a grammar library), capture requests: 1098
+test every_language_opens_through_the_protocol_with_the_inventory_state ... ok
+test every_in_scope_oracle_case_matches_step_by_step_through_the_helper has been running for over 60 seconds
+replayed cases: 315, evaluate requests: 722 (543 changed the selection), mirrored edit events: 24, skipped without --features test-support: 0
+test every_in_scope_oracle_case_matches_step_by_step_through_the_helper ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 74.65s
+
+
+real	1m15.184s
+user	2m15.165s
+sys	0m3.451s

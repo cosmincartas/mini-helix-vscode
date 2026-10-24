@@ -1,0 +1,4 @@
+## VS Code 1.85.2 (minimum runtime), ELECTRON_RUN_AS_NODE
+{"nodeVersion":"v18.15.0","electron":"25.9.7","liveLoopbackTcpConnection":true,"excludeNetworkTypeBefore":"undefined","detectedTarget":"linux-x64","getReportCalls":0,"excludeNetworkTypeAfter":"undefined"}
+## host node (supports excludeNetwork)
+{"nodeVersion":"v26.8.2","electron":null,"liveLoopbackTcpConnection":true,"excludeNetworkTypeBefore":"boolean","detectedTarget":"linux-x64","getReportCalls":1,"excludeNetworkTypeAfter":"boolean"}

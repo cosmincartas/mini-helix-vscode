@@ -1,0 +1,37 @@
+▶ document replicas with the real helper
+  ✖ resynchronizes a replica left stale by a rejected event at the next ensureSynced, and reports an unsupported host snapshot as failed (4615.645263ms)
+✖ document replicas with the real helper (4616.954529ms)
+ℹ tests 1
+ℹ suites 1
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4661.559886
+
+✖ failing tests:
+
+test at out/test/unit/matchSync.test.js:294:24
+✖ resynchronizes a replica left stale by a rejected event at the next ensureSynced, and reports an unsupported host snapshot as failed (4615.645263ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'doc-1'
+  - ]
+  
+      at TestContext.<anonymous> (/home/cosmincartas/work/projects/vscode-extension-helix-match/out/test/unit/matchSync.test.js:307:30)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Promise.all (index 3)
+      at async Suite.run (node:internal/test_runner/test:1905:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'doc-1' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

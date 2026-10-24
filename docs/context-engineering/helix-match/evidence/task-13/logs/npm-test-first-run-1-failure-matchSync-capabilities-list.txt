@@ -1,0 +1,277 @@
+$ bash -c npm run compile && HELIX_MATCH_REQUIRE_REAL_HELPER=1 npm test
+
+> mini-helix@0.1.0 compile
+> tsc -p .
+
+
+> mini-helix@0.1.0 test
+> npm run check:keybindings && npm run compile && node --test out/test/unit/*.test.js
+
+
+> mini-helix@0.1.0 check:keybindings
+> node scripts/keybindings.cjs --check
+
+
+> mini-helix@0.1.0 compile
+> tsc -p .
+
+✔ h and l move the block cursor by graphemes, across lines (3.708626ms)
+✔ j and k keep the visual column, and remember it between vertical moves (3.776884ms)
+✔ a count repeats word motions (0.810733ms)
+✔ the next key uses the count; unbound keys and Escape clear it (0.938656ms)
+✔ an empty VS Code selection behaves as the block cursor over the next grapheme (4.409571ms)
+✔ CRLF and CR line breaks behave like Helix's LF (0.208825ms)
+✔ j and k use the editor tab size (0.123303ms)
+✔ grapheme widths follow Helix (unicode-width 0.1.12) (0.103856ms)
+✔ counts start with 1-9, continue with any digit, and stop growing past Helix's limit (0.178618ms)
+✔ Helix test suite: i, a, and c cases (3.126093ms)
+✔ d deletes selections, or the grapheme under each cursor (0.591058ms)
+✔ c deletes selections, or replaces whole lines with an indented one (1.086896ms)
+✔ a appends after selections and restores the cursor on Escape (0.471572ms)
+✔ i inserts before selections (0.264501ms)
+✔ edits act on the selections word motions make (0.570499ms)
+✔ an empty VS Code selection behaves as the block cursor over the next grapheme (2.35228ms)
+✔ edits use the document line ending and editor indentation (0.161816ms)
+✔ edits are sorted and disjoint, and the primary selection stays first (0.181533ms)
+✔ restoring the append cursor leaves selections and the end of the text alone (0.201492ms)
+✔ Helix notation round-trips, including adjacent and reversed ranges (0.153551ms)
+✔ test_vertical_move (5.004026ms)
+✔ horizontal_moves_through_single_line_text (0.53948ms)
+✔ horizontal_moves_through_multiline_text (0.229464ms)
+✔ vertical_moves_in_single_column (0.205288ms)
+✔ vertical_moves_jumping_column (0.191181ms)
+✔ multibyte_character_wide_column_jumps (0.529321ms)
+✔ w: test_behaviour_when_moving_to_start_of_next_words (0.705324ms)
+✔ b: test_behaviour_when_moving_to_start_of_previous_words (0.270743ms)
+✔ e: test_behaviour_when_moving_to_end_of_next_words (0.360181ms)
+✔ W: test_behaviour_when_moving_to_start_of_next_long_words (0.307472ms)
+✔ B: test_behaviour_when_moving_to_start_of_previous_long_words (0.214536ms)
+✔ E: test_behaviour_when_moving_to_end_of_next_long_words (0.169901ms)
+✔ Helix history: undo and redo whole revisions; undo at the root is a no-op (1.124938ms)
+✔ redo restores the selections recorded with the revision (3.830125ms)
+✔ a native step spanning revisions stops at the revision it reaches (0.235325ms)
+✔ a revision that restores earlier text stops at the nearest revision (0.206681ms)
+✔ new revisions after an undo drop the redo branch, like the native stack (0.208354ms)
+✔ history from before tracking falls back to one native step at a time (0.224024ms)
+✔ undo gives up after as many native steps as the revision had changes (0.161455ms)
+✔ an exhausted native stack drops the revisions it can no longer reach (0.161375ms)
+✔ commit needs a pending change; uncommitted reports one (0.155424ms)
+✔ navigation works in read-only NORMAL editors, yields to labels, and has no chord blockers (1.080304ms)
+✔ manifest contains the generated bindings (1.27418ms)
+✔ i, a, c, d, u, U, Escape, g w, motions, and counts are the default bindings outside a word jump (0.455442ms)
+✔ every bound motion and edit command is contributed and registered (0.731063ms)
+✔ motion keys override their blockers but yield to label input (0.334243ms)
+✔ blockers are unique and NORMAL-only, and editable-editor-only unless a count is pending (0.632616ms)
+✔ every other g chord is an unbound key that clears the count (0.272376ms)
+✔ digits are counts in NORMAL and label-free; Escape clears a pending count (0.207563ms)
+✔ ordinary printable keys and direct editing keys are blocked (0.260854ms)
+✔ only requested modified shortcuts are bound; arrow keys are captured only during a jump (0.322079ms)
+✔ i, a, c, d, and u override their blockers and label input overrides them during a jump (0.252378ms)
+✔ U overrides its blocker, needs a writable editor, and cancels a jump (0.138663ms)
+✔ every label character is captured with its argument, only during a jump (0.234043ms)
+▶ MatchClient protocol constants (one compatibility check)
+  ✔ mirrors native/match-helper/tests/fixtures/protocol/constants.json (1.08869ms)
+  ✔ emits request frames byte-identical to the shared fixtures (34.595141ms)
+✔ MatchClient protocol constants (one compatibility check) (36.378174ms)
+▶ MatchClient handshake
+  ✔ returns the epoch, capabilities and identity of a ready helper (18.683722ms)
+  ✔ coalesces concurrent ensureReady calls into one helper (19.252178ms)
+  ✔ rejects when the helper reports an identity error and exits 10 (40.908523ms)
+  ✔ rejects a helper that answers with a different runtime identity (38.303004ms)
+  ✔ rejects a helper that exits before answering initialize (18.59287ms)
+  ✔ rejects an initialize response that is malformed or carries no epoch (74.437087ms)
+  ✔ times out a helper that never answers initialize and kills it (170.340578ms)
+  ✔ reports a missing helper or unsupported target as unavailable without spawning (F-9) (0.627888ms)
+  ✔ never runs a shell: hostile characters in paths arrive verbatim as arguments (18.164781ms)
+  ✔ does not pass inherited runtime overrides to the helper (F-10) (18.526084ms)
+✔ MatchClient handshake (418.553241ms)
+▶ MatchClient requests
+  ✔ resolves typed results and passes helper error responses as remote_error without ending the session (18.780184ms)
+  ✔ matches concurrent responses to their requests and reassembles frames split inside UTF-8 sequences (223.381141ms)
+  ✔ rejects requests while no helper is ready (0.308353ms)
+  ✔ refuses an outgoing frame over the limit without sending or truncating it (18.802828ms)
+  ✔ rejects a request carrying an epoch from a previous helper without sending it (34.381697ms)
+✔ MatchClient requests (295.96411ms)
+▶ MatchClient failure model F-6 (crash, hang, malformed frame)
+  ✔ rejects every pending request when the helper process exits, and reports the stop once (18.311899ms)
+  ✔ times out a hung request, rejects all pending requests and kills the helper (238.384241ms)
+  ✔ terminates the session on malformed, non-object, invalid UTF-8, mismatched or oversized frames (227.109414ms)
+  ✔ delivers nothing from a replaced helper to a newer session (F-1) (37.337267ms)
+✔ MatchClient failure model F-6 (crash, hang, malformed frame) (521.388886ms)
+▶ MatchClient recovery policy
+  ✔ starts one new helper on the next explicit action after a crash, with a new epoch (36.131136ms)
+  ✔ does not retry the failed request automatically (18.607598ms)
+  ✔ allows one new start after a first startup failure, then stops until an explicit restart (no restart loop) (67.972748ms)
+  ✔ recovers on the next explicit action when only the first startup failed (35.300545ms)
+  ✔ disables automatic restart when the helper started after a crash fails its own startup (36.173827ms)
+  ✔ serializes restart(): a restart replaces the helper and a start in progress is superseded (17.84705ms)
+✔ MatchClient recovery policy (212.311191ms)
+▶ MatchClient shutdown and dispose
+  ✔ shuts the helper down gracefully (28.061382ms)
+  ✔ kills a helper that ignores shutdown after the grace period and ends in a deterministic stopped state (186.948615ms)
+  ✔ dispose rejects pending requests, kills the child, releases pipes and listeners, and is idempotent (138.433403ms)
+  ✔ dispose during startup rejects the start and leaves no child (121.433375ms)
+✔ MatchClient shutdown and dispose (475.07043ms)
+▶ MatchClient diagnostics (NFR-3)
+  ✔ keeps only bounded, allow-listed fields of stderr records and never request text (19.002535ms)
+  ✔ keeps request text out of error messages and stop events (20.016143ms)
+✔ MatchClient diagnostics (NFR-3) (39.164233ms)
+▶ Helper layout and target detection
+  ✔ defines the installed extension root layout (0.18494ms)
+  ✔ maps host platform, architecture and libc to the declared target matrix (0.136689ms)
+  ▶ host libc detection never resolves names (NFR-3)
+    ✔ uses the report only with excludeNetwork set during the call, and restores the setting (0.216299ms)
+    ✔ does not call getReport on a runtime without excludeNetwork (Node 18) and still detects the target (0.489005ms)
+  ✔ host libc detection never resolves names (NFR-3) (0.759697ms)
+  ✔ reads the expected identity from the compatibility lock (0.959375ms)
+✔ Helper layout and target detection (2.145969ms)
+▶ MatchClient with the real current-host helper
+  ✔ initializes against the real runtime, opens no sockets, answers a typed error and shuts down (4620.162292ms)
+  ✔ fails startup with the helper identity error and exit 10 when the expected runtime hash is wrong (9359.85521ms)
+  ✔ rejects a pending request when the helper is killed, then restarts explicitly with a new epoch (9311.915275ms)
+  ✔ resolves the helper under the installed extension root layout (4500.848897ms)
+✔ MatchClient with the real current-host helper (27793.039211ms)
+▶ oracle scope for consecutive commands
+  ✔ has the required chain classes (0.633659ms)
+✔ oracle scope for consecutive commands (1.18407ms)
+▶ consecutive match commands through the real evaluate
+  ✔ advertises evaluate (4603.462302ms)
+# evaluate chains: 157 cases, 181 evaluate requests, 18 multi-command chains, 4 lossy projected states, 4 lossy states where the editor read-back alone differs
+  ✔ replays every in-scope oracle case as a chain through projection, VS Code read-back and retained state; every step equals the oracle (4859.889914ms)
+  ✔ keeps a chain that feeds each result straight back (no projection) equal to the oracle as well (4788.176359ms)
+✔ consecutive match commands through the real evaluate (14251.846307ms)
+▶ evaluate error contract through the client
+  ✔ reports stable remote errors without document text and the client stays usable (4719.991891ms)
+✔ evaluate error contract through the client (4720.138318ms)
+▶ selectionCodec offsets
+  ✔ accepts scalar boundaries and rejects everything else without rounding (0.832986ms)
+  ✔ rejects an offset beside a lone surrogate as malformed UTF-16 (never replaced) (0.361273ms)
+  ✔ converts VS Code selections to wire offsets in editor order with primary index 0, keeping direction (0.616827ms)
+✔ selectionCodec offsets (2.434916ms)
+▶ selectionCodec projection
+  ✔ puts the primary first and keeps the canonical order for the rest; back-mapping recovers the canonical index (0.357626ms)
+  ✔ validates before projecting: bad primary, empty set and offsets inside pairs are rejected (0.231528ms)
+✔ selectionCodec projection (0.729179ms)
+▶ RetainedSelection
+  ✔ reproduces the lossy class and restores the semantic set while nothing external happened (0.488885ms)
+  ✔ does not report a lossless projection as lossy but still retains canonical state (0.217652ms)
+  ✔ is invalidated by a document version change, a different document or generation (0.206892ms)
+  ✔ is invalidated by ANY external selection event, even when the selections are equal again (0.187635ms)
+  ✔ is invalidated when the editor selections differ although no event was delivered (0.180612ms)
+  ✔ command-owned events update the tracked projection without invalidating their owner (0.24283ms)
+  ✔ own scopes nest and close even when the command throws (0.205819ms)
+  ✔ retain() starts a fresh epoch and invalidate() drops the record and advances the generation (0.135977ms)
+✔ RetainedSelection (2.137985ms)
+▶ oracle fixture for selection identity
+  ✔ exists with the required classes (regenerated only by the oracle) (0.968161ms)
+✔ oracle fixture for selection identity (1.029978ms)
+▶ selection import/export with the real helper
+  ✔ advertises the test-only method and the evaluate/continue/cancel methods (4688.07114ms)
+  ✔ normalizes every oracle selection-identity case exactly as pinned Helix does (UTF-16 wire, scalar view, primary) (4833.649297ms)
+  ✔ round-trips every oracle selection-identity case through the codec: projection, VS Code read-back, retained state, helper import (4688.215562ms)
+# consecutive oracle states fed through the codec: 2879 (9 in the lossy class)
+  ✔ feeds consecutive oracle states (every initial and step snapshot of every fixture) through projection and retention unchanged (5846.518214ms)
+  ✔ rejects offsets inside surrogate pairs, beyond the document, unsafe numbers and invalid shapes; the helper stays usable (4548.487671ms)
+  ✔ applies the document freshness checks: unknown document, stale generation, version mismatch (4558.246671ms)
+  ✔ refuses malformed UTF-16 document text with a controlled result and creates no replica to select in (4408.470042ms)
+  ✔ keeps selections valid across document changes: a new version is addressed by its own version (4647.019816ms)
+✔ selection import/export with the real helper (38219.172637ms)
+▶ production helper
+  ✔ does not expose the test-only selection method (4483.81182ms)
+✔ production helper (4483.963937ms)
+▶ MatchClient.documents without a running helper
+  ✔ registers documents without starting a helper and reports them unsynchronized (1.049635ms)
+  ✔ rejects unknown documents, duplicate opens and older generations without sending anything (0.496559ms)
+✔ MatchClient.documents without a running helper (2.21518ms)
+▶ document replicas with the real helper
+  ✔ opens a replica and acknowledges version, language, syntax state and length (4900.986453ms)
+  ✔ applies all edits of one event against the base snapshot, in any order, as one changeset (4861.620498ms)
+  ✔ rejects overlapping, ambiguous, out-of-range and pair-splitting edits and keeps the replica unchanged (4670.163514ms)
+  ✔ resynchronizes a replica left stale by a rejected event at the next ensureSynced, and reports an unsupported host snapshot as failed (4673.968583ms)
+  ✔ answers a version gap with resync_required and recovers with a complete snapshot; duplicates are never applied twice (4635.994139ms)
+  ✔ keeps versions and hashes in agreement through undo and redo shaped sequences (4777.951818ms)
+  ✔ mirrors CRLF and LF text exactly, including an offset between CR and LF (4583.029ms)
+  ✔ keeps non-BMP characters and combining marks exact and converts UTF-16 offsets (4587.573266ms)
+  ✔ rejects malformed UTF-16 as unsupported_text without lossy replacement and without touching the replica (4566.573452ms)
+  ✔ reconfigures language through the equivalent upstream operation and reports syntax state transitions (5001.178417ms)
+  ✔ keeps update_failure through further changes, snapshots and a helper restart of the same generation (9271.472885ms)
+  ✔ keeps initial_failure through changes and restarts, and validates retained state against language and identity (9302.494405ms)
+  ✔ resends complete snapshots of every open document after a helper restart, without starting a helper by itself (9155.353211ms)
+  ✔ releases a closed replica and rejects messages for old generations of a reused document ID (4732.92727ms)
+  ✔ never puts document text into helper diagnostics or error details (4410.857768ms)
+  ✔ opens documents of every language state without disturbing the others (sequence of mixed operations) (4742.934158ms)
+✔ document replicas with the real helper (88876.183178ms)
+▶ the production helper
+  ✖ serves the document methods but has no test-only observation or injection methods (4309.31041ms)
+✖ the production helper (4309.837477ms)
+✔ initialization publishes and renders the configured state (1.060707ms)
+✔ INSERT prepares selections once, NORMAL preserves them (0.16397ms)
+✔ a and c place their own carets; only leaving a restores the cursor (3.685341ms)
+✔ leaving INSERT commits its undo revision, after restoring the append cursor (0.16907ms)
+✔ suspending INSERT commits its revision; suspending NORMAL does not (0.186563ms)
+✔ suspending INSERT forgets a pending append restore (0.112012ms)
+✔ disabled mode commands do not consume transitions or prepare selections (0.171134ms)
+✔ suspending and resuming preserves the previous mode (0.186513ms)
+✔ INSERT can be the initial mode without changing existing selections (0.188967ms)
+✔ state snapshots are immutable and do not change after transitions (0.51286ms)
+✔ rapid transitions render and publish in invocation order (0.217862ms)
+✔ labels alternate after/before the primary cursor, skipping its current word (1.100441ms)
+✔ word under cursor is skipped at its start, middle, and final character (0.192575ms)
+✔ cursor on whitespace or punctuation does not skip a neighboring word (0.114056ms)
+✔ punctuation separates words; underscores, digits, and camelCase stay together (0.141698ms)
+✔ labels require two graphemes, not two UTF-16 units (0.888611ms)
+✔ only supplied visible regions get targets; overlaps are deduplicated (0.151727ms)
+✔ label pairs roll over at az and stop at zz (1.944859ms)
+✔ empty content, single-letter words, and a lone current word have no targets (0.171935ms)
+✔ all words may precede or follow an off-viewport cursor (0.196111ms)
+✔ W, B, and E treat punctuation and word characters as one WORD (2.453852ms)
+✔ motions never split grapheme clusters or CRLF line endings (0.218634ms)
+✔ moving forward from the end of the text keeps the selection (0.104358ms)
+ℹ tests 166
+ℹ suites 22
+ℹ pass 165
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93250.374337
+
+✖ failing tests:
+
+test at out/test/unit/matchSync.test.js:738:24
+✖ serves the document methods but has no test-only observation or injection methods (4309.31041ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      'initialize',
+      'shutdown',
+      'open',
+      'change',
+  ...
+      'evaluate',
+  +   'continue',
+  +   'cancel'
+    ]
+  
+      at TestContext.<anonymous> (/home/cosmincartas/work/projects/vscode-extension-helix-match/out/test/unit/matchSync.test.js:742:30)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1905:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      'initialize', 'shutdown',
+      'open',       'change',
+      'snapshot',   'configure',
+      'close',      'evaluate',
+      'continue',   'cancel'
+    ],
+    expected: [ 'initialize', 'shutdown', 'open', 'change', 'snapshot', 'configure', 'close', 'evaluate' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+exit: 1

@@ -1,0 +1,33 @@
+▶ MatchClient.documents without a running helper
+  ✔ registers documents without starting a helper and reports them unsynchronized (0.904361ms)
+  ✔ rejects unknown documents, duplicate opens and older generations without sending anything (0.426377ms)
+✔ MatchClient.documents without a running helper (1.928318ms)
+▶ document replicas with the real helper
+  ✔ opens a replica and acknowledges version, language, syntax state and length (4527.945984ms)
+  ✔ applies all edits of one event against the base snapshot, in any order, as one changeset (4523.07527ms)
+  ✔ rejects overlapping, ambiguous, out-of-range and pair-splitting edits and keeps the replica unchanged (4582.463256ms)
+  ✔ answers a version gap with resync_required and recovers with a complete snapshot; duplicates are never applied twice (4564.252617ms)
+  ✔ keeps versions and hashes in agreement through undo and redo shaped sequences (4700.702405ms)
+  ✔ mirrors CRLF and LF text exactly, including an offset between CR and LF (4360.136331ms)
+  ✔ keeps non-BMP characters and combining marks exact and converts UTF-16 offsets (4539.675704ms)
+  ✔ rejects malformed UTF-16 as unsupported_text without lossy replacement and without touching the replica (4373.490863ms)
+  ✔ reconfigures language through the equivalent upstream operation and reports syntax state transitions (5022.957189ms)
+  ✔ keeps update_failure through further changes, snapshots and a helper restart of the same generation (9519.605486ms)
+  ✔ keeps initial_failure through changes and restarts, and validates retained state against language and identity (9292.283049ms)
+  ✔ resends complete snapshots of every open document after a helper restart, without starting a helper by itself (9509.127704ms)
+  ✔ releases a closed replica and rejects messages for old generations of a reused document ID (4628.466122ms)
+  ✔ never puts document text into helper diagnostics or error details (4582.133483ms)
+  ✔ opens documents of every language state without disturbing the others (sequence of mixed operations) (4585.003852ms)
+✔ document replicas with the real helper (83312.473909ms)
+▶ the production helper
+  ✔ serves the document methods but has no test-only observation or injection methods (4404.649398ms)
+✔ the production helper (4404.804351ms)
+ℹ tests 18
+ℹ suites 3
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 87762.508805
+exit 0

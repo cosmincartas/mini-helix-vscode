@@ -1,0 +1,119 @@
+PASS pinned source tree 84267efbebf5... equals native/helix-lock.json (revision ba40e547426b)
+PASS runtime linux-x64: 1799 assets re-hashed, runtime hash fd5ee12cf756... equals native/helix-lock.json
+MUTATION: keymap override m-i -> select_textobject_around (RED demonstration; the run must fail)
+--- 113 fixture cases (8 parallel oracle processes)
+FAIL counts-pending/m3i-brace: $.final.selections[0].anchor: expected 3 actual 2 | $.final.selections[0].anchorUtf16: expected 3 actual 2 | $.final.selections[0].head: expected 18 actual 19 | $.final.selections[0].headUtf16: expected 18 actual 19 | $.steps[0].snapshot.selections[0].anchor: expected 3 actual 2 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 3 actual 2 | $.steps[0].snapshot.selections[0].head: expected 18 actual 19 | $.steps[0].snapshot.selections[0].headUtf16: expected 18 actual 19
+PASS counts-pending/2m3i-brace
+FAIL counts-pending/3mi-brace: $.final.selections[0].anchor: expected 3 actual 2 | $.final.selections[0].anchorUtf16: expected 3 actual 2 | $.final.selections[0].head: expected 18 actual 19 | $.final.selections[0].headUtf16: expected 18 actual 19 | $.steps[0].snapshot.selections[0].anchor: expected 3 actual 2 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 3 actual 2 | $.steps[0].snapshot.selections[0].head: expected 18 actual 19 | $.steps[0].snapshot.selections[0].headUtf16: expected 18 actual 19
+FAIL counts-pending/mi-brace-count-1: $.final.selections[0].anchor: expected 11 actual 10 | $.final.selections[0].anchorUtf16: expected 11 actual 10 | $.final.selections[0].head: expected 14 actual 15 | $.final.selections[0].headUtf16: expected 14 actual 15 | $.steps[0].snapshot.selections[0].anchor: expected 11 actual 10 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 11 actual 10 | $.steps[0].snapshot.selections[0].head: expected 14 actual 15 | $.steps[0].snapshot.selections[0].headUtf16: expected 14 actual 15
+PASS counts-pending/mi3-digit-object
+PASS counts-pending/ms3-digit-surround
+PASS counts-pending/m0-zero
+FAIL counts-pending/mi-alt-w: $.final.selections[0].head: expected 13 actual 14 | $.final.selections[0].headUtf16: expected 13 actual 14 | $.steps[0].snapshot.selections[0].head: expected 13 actual 14 | $.steps[0].snapshot.selections[0].headUtf16: expected 13 actual 14
+PASS counts-pending/ms-ctrl-x
+FAIL counts-pending/mi-escape: $.steps[0].snapshot.autoinfoTitle: expected "Match inside" actual "Match around"
+FAIL counts-pending/m-menu-observed: $.final.selections[0].head: expected 13 actual 14 | $.final.selections[0].headUtf16: expected 13 actual 14 | $.steps[1].snapshot.autoinfoTitle: expected "Match inside" actual "Match around" | $.steps[2].snapshot.selections[0].head: expected 13 actual 14 | $.steps[2].snapshot.selections[0].headUtf16: expected 13 actual 14
+PASS git-hunks/mig-modified-line
+PASS git-hunks/mag-modified-line
+PASS git-hunks/mig-added-line
+PASS git-hunks/mig-pure-deletion-on-neighbour
+PASS git-hunks/mig-pure-deletion-at-line-end
+PASS git-hunks/mig-untrusted-same
+PASS git-hunks/mig-outside-hunk
+PASS git-hunks/mig-multi-selection
+PASS git-hunks/mig-untracked-unavailable
+PASS git-hunks/mig-no-repository
+PASS git-hunks/mig-crlf-head
+PASS git-hunks/mig-bom-baseline
+FAIL plaintext-objects/miw-ascii: $.final.selections[0].head: expected 11 actual 12 | $.final.selections[0].headUtf16: expected 11 actual 12 | $.steps[0].snapshot.selections[0].head: expected 11 actual 12 | $.steps[0].snapshot.selections[0].headUtf16: expected 11 actual 12
+PASS plaintext-objects/maw-ascii
+FAIL plaintext-objects/miW-long-word: $.final.selections[0].head: expected 14 actual 15 | $.final.selections[0].headUtf16: expected 14 actual 15 | $.steps[0].snapshot.selections[0].head: expected 14 actual 15 | $.steps[0].snapshot.selections[0].headUtf16: expected 14 actual 15
+FAIL plaintext-objects/mip-paragraph: $.final.selections[0].head: expected 20 actual 21 | $.final.selections[0].headUtf16: expected 20 actual 21 | $.steps[0].snapshot.selections[0].head: expected 20 actual 21 | $.steps[0].snapshot.selections[0].headUtf16: expected 20 actual 21
+PASS plaintext-objects/map-paragraph
+FAIL plaintext-objects/mi-paren-plaintext: $.final.selections[0].anchor: expected 7 actual 6 | $.final.selections[0].anchorUtf16: expected 7 actual 6 | $.final.selections[0].head: expected 11 actual 12 | $.final.selections[0].headUtf16: expected 11 actual 12 | $.steps[0].snapshot.selections[0].anchor: expected 7 actual 6 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 7 actual 6 | $.steps[0].snapshot.selections[0].head: expected 11 actual 12 | $.steps[0].snapshot.selections[0].headUtf16: expected 11 actual 12
+PASS plaintext-objects/ma-paren-plaintext
+FAIL plaintext-objects/mi-close-alias: $.final.selections[0].anchor: expected 7 actual 6 | $.final.selections[0].anchorUtf16: expected 7 actual 6 | $.final.selections[0].head: expected 11 actual 12 | $.final.selections[0].headUtf16: expected 11 actual 12 | $.steps[0].snapshot.selections[0].anchor: expected 7 actual 6 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 7 actual 6 | $.steps[0].snapshot.selections[0].head: expected 11 actual 12 | $.steps[0].snapshot.selections[0].headUtf16: expected 11 actual 12
+FAIL plaintext-objects/mim-closest: $.final.selections[0].anchor: expected 6 actual 5 | $.final.selections[0].anchorUtf16: expected 6 actual 5 | $.final.selections[0].head: expected 9 actual 10 | $.final.selections[0].headUtf16: expected 9 actual 10 | $.steps[0].snapshot.selections[0].anchor: expected 6 actual 5 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 6 actual 5 | $.steps[0].snapshot.selections[0].head: expected 9 actual 10 | $.steps[0].snapshot.selections[0].headUtf16: expected 9 actual 10
+PASS plaintext-objects/mam-closest
+PASS plaintext-objects/mm-jump-bracket
+FAIL plaintext-objects/mi-quote-pair: $.final.selections[0].anchor: expected 5 actual 4 | $.final.selections[0].anchorUtf16: expected 5 actual 4 | $.final.selections[0].head: expected 13 actual 14 | $.final.selections[0].headUtf16: expected 13 actual 14 | $.steps[0].snapshot.selections[0].anchor: expected 5 actual 4 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 5 actual 4 | $.steps[0].snapshot.selections[0].head: expected 13 actual 14 | $.steps[0].snapshot.selections[0].headUtf16: expected 13 actual 14
+FAIL plaintext-objects/mi-empty-pair: $.final.selections[0].anchor: expected 2 actual 1 | $.final.selections[0].anchorUtf16: expected 2 actual 1 | $.steps[0].snapshot.selections[0].anchor: expected 2 actual 1 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 2 actual 1
+PASS plaintext-objects/empty-file-miw
+PASS plaintext-objects/empty-file-mip
+FAIL plaintext-objects/miw-eof-no-newline: $.final.selections[0].anchor: expected 4 actual 3 | $.final.selections[0].anchorUtf16: expected 4 actual 3 | $.steps[0].snapshot.selections[0].anchor: expected 4 actual 3 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 4 actual 3
+PASS plaintext-objects/maw-eof-no-newline
+FAIL plaintext-objects/mip-blank-lines: $.final.selections[0].head: expected 2 actual 5 | $.final.selections[0].headUtf16: expected 2 actual 5 | $.steps[0].snapshot.selections[0].head: expected 2 actual 5 | $.steps[0].snapshot.selections[0].headUtf16: expected 2 actual 5
+PASS plaintext-objects/miw-combining-mark
+FAIL plaintext-objects/miw-emoji-utf16: $.final.selections[0].head: expected 6 actual 7 | $.final.selections[0].headUtf16: expected 7 actual 8 | $.steps[0].snapshot.selections[0].head: expected 6 actual 7 | $.steps[0].snapshot.selections[0].headUtf16: expected 7 actual 8
+FAIL plaintext-objects/mi-paren-non-bmp-content: $.final.selections[0].anchor: expected 1 actual 0 | $.final.selections[0].anchorUtf16: expected 1 actual 0 | $.final.selections[0].head: expected 5 actual 6 | $.final.selections[0].headUtf16: expected 7 actual 8 | $.steps[0].snapshot.selections[0].anchor: expected 1 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 1 actual 0 | $.steps[0].snapshot.selections[0].head: expected 5 actual 6 | $.steps[0].snapshot.selections[0].headUtf16: expected 7 actual 8
+FAIL plaintext-objects/mi-custom-guillemet-pair: $.steps[0].snapshot.selections[0].anchor: expected 3 actual 2 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 3 actual 2 | $.steps[0].snapshot.selections[0].head: expected 8 actual 9 | $.steps[0].snapshot.selections[0].headUtf16: expected 8 actual 9
+FAIL plaintext-objects/mi-custom-astral-pair: $.final.selections[0].anchor: expected 3 actual 2 | $.final.selections[0].anchorUtf16: expected 4 actual 2 | $.final.selections[0].head: expected 8 actual 9 | $.final.selections[0].headUtf16: expected 9 actual 11 | $.steps[0].snapshot.selections[0].anchor: expected 3 actual 2 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 4 actual 2 | $.steps[0].snapshot.selections[0].head: expected 8 actual 9 | $.steps[0].snapshot.selections[0].headUtf16: expected 9 actual 11
+PASS plaintext-objects/mi-unsupported-object
+FAIL selections-eol/multi-primary-not-first: $.final.selections[0].anchor: expected 1 actual 0 | $.final.selections[0].anchorUtf16: expected 1 actual 0 | $.final.selections[0].head: expected 3 actual 4 | $.final.selections[0].headUtf16: expected 3 actual 4 | $.final.selections[1].anchor: expected 6 actual 5 | $.final.selections[1].anchorUtf16: expected 6 actual 5 | $.final.selections[1].head: expected 8 actual 9 | $.final.selections[1].headUtf16: expected 8 actual 9
+FAIL selections-eol/multi-primary-last: $.final.primary: expected 2 actual 1 | $.final.selections[0].head: expected 3 actual 4 | $.final.selections[0].headUtf16: expected 3 actual 4 | $.final.selections[1].head: expected 7 actual 11 | $.final.selections[1].headUtf16: expected 7 actual 11 | $.final.selections[2]: expected {"anchor":8,"anchorUtf16":8,"direction":"forward","head":11,"headUtf16":11} actual undefined | $.steps[0].snapshot.primary: expected 2 actual 1 | $.steps[0].snapshot.selections[0].head: expected 3 actual 4
+PASS selections-eol/multi-overlap-normalized
+PASS selections-eol/multi-ms-merge
+FAIL selections-eol/reversed-mi-paren: $.final.selections[0].anchor: expected 11 actual 12 | $.final.selections[0].anchorUtf16: expected 11 actual 12 | $.final.selections[0].head: expected 7 actual 6 | $.final.selections[0].headUtf16: expected 7 actual 6 | $.steps[0].snapshot.selections[0].anchor: expected 11 actual 12 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 11 actual 12 | $.steps[0].snapshot.selections[0].head: expected 7 actual 6 | $.steps[0].snapshot.selections[0].headUtf16: expected 7 actual 6
+FAIL selections-eol/crlf-mi-paren: $.final.selections[0].anchor: expected 1 actual 0 | $.final.selections[0].anchorUtf16: expected 1 actual 0 | $.final.selections[0].head: expected 5 actual 6 | $.final.selections[0].headUtf16: expected 5 actual 6 | $.steps[0].snapshot.selections[0].anchor: expected 1 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 1 actual 0 | $.steps[0].snapshot.selections[0].head: expected 5 actual 6 | $.steps[0].snapshot.selections[0].headUtf16: expected 5 actual 6
+FAIL selections-eol/crlf-mip: $.final.selections[0].head: expected 10 actual 12 | $.final.selections[0].headUtf16: expected 10 actual 12 | $.steps[0].snapshot.selections[0].head: expected 10 actual 12 | $.steps[0].snapshot.selections[0].headUtf16: expected 10 actual 12
+PASS selections-eol/crlf-ms-paren
+PASS selections-eol/crlf-maw-eol
+FAIL selections-eol/crlf-no-trailing-newline: $.final.selections[0].head: expected 3 actual 4 | $.final.selections[0].headUtf16: expected 3 actual 4 | $.steps[0].snapshot.selections[0].head: expected 3 actual 4 | $.steps[0].snapshot.selections[0].headUtf16: expected 3 actual 4
+PASS selections-eol/select-mode-ms
+PASS selections-eol/lone-cr-mip
+FAIL selections-eol/crlf-pref-lone-cr-mi-paren: $.final.selections[0].anchor: expected 3 actual 2 | $.final.selections[0].anchorUtf16: expected 3 actual 2 | $.final.selections[0].head: expected 6 actual 7 | $.final.selections[0].headUtf16: expected 6 actual 7 | $.steps[0].snapshot.selections[0].anchor: expected 3 actual 2 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 3 actual 2 | $.steps[0].snapshot.selections[0].head: expected 6 actual 7 | $.steps[0].snapshot.selections[0].headUtf16: expected 6 actual 7
+PASS surround/ms-paren
+PASS surround/ms-quote
+PASS surround/ms-unicode-nonbmp
+PASS surround/ms-unicode-guillemet
+PASS surround/ms-m-literal
+PASS surround/ms-ctrl-modifier-quirk
+PASS surround/ms-escape-cancels
+PASS surround/ms-reversed-selection
+PASS surround/ms-multi-selection
+PASS surround/mr-preview-and-final
+PASS surround/mr-escape-restores
+PASS surround/mr-m-closest
+PASS surround/mr-multi-selection-preview
+PASS surround/mr-lookup-fails-replays-d
+PASS surround/md-paren
+PASS surround/md-no-pair-error
+PASS surround/md-astral-custom-pair
+PASS surround/md-astral-both-delimiters-selected-error
+PASS surround/md-nested-same-kind
+FAIL syntax-failure/control-syntax-available: $.final.selections[0].anchor: expected 7 actual 0 | $.final.selections[0].anchorUtf16: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchor: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 7 actual 0
+PASS syntax-failure/initial-failure-mif-noop
+FAIL syntax-failure/initial-failure-pair-plaintext: $.final.selections[0].anchor: expected 14 actual 13 | $.final.selections[0].anchorUtf16: expected 14 actual 13 | $.final.selections[0].head: expected 15 actual 16 | $.final.selections[0].headUtf16: expected 15 actual 16 | $.steps[0].snapshot.selections[0].anchor: expected 14 actual 13 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 14 actual 13 | $.steps[0].snapshot.selections[0].head: expected 15 actual 16 | $.steps[0].snapshot.selections[0].headUtf16: expected 15 actual 16
+PASS syntax-failure/incremental-failure-disables-for-good
+FAIL syntax-failure/incremental-no-failure-control: $.final.selections[0].anchor: expected 7 actual 0 | $.final.selections[0].anchorUtf16: expected 7 actual 0 | $.steps[1].snapshot.selections[0].anchor: expected 7 actual 0 | $.steps[1].snapshot.selections[0].anchorUtf16: expected 7 actual 0
+PASS syntax-failure/query-textobjects-failure
+PASS syntax-failure/query-highlights-failure
+PASS syntax-failure/query-injected-failure
+FAIL syntax-objects/rust-mif: $.final.selections[0].anchor: expected 30 actual 0 | $.final.selections[0].anchorUtf16: expected 30 actual 0 | $.steps[0].snapshot.selections[0].anchor: expected 30 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 30 actual 0
+PASS syntax-objects/rust-maf
+FAIL syntax-objects/rust-mia-parameter: $.final.selections[0].head: expected 13 actual 14 | $.final.selections[0].headUtf16: expected 13 actual 14 | $.steps[0].snapshot.selections[0].head: expected 13 actual 14 | $.steps[0].snapshot.selections[0].headUtf16: expected 13 actual 14
+PASS syntax-objects/rust-maa-parameter
+PASS syntax-objects/rust-mic-comment-marker
+PASS syntax-objects/quirk-mic-inside-comment-injection
+PASS syntax-objects/quirk-mac-inside-comment-injection
+FAIL syntax-objects/rust-mim-with-syntax: $.final.selections[0].anchor: expected 12 actual 11 | $.final.selections[0].anchorUtf16: expected 12 actual 11 | $.final.selections[0].head: expected 16 actual 17 | $.final.selections[0].headUtf16: expected 16 actual 17 | $.steps[0].snapshot.selections[0].anchor: expected 12 actual 11 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 12 actual 11 | $.steps[0].snapshot.selections[0].head: expected 16 actual 17 | $.steps[0].snapshot.selections[0].headUtf16: expected 16 actual 17
+FAIL syntax-objects/rust-mim-string-delimiter-syntax: $.final.selections[0].anchor: expected 11 actual 10 | $.final.selections[0].anchorUtf16: expected 11 actual 10 | $.final.selections[0].head: expected 19 actual 20 | $.final.selections[0].headUtf16: expected 19 actual 20 | $.steps[0].snapshot.selections[0].anchor: expected 11 actual 10 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 11 actual 10 | $.steps[0].snapshot.selections[0].head: expected 19 actual 20 | $.steps[0].snapshot.selections[0].headUtf16: expected 19 actual 20
+FAIL syntax-objects/rust-mim-string-delimiter-plaintext: $.final.selections[0].anchor: expected 8 actual 7 | $.final.selections[0].anchorUtf16: expected 8 actual 7 | $.final.selections[0].head: expected 21 actual 22 | $.final.selections[0].headUtf16: expected 21 actual 22 | $.steps[0].snapshot.selections[0].anchor: expected 8 actual 7 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 8 actual 7 | $.steps[0].snapshot.selections[0].head: expected 21 actual 22 | $.steps[0].snapshot.selections[0].headUtf16: expected 21 actual 22
+PASS syntax-objects/rust-mi-paren-after-string-noop
+FAIL syntax-objects/rust-mi-paren-inside-string: $.final.selections[0].anchor: expected 11 actual 10 | $.final.selections[0].anchorUtf16: expected 11 actual 10 | $.final.selections[0].head: expected 14 actual 15 | $.final.selections[0].headUtf16: expected 14 actual 15 | $.steps[0].snapshot.selections[0].anchor: expected 11 actual 10 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 11 actual 10 | $.steps[0].snapshot.selections[0].head: expected 14 actual 15 | $.steps[0].snapshot.selections[0].headUtf16: expected 14 actual 15
+FAIL syntax-objects/rust-mif-multi-selection: $.final.selections[0].anchor: expected 30 actual 0 | $.final.selections[0].anchorUtf16: expected 30 actual 0 | $.final.selections[1].anchor: expected 63 actual 53 | $.final.selections[1].anchorUtf16: expected 63 actual 53 | $.steps[0].snapshot.selections[0].anchor: expected 30 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 30 actual 0 | $.steps[0].snapshot.selections[1].anchor: expected 63 actual 53 | $.steps[0].snapshot.selections[1].anchorUtf16: expected 63 actual 53
+FAIL syntax-objects/rust-mif-counted: $.final.selections[0].anchor: expected 7 actual 0 | $.final.selections[0].anchorUtf16: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchor: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 7 actual 0
+FAIL syntax-objects/injected-markdown-rust-mif: $.final.selections[0].anchor: expected 20 actual 13 | $.final.selections[0].anchorUtf16: expected 20 actual 13 | $.steps[0].snapshot.selections[0].anchor: expected 20 actual 13 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 20 actual 13
+PASS syntax-objects/injected-markdown-rust-maf
+PASS syntax-objects/injected-markdown-control-prose
+PASS syntax-objects/absent-capture-toml-mif
+PASS syntax-objects/quirk-mif-function-ends-at-eof
+PASS syntax-objects/quirk-maf-function-ends-at-eof
+FAIL syntax-objects/quirk-control-mif-with-final-newline: $.final.selections[0].anchor: expected 7 actual 0 | $.final.selections[0].anchorUtf16: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchor: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 7 actual 0
+FAIL syntax-objects/rust-crlf-mif: $.final.selections[0].anchor: expected 7 actual 0 | $.final.selections[0].anchorUtf16: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchor: expected 7 actual 0 | $.steps[0].snapshot.selections[0].anchorUtf16: expected 7 actual 0
+FAIL syntax-objects/excluded-wren-miw: $.final.selections[0].head: expected 5 actual 6 | $.final.selections[0].headUtf16: expected 5 actual 6 | $.steps[0].snapshot.selections[0].head: expected 5 actual 6 | $.steps[0].snapshot.selections[0].headUtf16: expected 5 actual 6
+PASS syntax-objects/excluded-wren-mif-absent
+FAIL syntax-objects/excluded-gemini-miw: $.final.selections[0].head: expected 13 actual 14 | $.final.selections[0].headUtf16: expected 13 actual 14 | $.steps[0].snapshot.selections[0].head: expected 13 actual 14 | $.steps[0].snapshot.selections[0].headUtf16: expected 13 actual 14
+PASS syntax-objects/excluded-gemini-mif-absent
+
+FAILED: 43 problem(s)

@@ -1,0 +1,368 @@
+// Scratch generator for Task 11 oracle case INPUTS (expected is produced only by the oracle with --update).
+// Usage: node oracle-case-input-generator.cjs.txt <outDir>   -> <outDir>/brackets.json (cases without `expected`)
+// Offsets are Unicode scalar indices (selectionUnit "char", the oracle default); `at` computes them from the text.
+const fs = require('fs');
+const path = require('path');
+const out = process.argv[2];
+const G = 'brackets';
+const cases = [];
+const ids = new Set();
+function add(id, description, source, input) {
+  if (ids.has(id)) throw new Error('duplicate id ' + id);
+  ids.add(id);
+  cases.push({ id, description, source, input });
+}
+const chars = (t) => Array.from(t);
+/** char index of the nth occurrence of `needle` in `text`, plus `delta` */
+function at(text, needle, delta = 0, nth = 0) {
+  const cs = chars(text);
+  const ns = chars(needle);
+  let seen = -1;
+  for (let i = 0; i + ns.length <= cs.length; i++) {
+    if (ns.every((c, j) => cs[i + j] === c)) {
+      seen++;
+      if (seen === nth) return i + delta;
+    }
+  }
+  throw new Error(`needle ${JSON.stringify(needle)} #${nth} not in ${JSON.stringify(text)}`);
+}
+const cur = (p) => ({ anchor: p, head: p });
+const eof = (t) => chars(t).length;
+const P = 'plan Task 11 (mm in plaintext)';
+const S = 'plan Task 11 (mm through syntax)';
+const F = 'spec Syntax lifecycle (initial parse / root config failure: plaintext branch)';
+
+// ---------------------------------------------------------------------------------------------------------------
+// Plaintext documents (no language): the plaintext branch, cursor on / inside / outside brackets
+const T1 = 'a (b [c {d <e>} f] g) h\n';
+for (const [name, open, close] of [['paren', '(', ')'], ['bracket', '[', ']'], ['brace', '{', '}'], ['angle', '<', '>']]) {
+  add(`plain-${name}-on-open`, `cursor on the opening ${name}: jumps to the closing one`, P, { text: T1, selections: [cur(at(T1, open))], steps: ['mm'] });
+  add(`plain-${name}-on-close`, `cursor on the closing ${name}: jumps to the opening one`, P, { text: T1, selections: [cur(at(T1, close))], steps: ['mm'] });
+  add(`plain-${name}-round-trip`, `mm twice on the ${name} returns to the start`, P, { text: T1, selections: [cur(at(T1, open))], steps: ['mm', 'mm'] });
+}
+add('plain-inside-between', 'cursor between a pair but not on a bracket: plaintext never searches, no-op', P, { text: T1, selections: [cur(at(T1, 'c'))], steps: ['mm'] });
+add('plain-outside-before', 'cursor before every bracket: no-op', P, { text: T1, selections: [cur(0)], steps: ['mm'] });
+add('plain-outside-after', 'cursor after every bracket: no-op', P, { text: T1, selections: [cur(at(T1, 'h'))], steps: ['mm'] });
+add('plain-eof-cursor', 'cursor at the end of the document (after the final newline): no-op', P, { text: T1, selections: [cur(eof(T1))], steps: ['mm'] });
+add('plain-empty-document', 'empty document: no-op', P, { text: '', steps: ['mm'] });
+add('plain-only-open', 'a lone opening bracket has no match: no-op', P, { text: '(\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-only-close', 'a lone closing bracket has no match: no-op', P, { text: ')\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-nested-outer-open', 'nested same-type pairs: the outer open matches the outer close', P, { text: '((a)(b))\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-nested-inner-open', 'nested same-type pairs: the inner open matches its own close', P, { text: '((a)(b))\n', selections: [cur(1)], steps: ['mm'] });
+add('plain-nested-inner-close', 'nested same-type pairs: the inner close matches its own open', P, { text: '((a)(b))\n', selections: [cur(6)], steps: ['mm'] });
+add('plain-nested-outer-close', 'nested same-type pairs: the outer close matches the outer open', P, { text: '((a)(b))\n', selections: [cur(7)], steps: ['mm'] });
+add('plain-unbalanced-open-extra', 'an unclosed outer opening bracket: no-op; the inner pair still matches', P, { text: '(a(b)\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-unbalanced-inner-still-matches', 'an unclosed outer bracket does not stop the inner pair from matching', P, { text: '(a(b)\n', selections: [cur(2)], steps: ['mm'] });
+add('plain-unbalanced-close-extra', 'an extra closing bracket has no opener: no-op', P, { text: 'a)b(c)\n', selections: [cur(1)], steps: ['mm'] });
+add('plain-mismatched-types', 'brackets of other types are ignored by the scan: ( ] has no match', P, { text: '(a]\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-interleaved-types', 'interleaved ([)] counts only the same type: ( matches ) and [ matches ]', P, { text: '([)]\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-interleaved-types-bracket', 'interleaved ([)]: [ matches ]', P, { text: '([)]\n', selections: [cur(1)], steps: ['mm'] });
+add('plain-quotes-are-not-brackets', 'quotes are surround characters but not brackets: mm on a quote is a no-op', P, { text: '"a" \'b\' `c`\n', selections: [cur(0)], steps: ['mm', '<esc>mm'] });
+add('plain-pipe-is-not-a-bracket', 'the pipe pair is not a bracket pair', P, { text: '|a|\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-brackets-in-strings-count', 'plaintext ignores strings and comments: a parenthesis inside quotes is counted', P, { text: 'f(")", 1)\n', selections: [cur(1)], steps: ['mm'] });
+add('plain-multiline', 'a pair spanning several lines', P, { text: '{\n  a\n  {\n    b\n  }\n}\n', selections: [cur(0)], steps: ['mm', 'mm'] });
+add('plain-crlf', 'CRLF document: positions across the line ends', P, { text: '(a\r\nb)\r\n', eol: 'crlf', selections: [cur(0)], steps: ['mm', 'mm'] });
+add('plain-crlf-cursor-on-cr', 'CRLF document: cursor on the line break next to a bracket', P, { text: '(a)\r\nb\r\n', eol: 'crlf', selections: [cur(3)], steps: ['mm'] });
+add('plain-lone-cr', 'a lone CR is an ordinary character for the scan', P, { text: '(a\rb)\n', selections: [cur(0)], steps: ['mm'] });
+add('plain-adjacent-pair', 'an empty pair ()', P, { text: '()\n', selections: [cur(0)], steps: ['mm', 'mm'] });
+
+// Count: the pinned handler does not read the count
+add('plain-count-ignored', 'a count before mm has no effect on bracket matching', P, { text: T1, selections: [cur(at(T1, '('))], steps: ['3mm'] });
+add('plain-count-two-digits', 'a two-digit count has no effect', P, { text: T1, selections: [cur(at(T1, '('))], steps: ['12mm'] });
+add('plain-count-after-m', 'digits typed after the initial m extend the count; mm ignores it', P, { text: T1, selections: [cur(at(T1, '['))], steps: ['m4m'] });
+add('plain-count-then-no-match', 'a count with no matching bracket is still a no-op', P, { text: T1, selections: [cur(0)], steps: ['5mm'] });
+add('plain-count-does-not-leak', 'the count is consumed by mm: a following mm runs without it', P, { text: T1, selections: [cur(at(T1, '('))], steps: ['3mm', 'mm'] });
+
+// Scan limit (MAX_PLAINTEXT_SCAN = 10000 characters after / before the cursor)
+const filler = (n) => 'x'.repeat(n);
+const edgeFound = `(${filler(9999)})\n`;
+const edgeLost = `(${filler(10000)})\n`;
+add('plain-limit-open-at-limit', 'closing bracket exactly at the 10000-character scan limit: found', P, { text: edgeFound, selections: [cur(0)], steps: ['mm'] });
+add('plain-limit-open-over-limit', 'closing bracket one character beyond the scan limit: no-op', P, { text: edgeLost, selections: [cur(0)], steps: ['mm'] });
+add('plain-limit-close-at-limit', 'opening bracket exactly at the scan limit (backward): found', P, { text: edgeFound, selections: [cur(10000)], steps: ['mm'] });
+add('plain-limit-close-over-limit', 'opening bracket one character beyond the scan limit (backward): no-op', P, { text: edgeLost, selections: [cur(10001)], steps: ['mm'] });
+
+// Unicode
+const U1 = 'é(日本語) 😀[e\u0301]{👨\u200d👩\u200d👧}\n';
+add('plain-unicode-paren', 'non-ASCII text inside the pair: char and UTF-16 positions differ', P, { text: U1, selections: [cur(at(U1, '('))], steps: ['mm'] });
+add('plain-unicode-paren-back', 'jump back over non-ASCII text', P, { text: U1, selections: [cur(at(U1, ')'))], steps: ['mm'] });
+add('plain-unicode-astral-before', 'astral character before the bracket: UTF-16 export of the target', P, { text: U1, selections: [cur(at(U1, '['))], steps: ['mm'] });
+add('plain-unicode-combining', 'combining mark before the closing bracket', P, { text: U1, selections: [cur(at(U1, ']'))], steps: ['mm'] });
+add('plain-unicode-zwj-cluster', 'a ZWJ emoji family inside braces: the scan counts scalars, the selection is a grapheme', P, { text: U1, selections: [cur(at(U1, '{'))], steps: ['mm', 'mm'] });
+add('plain-unicode-bracket-after-cluster', 'cursor on the closing brace that follows a ZWJ cluster', P, { text: U1, selections: [cur(at(U1, '}'))], steps: ['mm'] });
+add('plain-unicode-cursor-inside-cluster-start', 'cursor on the first scalar of the ZWJ cluster (not a bracket): no-op', P, { text: U1, selections: [cur(at(U1, '👨'))], steps: ['mm'] });
+add('plain-unicode-fullwidth-brackets', 'fullwidth brackets are not brackets', P, { text: '（a）\n', selections: [cur(0)], steps: ['mm'] });
+
+// Selections: direction, extended ranges, several ranges, primary not first
+const T2 = '(a) [b] {c} <d> x\n';
+add('plain-range-forward-cursor-is-last-char', 'a forward range: the cursor is its last character (head - 1); (ab selects up to b: no-op', P, { text: '(ab) c\n', selections: [{ anchor: 0, head: 3 }], steps: ['mm'] });
+add('plain-range-forward-ends-on-bracket', 'a forward range whose last character is the closing bracket jumps to the opener', P, { text: '(ab) c\n', selections: [{ anchor: 0, head: 4 }], steps: ['mm'] });
+add('plain-range-forward-single-open', 'the one-character forward range on the opener: becomes a cursor on the closer', P, { text: '(ab) c\n', selections: [{ anchor: 0, head: 1 }], steps: ['mm'] });
+add('plain-range-backward-on-open', 'a backward range: the cursor is its head', P, { text: '(ab) c\n', selections: [{ anchor: 3, head: 0 }], steps: ['mm'] });
+add('plain-range-backward-on-close', 'a backward range whose head is on the closer jumps to the opener', P, { text: '(ab) c\n', selections: [{ anchor: 6, head: 3 }], steps: ['mm'] });
+add('plain-range-backward-no-match-keeps-range', 'a backward range with no match in the document is unchanged', P, { text: 'ab (c\n', selections: [{ anchor: 4, head: 1 }], steps: ['mm'] });
+add('plain-range-forward-no-match-keeps-range', 'a forward range with no match is unchanged (normalized)', P, { text: 'ab (c\n', selections: [{ anchor: 1, head: 4 }], steps: ['mm'] });
+add('plain-multi-all-match', 'several cursors on openers of different pairs all jump', P, { text: T2, selections: [cur(0), cur(4), cur(8), cur(12)], steps: ['mm'] });
+add('plain-multi-primary-last', 'primary is the last range', P, { text: T2, selections: [cur(0), cur(4), cur(8)], primary: 2, steps: ['mm'] });
+add('plain-multi-primary-middle', 'primary is a middle range', P, { text: T2, selections: [cur(0), cur(4), cur(8)], primary: 1, steps: ['mm'] });
+add('plain-multi-primary-not-first-mixed', 'some ranges match, some do not; the primary is not first', P, { text: T2, selections: [cur(1), cur(4), cur(16), cur(8)], primary: 3, steps: ['mm'] });
+add('plain-multi-mixed-directions', 'a backward and a forward range on brackets', P, { text: T2, selections: [{ anchor: 2, head: 0 }, { anchor: 4, head: 6 }, { anchor: 11, head: 8 }], primary: 1, steps: ['mm'] });
+add('plain-multi-open-and-close-of-same-pair', 'cursors on both ends of one pair swap ends; normalization keeps the set', P, { text: '(a) b\n', selections: [cur(0), cur(2)], primary: 1, steps: ['mm'] });
+add('plain-multi-swap-then-back', 'the same selection set, twice', P, { text: '(a) b\n', selections: [cur(0), cur(2)], primary: 1, steps: ['mm', 'mm'] });
+add('plain-multi-touching-results', 'results land next to other ranges: the merge rule applies to the whole set', P, { text: '(a)(b)\n', selections: [cur(0), cur(3)], primary: 0, steps: ['mm'] });
+add('plain-multi-overlapping-input', 'overlapping input ranges are normalized before the command', P, { text: '(ab) c\n', selections: [{ anchor: 0, head: 3 }, { anchor: 2, head: 5 }], primary: 1, steps: ['mm'] });
+add('plain-multi-result-equals-other-range', 'the target of one cursor is where another cursor already is: ranges merge', P, { text: '(a) b\n', selections: [cur(0), cur(2), cur(4)], primary: 2, steps: ['mm'] });
+add('plain-multi-three-nested', 'three cursors on nested openers', P, { text: '((()))\n', selections: [cur(0), cur(1), cur(2)], primary: 1, steps: ['mm'] });
+add('plain-multi-three-nested-twice', 'three cursors on nested openers, twice', P, { text: '((()))\n', selections: [cur(0), cur(1), cur(2)], primary: 1, steps: ['mm', 'mm'] });
+add('plain-multi-unicode', 'multiple cursors with non-ASCII text between them', P, { text: '(é) [😀] {日}\n', selections: [cur(0), cur(4), cur(8)], primary: 1, steps: ['mm'] });
+add('plain-after-motion-step', 'mm after a no-op step and after Escape', P, { text: T2, selections: [cur(0)], steps: ['<esc>', 'mm', '<esc>', 'mm'] });
+add('plain-mm-after-cancelled-m', 'm then Escape cancels; the next mm is an ordinary mm', P, { text: T2, selections: [cur(0)], steps: ['m<esc>', 'mm'] });
+add('plain-mm-then-object', 'mm followed by an object command in the next step', P, { text: '(a b)\n', selections: [cur(0)], steps: ['mm', 'mi('] });
+
+// Documents with a language that no grammar serves (wren is excluded by the pinned runtime): plaintext branch
+add('no-grammar-wren-on-open', 'a language without a grammar (excluded wren) matches through the plaintext branch: on the opener', F, { text: 'f(a, (b))\n', language: 'wren', selections: [cur(1)], steps: ['mm'] });
+add('no-grammar-wren-inside', 'a language without a grammar: a cursor inside the pair is a no-op', F, { text: 'f(a, (b))\n', language: 'wren', selections: [cur(3)], steps: ['mm'] });
+
+// ---------------------------------------------------------------------------------------------------------------
+// Syntax documents: the fuzzy syntax-aware branch
+const R1 = 'fn main() {\n    let v = vec![1, (2 + 3), 4];\n    if v.len() > 1 { println!("{}", v[0]); }\n}\n';
+const rust = (selections, steps, text = R1, extra = {}) => ({ text, language: 'rust', selections, steps, ...extra });
+add('rust-on-fn-paren-open', 'cursor on the parameter-list opener', S, rust([cur(at(R1, '('))], ['mm']));
+add('rust-on-fn-paren-close', 'cursor on the parameter-list closer', S, rust([cur(at(R1, ')'))], ['mm']));
+add('rust-on-body-brace-open', 'cursor on the function body opener: jumps to the final brace', S, rust([cur(at(R1, '{'))], ['mm']));
+add('rust-on-body-brace-close', 'cursor on the function body closer', S, rust([cur(at(R1, '}', 0, 2))], ['mm']));
+add('rust-inside-body', 'cursor inside the function body (not on a bracket): syntax jumps to the closing brace', S, rust([cur(at(R1, 'let'))], ['mm']));
+add('rust-inside-body-then-back', 'inside the body: mm to the closer, then mm back to the opener', S, rust([cur(at(R1, 'let'))], ['mm', 'mm']));
+add('rust-inside-macro-brackets', 'cursor inside the vec! brackets: jumps to the bracket closer', S, rust([cur(at(R1, '1,'))], ['mm']));
+add('rust-inside-inner-parens', 'cursor inside the innermost parenthesized expression', S, rust([cur(at(R1, '2 +'))], ['mm']));
+add('rust-on-inner-paren-open', 'cursor on the inner opener', S, rust([cur(at(R1, '(2'))], ['mm']));
+add('rust-on-inner-paren-close', 'cursor on the inner closer', S, rust([cur(at(R1, '3)', 1))], ['mm']));
+add('rust-on-vec-bracket-open', 'cursor on the macro bracket opener', S, rust([cur(at(R1, '[1'))], ['mm']));
+add('rust-on-vec-bracket-close', 'cursor on the macro bracket closer', S, rust([cur(at(R1, '];'))], ['mm']));
+add('rust-on-call-parens', 'a call argument list: v.len() empty parens', S, rust([cur(at(R1, 'len(', 3))], ['mm']));
+add('rust-index-brackets', 'index brackets in a macro token tree', S, rust([cur(at(R1, '[0]'))], ['mm']));
+add('rust-on-keyword-outside', 'cursor on the fn keyword, outside every bracket of the item', S, rust([cur(0)], ['mm']));
+add('rust-on-let-binding-name', 'cursor on a name inside the body', S, rust([cur(at(R1, 'v ='))], ['mm']));
+add('rust-after-last-brace', 'cursor after the final closing brace (the trailing newline)', S, rust([cur(eof(R1) - 1)], ['mm']));
+add('rust-at-eof', 'cursor at the end of the document', S, rust([cur(eof(R1))], ['mm']));
+add('rust-on-comparison-gt', 'a greater-than operator is not an angle pair: no-op', S, rust([cur(at(R1, '> 1'))], ['mm']));
+add('rust-generics-angle', 'generic angle brackets: on the opener', S, rust([cur(at('let v: Vec<Vec<i32>> = 1;\n', '<'))], ['mm'], 'let v: Vec<Vec<i32>> = 1;\n'));
+add('rust-generics-angle-inner-close', 'nested generics: the inner closer', S, rust([cur(at('let v: Vec<Vec<i32>> = 1;\n', '>'))], ['mm'], 'let v: Vec<Vec<i32>> = 1;\n'));
+add('rust-generics-inside', 'nested generics: cursor inside', S, rust([cur(at('let v: Vec<Vec<i32>> = 1;\n', 'i32'))], ['mm'], 'let v: Vec<Vec<i32>> = 1;\n'));
+add('rust-count-ignored', 'a count before mm has no effect on the syntax branch', S, rust([cur(at(R1, 'let'))], ['4mm']));
+add('rust-nested-closure', 'a closure with parenthesized body inside a call', S, rust([cur(at('fn f() { g(|x| (x + 1), [2]); }\n', 'x +'))], ['mm'], 'fn f() { g(|x| (x + 1), [2]); }\n'));
+add('rust-closure-pipes-not-pair', 'closure pipes are not a bracket pair', S, rust([cur(at('fn f() { g(|x| x); }\n', '|x'))], ['mm'], 'fn f() { g(|x| x); }\n'));
+
+// Strings, characters, comments (syntax-aware matching versus the plaintext scan)
+const RS = 'fn f() {\n    let s = "(a) )";\n    let c = \'(\';\n    let r = r#"(("#;\n    g(s); // (c\n    /* ) ( */\n}\n';
+add('rust-string-open-inside-string', 'a parenthesis inside a string: the leaf string content falls back to a plaintext scan limited to the token', S, rust([cur(at(RS, '(a'))], ['mm'], RS));
+add('rust-string-close-inside-string', 'the closer inside the string', S, rust([cur(at(RS, 'a)', 1))], ['mm'], RS));
+add('rust-string-unbalanced-inside-string', 'an unbalanced closer inside a string does not match code outside', S, rust([cur(at(RS, ' )"', 1))], ['mm'], RS));
+add('rust-string-on-open-quote', 'cursor on the opening quote of a string', S, rust([cur(at(RS, '"(a'))], ['mm'], RS));
+add('rust-string-on-close-quote', 'cursor on the closing quote of a string', S, rust([cur(at(RS, ')";', 1))], ['mm'], RS));
+add('rust-string-inside-text', 'cursor on a plain letter inside the string: the enclosing string node pair (the quotes) is the match', S, rust([cur(at(RS, 'a) )'))], ['mm'], RS));
+add('rust-char-literal-paren', 'a parenthesis in a character literal', S, rust([cur(at(RS, "'('", 1))], ['mm'], RS));
+add('rust-raw-string-parens', 'unbalanced parentheses in a raw string', S, rust([cur(at(RS, '(("'))], ['mm'], RS));
+add('rust-line-comment-paren', 'an unbalanced parenthesis in a line comment', S, rust([cur(at(RS, '(c'))], ['mm'], RS));
+add('rust-block-comment-close', 'the closer in a block comment', S, rust([cur(at(RS, ') ( */'))], ['mm'], RS));
+add('rust-block-comment-open', 'the opener in a block comment', S, rust([cur(at(RS, '( */'))], ['mm'], RS));
+add('rust-code-after-comment', 'code brackets after a comment containing brackets', S, rust([cur(at(RS, 'g('))], ['mm'], RS));
+add('rust-code-paren-around-string', 'cursor on a call opener whose argument is a string with a parenthesis', S, rust([cur(at('fn f() { g(")") }\n', '(', 0, 1))], ['mm'], 'fn f() { g(")") }\n'));
+add('rust-inside-call-with-string', 'cursor inside a call whose argument holds a string with a parenthesis', S, rust([cur(at('fn f() { g(")", 1) }\n', ', 1'))], ['mm'], 'fn f() { g(")", 1) }\n'));
+add('rust-doc-comment', 'a doc comment line (comment injection layer) with a parenthesis', S, rust([cur(at('/// see (x)\nfn f() {}\n', '(x'))], ['mm'], '/// see (x)\nfn f() {}\n'));
+add('rust-todo-comment', 'a TODO comment with parentheses', S, rust([cur(at('// TODO(me): x\nfn f() {}\n', '(me'))], ['mm'], '// TODO(me): x\nfn f() {}\n'));
+add('rust-todo-comment-inside', 'a TODO comment: cursor inside', S, rust([cur(at('// TODO(me): x\nfn f() {}\n', 'me'))], ['mm'], '// TODO(me): x\nfn f() {}\n'));
+
+// Malformed text and absent matches
+const rm = (text, pos, steps = ['mm']) => rust([cur(pos)], steps, text);
+add('rust-malformed-unclosed-brace', 'an unclosed function body brace: no-op on the opener', S, rm('fn f() {\n    g(1);\n', at('fn f() {\n    g(1);\n', '{')));
+add('rust-malformed-unclosed-brace-inner', 'an unclosed function body: the inner call still matches', S, rm('fn f() {\n    g(1);\n', at('fn f() {\n    g(1);\n', '(', 0, 1)));
+add('rust-malformed-unclosed-brace-inside', 'an unclosed function body: cursor inside', S, rm('fn f() {\n    g(1);\n', at('fn f() {\n    g(1);\n', 'g(')));
+add('rust-malformed-extra-close', 'an extra closing brace at the end', S, rm('fn f() {}\n}\n', at('fn f() {}\n}\n', '}', 0, 1)));
+add('rust-malformed-error-node-inside', 'an ERROR node in the middle of balanced code', S, rm('fn f() { let = ( ; g(1); }\n', at('fn f() { let = ( ; g(1); }\n', 'g(1')));
+add('rust-malformed-unclosed-paren-open', 'an unclosed parenthesis inside a body: the opener has no match', S, rm('fn f() { g(1; h(2); }\n', at('fn f() { g(1; h(2); }\n', '(')));
+add('rust-malformed-mismatched', 'a mismatched pair (];', S, rm('fn f() { g(1]; }\n', at('fn f() { g(1]; }\n', '(', 0, 1)));
+add('rust-malformed-only-open', 'a document that is a single opening brace', S, rm('{\n', 0));
+add('rust-malformed-only-close', 'a document that is a single closing brace', S, rm('}\n', 0));
+add('rust-malformed-unterminated-string', 'an unterminated string swallows the rest of the file', S, rm('fn f() { let s = "(a; g(1); }\n', at('fn f() { let s = "(a; g(1); }\n', '(a')));
+add('rust-malformed-unterminated-block-comment', 'an unterminated block comment', S, rm('fn f() { /* ( g(1); }\n', at('fn f() { /* ( g(1); }\n', '( g')));
+add('rust-empty-document', 'an empty rust document', S, rm('', 0));
+// NOT a fixture: a whitespace-only document with the cursor in the whitespace overflows `pos_ - node_start` in the pinned
+// match_brackets.rs:154 (debug build only; release wraps and returns no match). The oracle is a debug build, so it panics;
+// tests/brackets.rs covers that input outside the differential set.
+add('rust-leading-whitespace-before-code', 'a cursor in the leading whitespace of a document with code', S, rm('  \n\n  fn f() { (1) }\n', 1));
+add('rust-comment-only-document', 'a document that is only a comment, cursor inside it', S, rm('// (a)\n', 4));
+add('rust-no-brackets', 'no brackets at all', S, rm('let x = 1;\n', 4));
+add('rust-absent-match-keeps-multiple', 'several ranges, none with a match: unchanged set', S, rust([cur(0), cur(4), cur(8)], ['mm'], 'let x = 1;\n'));
+
+// Unicode in syntax documents (byte offsets versus character offsets in the parse tree)
+const RU = 'fn f() {\n    let é = "日本語😀";\n    g("ü", (é, [😀]));\n}\n';
+add('rust-unicode-on-open', 'brackets after non-ASCII text: byte and char offsets differ', S, rust([cur(at(RU, '(', 0, 2))], ['mm'], RU));
+add('rust-unicode-inside', 'cursor inside after astral characters', S, rust([cur(at(RU, '[😀'))], ['mm'], RU));
+add('rust-unicode-on-close', 'cursor on a closer after astral characters', S, rust([cur(at(RU, ']'))], ['mm'], RU));
+add('rust-unicode-inside-string', 'cursor inside a string of non-ASCII text', S, rust([cur(at(RU, '本'))], ['mm'], RU));
+add('rust-unicode-after-string', 'cursor right after astral text, on the call closer', S, rust([cur(at(RU, '));', 1))], ['mm'], RU));
+add('rust-unicode-grapheme-cursor', 'a range ending after a combining sequence', S, rust([{ anchor: at(RU, '(', 0, 2), head: at(RU, '(', 0, 2) + 2 }], ['mm'], RU));
+
+// Selections on syntax documents
+add('rust-reversed-selection-on-open', 'a backward range whose head is on the opener', S, rust([{ anchor: at(R1, '(', 0, 1) + 3, head: at(R1, '(', 0, 1) }], ['mm'], R1));
+add('rust-reversed-selection-inside', 'a backward range whose head is inside a scope', S, rust([{ anchor: at(R1, '4];'), head: at(R1, '2 +') }], ['mm'], R1));
+add('rust-forward-selection-ends-on-close', 'a forward range ending on a closing bracket (cursor = last char)', S, rust([{ anchor: at(R1, '(2'), head: at(R1, '3)', 2) }], ['mm'], R1));
+add('rust-forward-selection-inside', 'a forward range inside a scope', S, rust([{ anchor: at(R1, '1,'), head: at(R1, '(2') }], ['mm'], R1));
+add('rust-multi-merge-same-scope', 'two cursors inside one scope both jump to its closer: they merge', S, rust([cur(at(R1, '1,')), cur(at(R1, '4];'))], ['mm'], R1));
+add('rust-multi-merge-primary-second', 'merging cursors with the primary on the second', S, { ...rust([cur(at(R1, '1,')), cur(at(R1, '4];'))], ['mm'], R1), primary: 1 });
+add('rust-multi-different-scopes', 'cursors in different scopes jump to different closers', S, { ...rust([cur(at(R1, '2 +')), cur(at(R1, '1,')), cur(at(R1, 'let'))], ['mm'], R1), primary: 2 });
+add('rust-multi-primary-not-first-mixed', 'matches and no-ops mixed; primary is the last', S, { ...rust([cur(0), cur(at(R1, '(2')), cur(at(R1, 'v ='))], ['mm'], R1), primary: 2 });
+add('rust-multi-on-open-and-inside', 'a cursor on an opener and another inside the same pair', S, { ...rust([cur(at(R1, '(2')), cur(at(R1, '2 +'))], ['mm'], R1), primary: 1 });
+add('rust-multi-twice', 'several cursors, mm twice', S, { ...rust([cur(at(R1, '2 +')), cur(at(R1, 'let')), cur(at(R1, '(2'))], ['mm', 'mm'], R1), primary: 1 });
+add('rust-multi-unicode', 'several cursors on a document with non-ASCII text', S, { ...rust([cur(at(RU, '(', 0, 2)), cur(at(RU, '[😀')), cur(at(RU, '本'))], ['mm'], RU), primary: 2 });
+
+// Other languages
+const lang = (language, text, pos, extra = {}) => ({ text, language, selections: [cur(pos)], steps: ['mm'], ...extra });
+const JS = 'function f(a, b) {\n  const s = `x ${(a + b)} (`;\n  const r = /\\(/;\n  return [a, { b: (1) }];\n}\n';
+add('js-inside-function-body', 'javascript: cursor inside the function body', S, lang('javascript', JS, at(JS, 'const')));
+add('js-on-template-substitution-open', 'javascript: a template substitution inside a template string', S, lang('javascript', JS, at(JS, '${') + 1));
+add('js-inside-template-substitution', 'javascript: cursor inside the substitution parentheses', S, lang('javascript', JS, at(JS, 'a + b')));
+add('js-template-string-paren', 'javascript: a parenthesis in the template string text', S, lang('javascript', JS, at(JS, '(`')));
+add('js-regex-paren', 'javascript: an escaped parenthesis in a regular expression', S, lang('javascript', JS, at(JS, '\\(') + 1));
+add('js-object-in-array', 'javascript: array and object literals', S, lang('javascript', JS, at(JS, '[a')));
+add('js-params-inside', 'javascript: cursor inside the parameter list', S, lang('javascript', JS, at(JS, 'a, b')));
+const TSX = 'const e = <div id="x">{(a)}<p>t</p></div>;\nfunction g<T>(x: T): Array<T> { return [x]; }\n';
+add('tsx-jsx-tag-open-angle', 'tsx: the opening angle of a JSX tag', S, lang('tsx', TSX, at(TSX, '<div')));
+add('tsx-jsx-tag-close-angle', 'tsx: the closing angle of a JSX open tag', S, lang('tsx', TSX, at(TSX, '">', 1)));
+add('tsx-jsx-expression-brace', 'tsx: a JSX expression container', S, lang('tsx', TSX, at(TSX, '{(')));
+add('tsx-jsx-inside-element', 'tsx: cursor inside the element text', S, lang('tsx', TSX, at(TSX, 't</p>')));
+add('tsx-type-arguments', 'tsx: generic type arguments', S, lang('tsx', TSX, at(TSX, '<T>')));
+add('tsx-return-type-generic-inside', 'tsx: cursor inside Array<T>', S, lang('tsx', TSX, at(TSX, 'T>', 0, 1)));
+const PY = 'def f(a, b):\n    s = "(" + """\n(\n"""\n    return print((a, [b]))  # (\n';
+add('python-inside-def-params', 'python: parameter list', S, lang('python', PY, at(PY, '(a')));
+add('python-string-paren', 'python: a parenthesis in a string', S, lang('python', PY, at(PY, '"("') + 1));
+add('python-triple-quote-paren', 'python: a parenthesis inside a triple-quoted string', S, lang('python', PY, at(PY, '\n(\n') + 1));
+add('python-nested-tuple', 'python: nested call and tuple', S, lang('python', PY, at(PY, '((a') + 1));
+add('python-inside-list', 'python: cursor inside a list', S, lang('python', PY, at(PY, 'b]')));
+add('python-comment-paren', 'python: a parenthesis in a comment', S, lang('python', PY, at(PY, '# (') + 2));
+const JSON1 = '{"a": [1, {"b": 2}], "c": "(x", "d": [[]]}\n';
+add('json-on-object-open', 'json: the object opener', S, lang('json', JSON1, 0));
+add('json-inside-array', 'json: cursor inside an array', S, lang('json', JSON1, at(JSON1, '1,')));
+add('json-on-nested-close', 'json: a nested closer', S, lang('json', JSON1, at(JSON1, '}]')));
+add('json-string-paren', 'json: a parenthesis in a string', S, lang('json', JSON1, at(JSON1, '(x')));
+add('json-empty-array', 'json: an empty nested array', S, lang('json', JSON1, at(JSON1, '[[') + 1));
+const TOML1 = 'a = [1, 2, [3]]\nb = { x = 1, y = "(" }\n[t]\nc = 1\n';
+add('toml-array-inside', 'toml: cursor inside an array', S, lang('toml', TOML1, at(TOML1, '2,')));
+add('toml-inline-table-open', 'toml: an inline table opener', S, lang('toml', TOML1, at(TOML1, '{ x')));
+add('toml-table-header', 'toml: a table header bracket', S, lang('toml', TOML1, at(TOML1, '[t')));
+add('toml-string-paren', 'toml: a parenthesis in a string', S, lang('toml', TOML1, at(TOML1, '"("') + 1));
+const C1 = '#include <stdio.h>\nint main(void) {\n  int a[2] = {1, (2)};\n  if (a[0] < a[1]) { return (1); }\n  return 0; /* ) */\n}\n';
+add('c-include-angle', 'c: the system include path is one token with angle brackets', S, lang('c', C1, at(C1, '<stdio')));
+add('c-inside-main', 'c: cursor inside the function body', S, lang('c', C1, at(C1, 'int a')));
+add('c-array-initializer', 'c: an initializer list', S, lang('c', C1, at(C1, '{1')));
+add('c-less-than-not-pair', 'c: a comparison operator is not an angle pair', S, lang('c', C1, at(C1, '< a')));
+add('c-comment-paren', 'c: a parenthesis in a block comment', S, lang('c', C1, at(C1, ') */')));
+add('c-inside-condition', 'c: cursor inside an if condition', S, lang('c', C1, at(C1, 'a[0]')));
+const HTML = '<div class="(a)">\n  <p>(text)</p>\n  <script>function f(a) { return (a); }</script>\n  <style>a { b: (c); }</style>\n</div>\n';
+add('html-tag-open-angle', 'html: a tag opener', S, lang('html', HTML, at(HTML, '<div')));
+add('html-tag-close-angle', 'html: the end of an open tag', S, lang('html', HTML, at(HTML, '">') + 1));
+add('html-attribute-paren', 'html: a parenthesis in an attribute value', S, lang('html', HTML, at(HTML, '(a)">')));
+add('html-text-paren', 'html: a parenthesis in text', S, lang('html', HTML, at(HTML, '(text')));
+add('html-inside-element', 'html: cursor in an element', S, lang('html', HTML, at(HTML, 'text)')));
+add('html-script-function-body', 'html: injected javascript, cursor inside the function body', S, lang('html', HTML, at(HTML, 'return')));
+add('html-script-paren', 'html: injected javascript, a parenthesis', S, lang('html', HTML, at(HTML, '(a);')));
+add('html-style-brace', 'html: injected css, a rule brace', S, lang('html', HTML, at(HTML, '{ b')));
+add('html-style-inside-rule', 'html: injected css, cursor inside the rule', S, lang('html', HTML, at(HTML, 'b: (c')));
+add('html-style-paren', 'html: injected css, parenthesis in a value', S, lang('html', HTML, at(HTML, '(c)')));
+const MD = '# T (x)\n\ntext (a [b]) `c (d` [link](url)\n\n```rust\nfn f() {\n    g((1), "(");\n}\n```\n\n```text\n(plain\n```\n\n```\n(none)\n```\n';
+add('md-prose-paren-open', 'markdown: a parenthesis in prose', S, lang('markdown', MD, at(MD, '(a')));
+add('md-prose-paren-inside', 'markdown: cursor inside prose parentheses', S, lang('markdown', MD, at(MD, 'a [')));
+add('md-prose-heading-paren', 'markdown: a parenthesis in a heading', S, lang('markdown', MD, at(MD, '(x')));
+add('md-inline-code-paren', 'markdown: an unbalanced parenthesis in inline code', S, lang('markdown', MD, at(MD, '(d')));
+add('md-link-destination', 'markdown: a link destination in parentheses', S, lang('markdown', MD, at(MD, '(url')));
+add('md-link-text-bracket', 'markdown: link text brackets', S, lang('markdown', MD, at(MD, '[link')));
+add('md-fence-rust-body-brace', 'markdown: an injected rust layer, the function body brace', S, lang('markdown', MD, at(MD, '{\n    g')));
+add('md-fence-rust-inside-body', 'markdown: an injected rust layer, cursor inside the body', S, lang('markdown', MD, at(MD, 'g((')));
+add('md-fence-rust-inner-paren', 'markdown: an injected rust layer, nested parentheses', S, lang('markdown', MD, at(MD, '(1)')));
+add('md-fence-rust-string-paren', 'markdown: an injected rust layer, a parenthesis inside a string', S, lang('markdown', MD, at(MD, '"("') + 1));
+add('md-fence-rust-body-close', 'markdown: the injected function body closer', S, lang('markdown', MD, at(MD, '}\n```')));
+add('md-fence-unknown-language', 'markdown: a fence whose language has no layer: markdown parse of the text', S, lang('markdown', MD, at(MD, '(plain')));
+add('md-fence-no-language', 'markdown: a fence without a language', S, lang('markdown', MD, at(MD, '(none')));
+add('md-fence-rust-twice', 'markdown: mm twice inside the injected layer', S, lang('markdown', MD, at(MD, 'g(('), { steps: ['mm', 'mm'] }));
+add('md-multi-across-layers', 'markdown: several cursors across prose and the injected layer, primary not first', S, { text: MD, language: 'markdown', selections: [cur(at(MD, '(a')), cur(at(MD, 'g((')), cur(at(MD, '(url'))], primary: 1, steps: ['mm'] });
+const LUA = 'local t = { a = (1), [2] = "(" }\nlocal function f(x) return t[x] end -- (\n';
+add('lua-table-open', 'lua: a table constructor', S, lang('lua', LUA, at(LUA, '{ a')));
+add('lua-inside-table', 'lua: cursor inside a table constructor', S, lang('lua', LUA, at(LUA, 'a =')));
+add('lua-string-paren', 'lua: a parenthesis in a string', S, lang('lua', LUA, at(LUA, '"("') + 1));
+const GO = 'package main\nfunc f(a int) (int, error) {\n\treturn a, nil // )\n}\n';
+add('go-result-list', 'go: a result list', S, lang('go', GO, at(GO, '(int')));
+add('go-inside-body', 'go: cursor inside the body', S, lang('go', GO, at(GO, 'return')));
+const BASH = 'f() { echo "$(date)" ${x:-(} $((1+2)); }\n';
+add('bash-command-substitution', 'bash: a command substitution inside a string', S, lang('bash', BASH, at(BASH, '$(date') + 1));
+add('bash-parameter-expansion', 'bash: a parameter expansion with a parenthesis default', S, lang('bash', BASH, at(BASH, '${x') + 1));
+add('bash-arithmetic', 'bash: an arithmetic expansion', S, lang('bash', BASH, at(BASH, '$((') + 2));
+add('bash-function-body', 'bash: cursor inside the function body', S, lang('bash', BASH, at(BASH, 'echo')));
+const CSS = 'a, b > c { color: rgb(0, (1), 2); margin: calc(1px + (2px)); }\n@media (min-width: 1px) { d { e: f } }\n';
+add('css-rule-brace', 'css: a rule block', S, lang('css', CSS, at(CSS, '{ color')));
+add('css-function-parens', 'css: a function call', S, lang('css', CSS, at(CSS, '(0')));
+add('css-media-query-paren', 'css: a media feature in parentheses', S, lang('css', CSS, at(CSS, '(min')));
+add('css-inside-nested-rule', 'css: cursor inside a nested rule block', S, lang('css', CSS, at(CSS, 'e: f')));
+const YAML = 'a: [1, (2), {b: 3}]\nc: "("\nd:\n  - (e\n';
+add('yaml-flow-sequence', 'yaml: a flow sequence', S, lang('yaml', YAML, 3));
+add('yaml-flow-mapping-inside', 'yaml: cursor inside a flow mapping', S, lang('yaml', YAML, at(YAML, 'b:')));
+add('yaml-plain-scalar-paren', 'yaml: a plain scalar with a parenthesis', S, lang('yaml', YAML, at(YAML, '(e')));
+const LATEX = '\\begin{document}\n\\left( x \\right) \\textbf{(a)} % )\n\\end{document}\n';
+add('latex-group-brace', 'latex: a group brace', S, lang('latex', LATEX, at(LATEX, '{(a')));
+add('latex-environment-brace', 'latex: an environment name group', S, lang('latex', LATEX, at(LATEX, '{document')));
+add('latex-left-right', 'latex: left/right delimiters are plain characters', S, lang('latex', LATEX, at(LATEX, '( x')));
+const NIX = '{ a = [ 1 (f 2) ]; b = "${(x)}"; }\n';
+add('nix-attrset-open', 'nix: the attribute set opener', S, lang('nix', NIX, 0));
+add('nix-list-inside', 'nix: cursor inside a list', S, lang('nix', NIX, at(NIX, '1 (')));
+add('nix-interpolation', 'nix: a string interpolation', S, lang('nix', NIX, at(NIX, '${(') + 1));
+
+// Syntax unavailable: the plaintext branch (spec "Syntax lifecycle")
+const RF = 'fn f() { let s = ")"; g((1), 2); }\n';
+const fail = (kind, extra = {}) => ({ failure: { kind, ...extra } });
+add('failure-initial-inside-is-noop', 'initial parse failure: a cursor inside the pair is a no-op (plaintext), unlike the syntax branch', F, rust([cur(at(RF, '1)'))], ['mm'], RF, fail('initial-parse')));
+add('failure-initial-on-open', 'initial parse failure: on the opener the plaintext scan counts the parenthesis in the string', F, rust([cur(at(RF, '('))], ['mm'], RF, fail('initial-parse')));
+add('failure-initial-on-call-open', 'initial parse failure: a call opener matches by plaintext', F, rust([cur(at(RF, '(', 0, 1))], ['mm'], RF, fail('initial-parse')));
+add('failure-initial-string-paren', 'initial parse failure: the parenthesis in the string matches a code opener', F, rust([cur(at(RF, '")"') + 1)], ['mm'], RF, fail('initial-parse')));
+add('failure-initial-multi', 'initial parse failure with several cursors and the primary not first', F, { ...rust([cur(at(RF, '(', 0, 1)), cur(at(RF, '1)')), cur(at(RF, '{'))], ['mm'], RF, fail('initial-parse')), primary: 2 });
+add('failure-initial-markdown-fence', 'initial parse failure of a markdown document: the fence content is plain text', F, lang('markdown', '# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n', at('# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n', 'g(('), fail('initial-parse')));
+add('failure-initial-markdown-fence-on-open', 'initial parse failure of a markdown document: on a bracket', F, lang('markdown', '# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n', at('# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n', '{\n'), fail('initial-parse')));
+add('failure-initial-html-script', 'initial parse failure of an html document with a script', F, lang('html', '<script>\nfunction f(a) { return (a); }\n</script>\n', at('<script>\nfunction f(a) { return (a); }\n</script>\n', 'return'), fail('initial-parse')));
+add('failure-initial-count', 'initial parse failure with a count', F, rust([cur(at(RF, '(', 0, 1))], ['3mm'], RF, fail('initial-parse')));
+const RE = 'fn f() { let s = ")"; g((1), 2); }\nfn h() { k(1); }\n';
+add('failure-incremental-before-edit-is-syntax', 'incremental failure after step 1: before the edit mm still uses the tree', F, rust([cur(at(RE, '1)'))], ['mm', 'd', 'mm'], RE, fail('incremental-parse', { afterStep: 1 })));
+add('failure-incremental-after-edit-plaintext', 'incremental failure: after the edit mm is plaintext (a cursor inside a pair is a no-op)', F, rust([cur(at(RE, '1)'))], ['d', 'mm', 'mm'], RE, fail('incremental-parse', { afterStep: 0 })));
+add('failure-incremental-after-edit-on-bracket', 'incremental failure: on a bracket mm matches by plaintext (counts the string parenthesis)', F, rust([cur(at(RE, '('))], ['d', 'mm'], RE, fail('incremental-parse', { afterStep: 0 })));
+add('failure-incremental-never-reenabled', 'incremental failure: later edits do not re-enable the tree', F, rust([cur(at(RE, '1)'))], ['d', 'mm', 'd', 'mm'], RE, fail('incremental-parse', { afterStep: 0 })));
+add('failure-incremental-markdown-embedded', 'incremental failure of a markdown document with an injected layer', F, lang('markdown', '# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n\ntext (b)\n', at('# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n\ntext (b)\n', 'g(('), { ...fail('incremental-parse', { afterStep: 1 }), steps: ['mm', 'd', 'mm'] }));
+// Edits with a healthy tree: the incremental update feeds the next mm
+add('edit-then-mm-inside', 'an edit step followed by mm: the incrementally updated tree answers', S, rust([cur(at(RE, 'g('))], ['d', 'mm', 'mm'], RE));
+add('edit-delete-closer-then-mm', 'mm to the closer, delete it, then mm on the changed tree', S, rust([cur(at(RE, '(', 0, 1))], ['mm', 'd', 'mm'], RE));
+add('edit-insert-then-mm', 'insert a character before the bracket, then mm', S, rust([cur(at(RE, 'g('))], ['ix<esc>', 'mm'], RE));
+add('edit-markdown-fence-then-mm', 'an edit inside an injected layer, then mm', S, lang('markdown', '# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n', at('# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n', '1))'), { steps: ['d', 'mm', 'mm'] }));
+// Query failures: root configuration failure leaves the document without syntax (plaintext branch); others keep it
+const q = (language, file) => ({ queryOverrides: [{ language, file, content: '(broken' }] });
+for (const file of ['highlights.scm', 'injections.scm', 'locals.scm']) {
+  add(`query-root-${file.replace('.scm', '')}-inside`, `a failing root ${file}: no syntax tree, a cursor inside the pair is a no-op`, F, rust([cur(at(RF, '1)'))], ['mm'], RF, q('rust', file)));
+  add(`query-root-${file.replace('.scm', '')}-on-open`, `a failing root ${file}: plaintext scan from the opener`, F, rust([cur(at(RF, '('))], ['mm'], RF, q('rust', file)));
+}
+add('query-textobjects-failure-keeps-syntax', 'a failing textobjects.scm leaves syntax available: mm still jumps from inside the pair', S, rust([cur(at(RF, '1)'))], ['mm'], RF, q('rust', 'textobjects.scm')));
+add('query-textobjects-failure-string', 'a failing textobjects.scm: the string parenthesis still resolves through the tree', S, rust([cur(at(RF, '")"') + 1)], ['mm'], RF, q('rust', 'textobjects.scm')));
+add('query-inherited-ecma-highlights-failure', 'the root language inherits a failing ecma highlights: plaintext', F, lang('javascript', 'function f(a) { return (a); }\n', at('function f(a) { return (a); }\n', 'return'), q('ecma', 'highlights.scm')));
+const MDF = '# T\n\n```rust\nfn f() {\n    g((1));\n}\n```\n\ntext (b)\n';
+add('query-injected-rust-highlights-failure-prose', 'an injected layer fails to configure: the markdown layer still answers in prose', F, lang('markdown', MDF, at(MDF, '(b'), q('rust', 'highlights.scm')));
+add('query-injected-rust-highlights-failure-fence', 'an injected layer fails to configure: inside the fence the markdown layer answers', F, lang('markdown', MDF, at(MDF, 'g(('), q('rust', 'highlights.scm')));
+add('query-root-markdown-highlights-failure', 'a failing root markdown highlights: no syntax, plaintext', F, lang('markdown', MDF, at(MDF, '(b'), q('markdown', 'highlights.scm')));
+add('query-root-markdown-highlights-failure-fence', 'a failing root markdown highlights: plaintext inside the fence', F, lang('markdown', MDF, at(MDF, '{\n'), q('markdown', 'highlights.scm')));
+
+const doc = {
+  schemaVersion: 1,
+  group: G,
+  provenance: {
+    generator: 'mini-helix-match-oracle (native/oracle) driving helix-term key dispatch; expected results are never produced by extension code',
+    reference: 'native/helix-lock.json: helix revision, patched source tree hash, runtime hash (also recorded in every expected.reference)',
+    regenerate: 'npm run test:match:oracle -- --update, then review the diff',
+  },
+  cases,
+};
+fs.writeFileSync(path.join(out, G + '.json'), JSON.stringify(doc, null, 2) + '\n');
+console.log(G, cases.length);

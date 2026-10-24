@@ -1,0 +1,8 @@
+counts-pending.json original 11 now 11 expected+input identical
+git-hunks.json original 11 now 12 expected+input identical
+plaintext-objects.json original 24 now 24 expected+input identical
+selections-eol.json original 11 now 13 expected+input identical
+surround.json original 19 now 19 expected+input identical
+syntax-failure.json original 8 now 8 expected+input identical
+syntax-objects.json original 22 now 26 expected+input identical
+total original cases compared: 106

@@ -1,0 +1,79 @@
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.75s
+     Running tests/textobjects_syntax.rs (target/debug/deps/textobjects_syntax-6a5a27bddc2cf00c)
+
+running 8 tests
+test positive_fixture_coverage_per_capture_family ... ok
+test scope_accounting ... FAILED
+test language_changes_rebuild_the_syntax_and_objects_follow ... FAILED
+test every_in_scope_oracle_case_matches_step_by_step_through_the_helper ... FAILED
+test aliases_reach_the_same_objects_as_the_helix_language_id ... FAILED
+test every_language_opens_through_the_protocol_with_the_inventory_state ... FAILED
+test language_mapping_end_to_end ... ok
+test every_configured_language_is_in_the_capture_inventory_and_the_loader_agrees ... ok
+
+failures:
+
+---- scope_accounting stdout ----
+in scope: 315 cases; excluded: 2
+excluded syntax-failure/incremental-failure-disables-for-good: command outside inside/around: Char('s', []) in AfterM
+excluded syntax-failure/incremental-no-failure-control: command outside inside/around: Char('s', []) in AfterM
+
+thread 'scope_accounting' panicked at match-helper/tests/textobjects_syntax.rs:320:9:
+assertion `left == right` failed: syntax-objects-2
+  left: 245
+ right: 246
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- language_changes_rebuild_the_syntax_and_objects_follow stdout ----
+
+thread 'language_changes_rebuild_the_syntax_and_objects_follow' panicked at match-helper/tests/common/mod.rs:210:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"object_not_implemented","message":"this object is not implemented by this helper version"},"helperEpoch":1532552405101707,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+
+---- every_in_scope_oracle_case_matches_step_by_step_through_the_helper stdout ----
+
+thread 'every_in_scope_oracle_case_matches_step_by_step_through_the_helper' panicked at match-helper/tests/common/mod.rs:210:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"object_not_implemented","message":"this object is not implemented by this helper version"},"helperEpoch":1873262949308781,"ok":false,"protocolVersion":1,"requestId":5}
+  left: Bool(false)
+ right: Bool(true)
+
+---- aliases_reach_the_same_objects_as_the_helix_language_id stdout ----
+
+thread 'aliases_reach_the_same_objects_as_the_helix_language_id' panicked at match-helper/tests/common/mod.rs:210:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"object_not_implemented","message":"this object is not implemented by this helper version"},"helperEpoch":1579457122128245,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+
+---- every_language_opens_through_the_protocol_with_the_inventory_state stdout ----
+
+thread 'every_language_opens_through_the_protocol_with_the_inventory_state' panicked at match-helper/tests/common/mod.rs:210:9:
+assertion `left == right` failed: evaluate failed: {"error":{"code":"invalid_request","detail":"object_not_implemented","message":"this object is not implemented by this helper version"},"helperEpoch":3766547536685317,"ok":false,"protocolVersion":1,"requestId":3}
+  left: Bool(false)
+ right: Bool(true)
+
+
+failures:
+    aliases_reach_the_same_objects_as_the_helix_language_id
+    every_in_scope_oracle_case_matches_step_by_step_through_the_helper
+    every_language_opens_through_the_protocol_with_the_inventory_state
+    language_changes_rebuild_the_syntax_and_objects_follow
+    scope_accounting
+
+test result: FAILED. 3 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.65s
+
+error: test failed, to rerun pass `-p mini-helix-match-helper --test textobjects_syntax`
+
+real	0m17.435s
+user	0m45.010s
+sys	0m2.083s

@@ -1,0 +1,81 @@
+{
+  "helper": "mini-helix-match-helper-test",
+  "node": "v26.8.2",
+  "platform": "linux-x64",
+  "rounds": 30,
+  "startupMs": 158,
+  "rows": [
+    {
+      "language": "plaintext",
+      "lines": 1000,
+      "chars": 40890,
+      "openMs": 10.73,
+      "syntaxStateAfterOpen": "no_language",
+      "changeMedianMs": 0.054,
+      "changeMinMs": 0.039,
+      "changeMaxMs": 0.374,
+      "syntaxStateAfterChanges": "no_language",
+      "replicaMatchesHost": true
+    },
+    {
+      "language": "plaintext",
+      "lines": 10000,
+      "chars": 418890,
+      "openMs": 2.19,
+      "syntaxStateAfterOpen": "no_language",
+      "changeMedianMs": 0.046,
+      "changeMinMs": 0.037,
+      "changeMaxMs": 0.083,
+      "syntaxStateAfterChanges": "no_language",
+      "replicaMatchesHost": true
+    },
+    {
+      "language": "plaintext",
+      "lines": 100000,
+      "chars": 4288890,
+      "openMs": 26.67,
+      "syntaxStateAfterOpen": "no_language",
+      "changeMedianMs": 0.058,
+      "changeMinMs": 0.042,
+      "changeMaxMs": 0.11,
+      "syntaxStateAfterChanges": "no_language",
+      "replicaMatchesHost": true
+    },
+    {
+      "language": "rust",
+      "lines": 1000,
+      "chars": 26780,
+      "openMs": 61.77,
+      "syntaxStateAfterOpen": "available",
+      "changeMedianMs": 1.807,
+      "changeMinMs": 1.78,
+      "changeMaxMs": 1.912,
+      "syntaxStateAfterChanges": "available",
+      "replicaMatchesHost": true
+    },
+    {
+      "language": "rust",
+      "lines": 10000,
+      "chars": 287780,
+      "openMs": 49.25,
+      "syntaxStateAfterOpen": "available",
+      "changeMedianMs": 16.538,
+      "changeMinMs": 15.362,
+      "changeMaxMs": 18.273,
+      "syntaxStateAfterChanges": "available",
+      "replicaMatchesHost": true
+    },
+    {
+      "language": "rust",
+      "lines": 100000,
+      "chars": 3077780,
+      "openMs": 467.48,
+      "syntaxStateAfterOpen": "available",
+      "changeMedianMs": 218.229,
+      "changeMinMs": 200.006,
+      "changeMaxMs": 239.82,
+      "syntaxStateAfterChanges": "available",
+      "replicaMatchesHost": true
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+   Compiling gix-transport v0.57.2
+   Compiling gix-lock v23.0.1
+   Compiling gix-attributes v0.33.2
+   Compiling gix-ignore v0.21.1
+   Compiling gix-shallow v0.12.1
+   Compiling gix-pathspec v0.18.1
+   Compiling gix-revwalk v0.33.0
+   Compiling gix-ref v0.65.0
+   Compiling gix-filter v0.32.0
+   Compiling gix-pack v0.72.0
+   Compiling gix-traverse v0.59.0
+   Compiling gix-revision v0.47.0
+   Compiling tree-house v0.4.0
+   Compiling gix-refspec v0.43.0
+   Compiling gix-index v0.53.0
+   Compiling gix-discover v0.53.0
+   Compiling gix-config v0.58.0
+   Compiling gix-protocol v0.63.0
+   Compiling gix-odb v0.82.0
+   Compiling helix-core v25.7.1 (/native/feasibility/upstream/helix/helix-core)
+   Compiling gix-worktree v0.54.0
+   Compiling gix-diff v0.65.0
+   Compiling gix-dir v0.27.0
+   Compiling gix-submodule v0.32.0
+   Compiling gix-status v0.32.0
+   Compiling gix v0.85.0
+   Compiling helix-vcs v25.7.1 (/native/feasibility/upstream/helix/helix-vcs)
+   Compiling mini-helix-match-feasibility v0.0.0 (/native/feasibility/helper)
+    Finished `release` profile [optimized] target(s) in 45.65s
+== [armv7-unknown-linux-gnueabihf/link] cargo exit code: 0
+total 10436
+drwxr-xr-x. 24 root root     480 Oct 23 23:49 build
+drwxr-xr-x.  2 root root   10920 Oct 23 23:50 deps
+drwxr-xr-x.  2 root root      40 Oct 23 23:49 examples
+-rwxr-xr-x.  2 root root 1846560 Oct 23 23:50 grammars
+drwxr-xr-x.  2 root root      40 Oct 23 23:49 incremental
+-rwxr-xr-x.  2 root root 8822164 Oct 23 23:50 mini-helix-match-feasibility
+/out/cargo-target/armv7-unknown-linux-gnueabihf/armv7-unknown-linux-gnueabihf/release/mini-helix-match-feasibility:   ELF 32-bit LSB pie executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, BuildID[sha1]=968aadf113b72874d032f5527a02b0bb929ba35a, for GNU/Linux 3.2.0, not stripped
+/out/cargo-target/armv7-unknown-linux-gnueabihf/armv7-unknown-linux-gnueabihf/release/mini-helix-match-feasibility.d: ASCII text, with very long lines (4610)
+exit 0

@@ -1,0 +1,358 @@
+// Scratch generator for Task 9 oracle case INPUTS (expected is produced only by the oracle with --update).
+const fs = require('fs');
+const path = require('path');
+const out = process.argv[2];
+const MARK = '§';
+function mk(lang, text, steps, extra = {}) {
+  const chars = Array.from(text);
+  const sels = [];
+  const clean = [];
+  for (const ch of chars) { if (ch === MARK) { sels.push({ anchor: clean.length, head: clean.length }); } else clean.push(ch); }
+  const input = { text: clean.join('') };
+  if (lang) input.language = lang;
+  if (sels.length) input.selections = sels;
+  input.steps = steps;
+  return { input: Object.assign(input, extra) };
+}
+const groups = {};
+function add(group, id, description, source, c, tags) {
+  (groups[group] ||= []).push(Object.assign({ id, description, source }, tags ? { tags } : {}, c));
+}
+const G1 = 'syntax-objects-2';
+
+// ---------------- capture families: [family key, family name]
+const FAM = { f: 'function', t: 'class', a: 'parameter', c: 'comment', T: 'test', e: 'entry', x: 'xml-element' };
+function fam(k, lang, id, text, steps) {
+  add(G1, `${FAM[k]}-${id}`, `${FAM[k]} (${k}) in ${lang}: ${steps.join(' ')}`, 'spec Object inventory; plan Task 9 capture family ' + FAM[k], mk(lang, text, steps));
+}
+const both = (k) => [`mi${k}`, `ma${k}`];
+
+// function
+fam('f', 'rust', 'rust', 'fn add(a: i32) -> i32 {\n    a + §1\n}\n', both('f'));
+fam('f', 'python', 'python', 'def f(a, b):\n    return a §+ b\n', both('f'));
+fam('f', 'javascript', 'javascript', 'function f(a, b) {\n  return a §+ b;\n}\n', both('f'));
+fam('f', 'typescript', 'typescript-inherited-ecma', 'function f(a: number): number {\n  return a §+ 1;\n}\n', both('f'));
+fam('f', 'tsx', 'tsx-inherited-chain', 'const f = (a: number) => {\n  return <div>{a §+ 1}</div>;\n};\n', both('f'));
+fam('f', 'jsx', 'jsx-inherited-chain', 'const f = (a) => {\n  return <div>{a §+ 1}</div>;\n};\n', both('f'));
+fam('f', 'go', 'go', 'package main\n\nfunc add(a int, b int) int {\n\treturn a §+ b\n}\n', both('f'));
+fam('f', 'c', 'c', 'int add(int a, int b) {\n  return a §+ b;\n}\n', both('f'));
+fam('f', 'cpp', 'cpp-inherits-c', 'int add(int a, int b) {\n  return a §+ b;\n}\n', both('f'));
+fam('f', 'java', 'java', 'class A {\n  int add(int a, int b) {\n    return a §+ b;\n  }\n}\n', both('f'));
+fam('f', 'lua', 'lua', 'local function add(a, b)\n  return a §+ b\nend\n', both('f'));
+fam('f', 'ruby', 'ruby', 'def add(a, b)\n  a §+ b\nend\n', both('f'));
+fam('f', 'bash', 'bash', 'add() {\n  echo §"$1"\n}\n', both('f'));
+fam('f', 'php', 'php', '<?php\nfunction add($a, $b) {\n  return $a §+ $b;\n}\n', both('f'));
+fam('f', 'c-sharp', 'c-sharp', 'class A {\n  int Add(int a, int b) {\n    return a §+ b;\n  }\n}\n', both('f'));
+fam('f', 'kotlin', 'kotlin', 'fun add(a: Int, b: Int): Int {\n  return a §+ b\n}\n', both('f'));
+fam('f', 'swift', 'swift', 'func add(a: Int, b: Int) -> Int {\n  return a §+ b\n}\n', both('f'));
+fam('f', 'scala', 'scala', 'object A {\n  def add(a: Int, b: Int): Int = {\n    a §+ b\n  }\n}\n', both('f'));
+fam('f', 'zig', 'zig', 'fn add(a: i32, b: i32) i32 {\n    return a §+ b;\n}\n', both('f'));
+fam('f', 'dart', 'dart', 'int add(int a, int b) {\n  return a §+ b;\n}\n', both('f'));
+fam('f', 'julia', 'julia', 'function add(a, b)\n    return a §+ b\nend\n', both('f'));
+fam('f', 'ocaml', 'ocaml', 'let add a b =\n  a §+ b\n', both('f'));
+fam('f', 'elixir', 'elixir', 'defmodule A do\n  def add(a, b) do\n    a §+ b\n  end\nend\n', both('f'));
+fam('f', 'perl', 'perl', 'sub add {\n  my ($a, $b) = @_;\n  return $a §+ $b;\n}\n', both('f'));
+fam('f', 'haskell', 'haskell', 'add :: Int -> Int -> Int\nadd a b = a §+ b\n', both('f'));
+fam('f', 'nix', 'nix', '{ add = a: b: a §+ b; }\n', both('f'));
+fam('f', 'svelte', 'svelte', '<script>\n  function add(a, b) {\n    return a §+ b;\n  }\n</script>\n', both('f'));
+fam('f', 'glsl', 'glsl', 'float add(float a, float b) {\n  return a §+ b;\n}\n', both('f'));
+fam('f', 'fish', 'fish', 'function add\n  echo §$argv\nend\n', both('f'));
+fam('f', 'cmake', 'cmake', 'function(add a b)\n  message(§${a})\nendfunction()\n', both('f'));
+
+// class
+fam('t', 'rust', 'rust-struct', 'struct S {\n    a: §i32,\n}\n', both('t'));
+fam('t', 'rust', 'rust-impl', 'struct S;\nimpl S {\n    fn f(&self) {§}\n}\n', both('t'));
+fam('t', 'python', 'python', 'class A:\n    def f(self):\n        return §1\n', both('t'));
+fam('t', 'javascript', 'javascript', 'class A {\n  f() {\n    return §1;\n  }\n}\n', both('t'));
+fam('t', 'typescript', 'typescript-interface', 'interface I {\n  a: §number;\n}\n', both('t'));
+fam('t', 'tsx', 'tsx-class', 'class A {\n  f(): number {\n    return §1;\n  }\n}\n', both('t'));
+fam('t', 'jsx', 'jsx-class', 'class A {\n  f() {\n    return §1;\n  }\n}\n', both('t'));
+fam('t', 'java', 'java', 'class A {\n  int a = §1;\n}\n', both('t'));
+fam('t', 'c-sharp', 'c-sharp', 'class A {\n  int a = §1;\n}\n', both('t'));
+fam('t', 'cpp', 'cpp', 'class A {\n  int a = §1;\n};\n', both('t'));
+fam('t', 'c', 'c-struct', 'struct S {\n  int §a;\n};\n', both('t'));
+fam('t', 'go', 'go-type', 'package main\n\ntype S struct {\n\ta §int\n}\n', both('t'));
+fam('t', 'kotlin', 'kotlin', 'class A {\n  val a = §1\n}\n', both('t'));
+fam('t', 'swift', 'swift', 'class A {\n  var a = §1\n}\n', both('t'));
+fam('t', 'ruby', 'ruby', 'class A\n  def f\n    §1\n  end\nend\n', both('t'));
+fam('t', 'php', 'php', '<?php\nclass A {\n  public $a = §1;\n}\n', both('t'));
+fam('t', 'scala', 'scala', 'class A {\n  val a = §1\n}\n', both('t'));
+fam('t', 'dart', 'dart', 'class A {\n  int a = §1;\n}\n', both('t'));
+fam('t', 'zig', 'zig', 'const S = struct {\n    a: §i32,\n};\n', both('t'));
+fam('t', 'protobuf', 'protobuf-message', 'syntax = "proto3";\nmessage M {\n  int32 §a = 1;\n}\n', both('t'));
+fam('t', 'css', 'css-rule', '@media screen {\n  a { color: §red; }\n}\n', both('t'));
+fam('t', 'elixir', 'elixir-module', 'defmodule A do\n  def f, do: §1\nend\n', both('t'));
+fam('t', 'haskell', 'haskell-data', 'data T = A §Int | B\n', both('t'));
+fam('t', 'julia', 'julia-struct', 'struct S\n    a::§Int\nend\n', both('t'));
+
+// parameter
+fam('a', 'rust', 'rust', 'fn add(a: i32, §b: i32) -> i32 { a + b }\n', both('a'));
+fam('a', 'python', 'python', 'def f(a, §b, c):\n    pass\n', both('a'));
+fam('a', 'javascript', 'javascript', 'function f(a, §b, c) {}\n', both('a'));
+fam('a', 'typescript', 'typescript', 'function f(a: number, §b: string) {}\n', both('a'));
+fam('a', 'tsx', 'tsx', 'function f(a: number, §b: string) {}\n', both('a'));
+fam('a', 'go', 'go', 'package main\n\nfunc add(a int, §b int) int { return a }\n', both('a'));
+fam('a', 'c', 'c', 'int add(int a, int §b) { return a; }\n', both('a'));
+fam('a', 'java', 'java', 'class A {\n  int add(int a, int §b) { return a; }\n}\n', both('a'));
+fam('a', 'lua', 'lua', 'local function add(a, §bb) return a end\n', both('a'));
+fam('a', 'ruby', 'ruby', 'def add(a, §b)\n  a\nend\n', both('a'));
+fam('a', 'php', 'php', '<?php\nfunction add($a, §$b) { return $a; }\n', both('a'));
+fam('a', 'kotlin', 'kotlin', 'fun add(a: Int, §b: Int): Int { return a }\n', both('a'));
+fam('a', 'c-sharp', 'c-sharp', 'class A {\n  int Add(int a, int §b) { return a; }\n}\n', both('a'));
+fam('a', 'bash', 'bash-inside-only', 'f() {\n  echo §"$1" "$2"\n}\nf a b\n', both('a'));
+fam('a', 'swift', 'swift', 'func add(a: Int, §b: Int) -> Int { return a }\n', both('a'));
+fam('a', 'haskell', 'haskell-inside-only', 'add a §bb = a\n', both('a'));
+fam('a', 'nix', 'nix', '{ a, §bb }: a\n', both('a'));
+fam('a', 'zig', 'zig', 'fn add(a: i32, §b: i32) i32 { return a; }\n', both('a'));
+fam('a', 'ocaml', 'ocaml', 'let add a §bb = a\n', both('a'));
+
+// comment
+fam('c', 'rust', 'rust-line', 'fn f() {}\n§// note\nfn g() {}\n', both('c'));
+fam('c', 'rust', 'rust-block', 'fn f() {}\n§/* note */\nfn g() {}\n', both('c'));
+fam('c', 'python', 'python', 'x = 1\n§# note\ny = 2\n', both('c'));
+fam('c', 'javascript', 'javascript', 'let x = 1;\n§// note\nlet y = 2;\n', both('c'));
+fam('c', 'typescript', 'typescript-block', 'let x = 1;\n§/* note */\nlet y = 2;\n', both('c'));
+fam('c', 'tsx', 'tsx', 'let x = 1;\n§// note\nlet y = 2;\n', both('c'));
+fam('c', 'c', 'c', 'int x;\n§/* note */\nint y;\n', both('c'));
+fam('c', 'go', 'go', 'package main\n§// note\nvar x = 1\n', both('c'));
+fam('c', 'java', 'java', 'class A {\n  §// note\n  int a;\n}\n', both('c'));
+fam('c', 'toml', 'toml-around-only', '§# note\na = 1\n', both('c'));
+fam('c', 'json', 'json', '{\n  §// note\n  "a": 1\n}\n', both('c'));
+fam('c', 'jsonc', 'jsonc', '{\n  §/* note */\n  "a": 1\n}\n', both('c'));
+fam('c', 'yaml', 'yaml', 'a: 1\n§# note\nb: 2\n', both('c'));
+fam('c', 'html', 'html-around-only', '<div>\n§<!-- note -->\n</div>\n', both('c'));
+fam('c', 'css', 'css', 'a { color: red; }\n§/* note */\nb { color: blue; }\n', both('c'));
+fam('c', 'bash', 'bash', 'echo a\n§# note\necho b\n', both('c'));
+fam('c', 'lua', 'lua', 'local x = 1\n§-- note\nlocal y = 2\n', both('c'));
+fam('c', 'ruby', 'ruby', 'x = 1\n§# note\ny = 2\n', both('c'));
+fam('c', 'nix', 'nix', '{\n  §# note\n  a = 1;\n}\n', both('c'));
+fam('c', 'c-sharp', 'c-sharp-around-only', 'class A {\n  §// note\n  int a;\n}\n', both('c'));
+fam('c', 'markdown', 'markdown-absent', '# T\n\ntext §here\n', both('c'));
+fam('c', 'rust', 'rust-doc-comment-injection', '§/// docs\nfn f() {}\n', both('c'));
+
+fam('c', 'sql', 'sql-no-comment-injection', 'select 1;\n-- §note\nselect 2;\n', both('c'));
+fam('c', 'elm', 'elm-no-comment-injection', 'x = 1\n-- §note\ny = 2\n', both('c'));
+fam('c', 'clojure', 'clojure-no-comment-injection', '(def x 1)\n; §note\n(def y 2)\n', both('c'));
+fam('c', 'solidity', 'solidity-no-comment-injection', 'contract A {\n  // §note\n  uint a;\n}\n', both('c'));
+fam('c', 'env', 'env-no-comment-injection', 'A=1\n# §note\nB=2\n', both('c'));
+fam('c', 'crystal', 'crystal-no-comment-injection', 'x = 1\n# §note\ny = 2\n', both('c'));
+fam('c', 'prisma', 'prisma-no-comment-injection', 'model A {\n  // §note\n  id Int\n}\n', both('c'));
+fam('c', 'hocon', 'hocon-no-comment-injection', 'a = 1\n# §note\nb = 2\n', both('c'));
+fam('c', 'eiffel', 'eiffel-no-comment-injection', 'class A\n-- §note\nend\n', both('c'));
+
+// test
+fam('T', 'rust', 'rust', '#[test]\nfn t() {\n    let xx = §11;\n}\n', both('T'));
+fam('T', 'go', 'go', 'package main\n\nfunc TestX(t *testing.T) {\n\tt.Log(§"a")\n}\n', both('T'));
+fam('T', 'python', 'python', 'def test_x():\n    assert §True\n', both('T'));
+fam('T', 'zig', 'zig', 'test "x" {\n    try §foo();\n}\n', both('T'));
+fam('T', 'elixir', 'elixir', 'defmodule ATest do\n  test "x" do\n    assert §true\n  end\nend\n', both('T'));
+fam('T', 'dart', 'dart', 'void main() {\n  test("x", () {\n    expect(§1, 1);\n  });\n}\n', both('T'));
+fam('T', 'julia', 'julia', '@testset "x" begin\n    @test §1 == 1\nend\n', both('T'));
+fam('T', 'toml', 'toml-absent', 'a = §1\n', both('T'));
+fam('T', 'javascript', 'javascript-absent', 'function test() { return §1; }\n', both('T'));
+
+// entry
+fam('e', 'toml', 'toml', '[t]\na = §1\nb = 2\n', both('e'));
+fam('e', 'json', 'json', '{\n  "a": §1,\n  "b": 2\n}\n', both('e'));
+fam('e', 'yaml', 'yaml', 'a: §1\nb: 2\n', both('e'));
+fam('e', 'javascript', 'javascript-object', 'const o = { a: §1, b: 2 };\n', both('e'));
+fam('e', 'typescript', 'typescript-object', 'const o = { a: §1, b: 2 };\n', both('e'));
+fam('e', 'tsx', 'tsx-object', 'const o = { a: §1, b: 2 };\n', both('e'));
+fam('e', 'python', 'python-dict', 'd = {"a": §1, "b": 2}\n', both('e'));
+fam('e', 'rust', 'rust-struct-literal', 'struct S { a: i32, b: i32 }\nfn f() { let s = S { a: §1, b: 2 }; }\n', both('e'));
+fam('e', 'lua', 'lua-table', 'local t = { a = §1, b = 2 }\n', both('e'));
+fam('e', 'css', 'css-declaration', 'a { color: §red; width: 1px; }\n', both('e'));
+fam('e', 'nix', 'nix-binding', '{ a = §1; b = 2; }\n', both('e'));
+fam('e', 'ruby', 'ruby-hash', 'h = { a: §1, b: 2 }\n', both('e'));
+fam('e', 'hcl', 'hcl-attribute', 'a = §1\nb = 2\n', both('e'));
+fam('e', 'java', 'java-around-only', 'class A {\n  int[] a = { §11, 2 };\n}\n', both('e'));
+fam('e', 'c', 'c-initializer', 'int a[] = { §11, 2 };\n', both('e'));
+fam('e', 'bash', 'bash-around-only', 'a=(§11 2)\n', both('e'));
+fam('e', 'git-config', 'git-config', '[core]\n\teditor = §vi\n\tbare = false\n', both('e'));
+fam('e', 'docker-compose', 'docker-compose', 'services:\n  web:\n    image: §x\n', both('e'));
+fam('e', 'graphql', 'graphql', 'query { a(b: §1) { c } }\n', both('e'));
+fam('e', 'json5', 'json5', '{ a: §1, b: 2 }\n', both('e'));
+
+// xml-element
+fam('x', 'html', 'html', '<div><p>§hi</p><p>x</p></div>\n', both('x'));
+fam('x', 'xml', 'xml', '<a><b>§t</b><c/></a>\n', both('x'));
+fam('x', 'jsx', 'jsx', 'const e = <div><p>§hi</p></div>;\n', both('x'));
+fam('x', 'tsx', 'tsx', 'const e = <div><p>§hi</p></div>;\n', both('x'));
+fam('x', 'svelte', 'svelte', '<div><p>§hi</p></div>\n', both('x'));
+fam('x', 'vue', 'vue', '<template>\n  <div><p>§hi</p></div>\n</template>\n', both('x'));
+fam('x', 'blade', 'blade', '<div><p>§hi</p></div>\n', both('x'));
+fam('x', 'templ', 'templ', 'package main\n\ntempl A() {\n\t<div><p>§hi</p></div>\n}\n', both('x'));
+fam('x', 'toml', 'toml-absent', 'a = "<p>§x</p>"\n', both('x'));
+fam('x', 'html', 'html-self-closing', '<div><br>§<img src="a"></div>\n', both('x'));
+
+// ---------------- counts, multi-selection, modes of selection, absent captures
+add(G1, 'count-2-function-ignored-or-used', 'count before mi is passed to the object function (captures ignore it)', 'select_textobject count', mk('rust', 'fn f() {\n    §1\n}\n', ['2mif', 'mif']));
+add(G1, 'multi-selection-function-two-functions', 'two cursors in two functions: both transform', 'select_textobject over the complete set', mk('rust', 'fn f() {\n    §1\n}\nfn g() {\n    §2\n}\n', ['mif', 'maf']));
+add(G1, 'multi-selection-primary-last', 'second cursor outside any function stays unchanged, primary 0', 'select_textobject', mk('rust', 'fn f() {\n    §1\n}\n§\n', ['mif']));
+add(G1, 'reversed-selection-function', 'reversed selection: cursor is the head', 'Range::cursor', mk('rust', 'fn f() {\n    abc\n}\n', ['mif'], { selections: [{ anchor: 16, head: 12 }] }));
+add(G1, 'chain-function-parameter-comment', 'consecutive capture commands on the previous result', 'consecutive match commands', mk('rust', '// c\nfn f(a: i32, §b: i32) {}\n', ['mia', 'maa', 'mif', 'maf']));
+add(G1, 'crlf-function', 'CRLF document function object', 'EOL', mk('rust', 'fn f() {\r\n    §1\r\n}\r\n', ['mif', 'maf'], { eol: 'crlf' }));
+add(G1, 'unicode-function', 'non-ASCII text before the cursor (UTF-16/char offsets)', 'UTF-16 projection', mk('rust', 'fn f() {\n    let s = "ünï😀"; §1\n}\n', ['mif', 'maf']));
+add(G1, 'utf16-selection-unit-function', 'astral characters with UTF-16 selection offsets', 'UTF-16 projection', mk('rust', 'fn f() {\n    let s = "😀"; 1\n}\n', ['mif'], { selectionUnit: 'utf16', selections: [{ anchor: 28, head: 28 }] }));
+add(G1, 'no-object-at-cursor', 'cursor outside every function: no-op', 'no-match is a no-op', mk('rust', '§const A: i32 = 1;\nfn f() {}\n', ['mif', 'maf', 'mia', 'mit']));
+add(G1, 'eof-cursor-function', 'cursor on the EOF position', 'EOF', mk('rust', 'fn f() {}\n§', ['mif', 'maf']));
+add(G1, 'unsupported-letter-with-syntax', 'object key without an object stays unchanged with syntax', 'select_textobject', mk('rust', 'fn f() {\n    §1\n}\n', ['miz', 'mi0']));
+add(G1, 'select-g-key-with-syntax-is-task10', 'placeholder removed', 'x', mk('rust', 'x', ['mif']));
+groups[G1].pop();
+
+// ---------------- syntax-backed pairs (root)
+const G2 = 'syntax-objects-2';
+function p(id, lang, text, steps, desc) { add(G2, id, desc || `syntax-backed pairs: ${steps.join(' ')} in ${lang}`, 'spec Object inventory; syntax-backed pair surround', mk(lang, text, steps)); }
+p('pair-rust-paren-string-delim', 'rust', 'fn f() {\n    let s = ")"; g(§a);\n}\n', ['mi(', 'ma(', 'mim']);
+p('pair-rust-paren-in-string-cursor', 'rust', 'fn f() {\n    let s = "a(§b)";\n}\n', ['mi(', 'ma(', 'mim']);
+p('pair-rust-char-literal-paren', 'rust', "fn f() {\n    let c = '('; g(§a);\n}\n", ['mi(', 'ma(', 'mim']);
+p('pair-rust-comment-paren', 'rust', 'fn f() {\n    // )\n    g(§a);\n}\n', ['mi(', 'ma(', 'mim']);
+p('pair-rust-lifetime-quote', 'rust', "fn f<'a>(x: &'a str) -> &'a str { §x }\n", ["mi'", "ma'", 'mim']);
+p('pair-rust-double-quote', 'rust', 'fn f() { let s = "a §b c"; }\n', ['mi"', 'ma"', 'mim', 'mi"']);
+p('pair-rust-braces-nested', 'rust', 'fn f() { if true { §x } }\n', ['mi{', 'ma{', 'mi{', 'mim']);
+p('pair-rust-brackets-macro', 'rust', 'fn f() { let v = vec![§1, 2]; }\n', ['mi[', 'ma[', 'mim']);
+p('pair-rust-angle-generics', 'rust', 'fn f() { let v: Vec<§i32> = Vec::new(); }\n', ['mi<gt>', 'ma<gt>', 'mim']);
+p('pair-rust-raw-string', 'rust', 'fn f() { let s = r#"a(§b)"#; }\n', ['mi(', 'ma(', 'mim']);
+p('pair-rust-mim-counted', 'rust', 'fn f() { g((§a)); }\n', ['2mim', 'mim', 'mim']);
+p('pair-rust-mi-paren-counted', 'rust', 'fn f() { g((§a)); }\n', ['2mi(', 'm2a(']);
+p('pair-js-template-literal', 'javascript', 'const s = `a (${f(§x)} b)`;\n', ['mi(', 'ma(', 'mim', 'mi`']);
+p('pair-js-regex-paren', 'javascript', 'const r = /\\(/; f(§x);\n', ['mi(', 'ma(', 'mim']);
+p('pair-js-single-quote-string', 'javascript', "const s = 'a (§b)';\n", ["mi'", "ma'", 'mi(', 'mim']);
+p('pair-python-triple-quote', 'python', 'x = """a ( §b"""\nf(1)\n', ['mi"', 'ma"', 'mi(', 'mim']);
+p('pair-python-paren-in-comment', 'python', 'f(§a)  # )\n', ['mi(', 'ma(', 'mim']);
+p('pair-c-char-and-string', 'c', "int f() { char c = '('; return g(§x); }\n", ['mi(', 'ma(', 'mim']);
+p('pair-json-braces-strings', 'json', '{ "a(": [§1, 2] }\n', ['mi[', 'ma[', 'mi{', 'mim']);
+p('pair-yaml-flow', 'yaml', 'a: [§1, 2]\nb: "x(y"\n', ['mi[', 'ma[', 'mim']);
+p('pair-toml-array-string', 'toml', 'a = ["(", §"b"]\n', ['mi[', 'ma[', 'mim', 'mi"']);
+p('pair-bash-paren-quote', 'bash', 'echo "a (" $(f §x)\n', ['mi(', 'ma(', 'mim', 'mi"']);
+p('pair-html-attribute-quotes', 'html', '<a href="§x" title=\'y\'>t</a>\n', ['mi"', 'ma"', 'mim', "mi'"]);
+p('pair-markdown-prose-parens', 'markdown', 'text (a §b) c\n', ['mi(', 'ma(', 'mim']);
+p('pair-markdown-inline-code-and-parens', 'markdown', 'a ( `b)` §c )\n', ['mi(', 'ma(', 'mim']);
+p('pair-css-paren-string', 'css', 'a { content: ")"; width: calc(1px + §2px); }\n', ['mi(', 'ma(', 'mim']);
+p('pair-go-rune-string', 'go', "package main\n\nfunc f() { r := ')'; g(§a) }\n", ['mi(', 'ma(', 'mim']);
+p('pair-plaintext-control', null, 'f(")", §a)\n', ['mi(', 'ma(', 'mim']);
+
+// ---------------- injected languages
+function inj(id, lang, text, steps, desc, src) { add(G2, id, desc, src || 'spec Object inventory; Runtime and language contract (injected languages)', mk(lang, text, steps)); }
+const MD_RUST = '# T\n\n```rust\nfn f(a: i32) {\n    g(§a);\n}\n```\n\ntext (a) "q"\n';
+inj('inj-md-rust-mif-maf', 'markdown', MD_RUST, ['mif', 'maf'], 'markdown fenced rust: function objects through the injected layer');
+inj('inj-md-rust-pairs', 'markdown', MD_RUST, ['mi(', 'ma(', 'mim'], 'pairs inside the fenced rust layer');
+inj('inj-md-rust-parameter', 'markdown', '# T\n\n```rust\nfn f(a: i32, §b: i32) {}\n```\n', ['mia', 'maa'], 'parameter object in the injected rust layer');
+inj('inj-md-rust-string-paren', 'markdown', '# T\n\n```rust\nfn f() { let s = ")"; g(§a); }\n```\n', ['mi(', 'ma(', 'mim'], 'string delimiter handling comes from the injected layer syntax');
+inj('inj-md-js-function', 'markdown', '# T\n\n```js\nfunction f(a, b) {\n  return §a;\n}\n```\n', ['mif', 'maf', 'mia'], 'fenced js (injection regex alias js) function and parameter');
+inj('inj-md-python-class-function', 'markdown', '# T\n\n```python\nclass A:\n    def f(self):\n        return §1\n```\n', ['mif', 'mit', 'maf'], 'fenced python class and function');
+inj('inj-md-json-entry', 'markdown', '# T\n\n```json\n{ "a": §1, "b": 2 }\n```\n', ['mie', 'mae', 'mi{'], 'fenced json entry and braces');
+inj('inj-md-toml-entry-comment', 'markdown', '# T\n\n```toml\n# n\na = §11\n```\n', ['mie', 'mac', 'mic'], 'fenced toml entry; around-only comment');
+inj('inj-md-yaml-entry', 'markdown', '# T\n\n```yaml\na: §1\nb: 2\n```\n', ['mie', 'mae'], 'fenced yaml entry');
+inj('inj-md-bash-function', 'markdown', '# T\n\n```bash\nf() {\n  echo §a\n}\n```\n', ['mif', 'maf'], 'fenced bash function');
+inj('inj-md-html-xml-element', 'markdown', '# T\n\n```html\n<div><p>§x</p></div>\n```\n', ['mix', 'max'], 'fenced html element');
+inj('inj-md-no-language-fence', 'markdown', '# T\n\n```\nfn f() {\n    §1\n}\n```\n', ['mif', 'mi{', 'mim'], 'fence without language: no injected layer');
+inj('inj-md-unknown-language-fence', 'markdown', '# T\n\n```nosuchlang\nfn f() {\n    §1\n}\n```\n', ['mif', 'mi{'], 'fence with an unknown language');
+inj('inj-md-prose-after-fence', 'markdown', MD_RUST.replace('§', '') + '', ['mif'], 'control: cursor at 0 outside the fence');
+inj('inj-md-two-fences', 'markdown', '```rust\nfn a() { §1 }\n```\n\n```python\ndef b():\n    return 2\n```\n', ['mif', 'maf'], 'two fences: the first layer only');
+inj('inj-md-two-fences-second', 'markdown', '```rust\nfn a() { 1 }\n```\n\n```python\ndef b():\n    return §2\n```\n', ['mif', 'maf'], 'two fences: the second layer');
+inj('inj-md-nested-html-script', 'markdown', '# T\n\n```html\n<script>\nfunction f(a) {\n  return §a;\n}\n</script>\n```\n', ['mif', 'maf', 'mi('], 'markdown fence -> html -> script (nested injection)');
+inj('inj-html-script-js', 'html', '<html>\n<script>\nfunction f(a, b) {\n  return §a;\n}\n</script>\n</html>\n', ['mif', 'maf', 'mia'], 'html script js layer');
+inj('inj-html-script-pairs', 'html', '<script>\nlet s = ")"; g(§a);\n</script>\n', ['mi(', 'ma(', 'mim'], 'pairs inside the script layer');
+inj('inj-html-style-css', 'html', '<style>\na { color: §red; }\n</style>\n', ['mie', 'mae', 'mit'], 'html style css layer entry and class');
+inj('inj-html-style-comment', 'html', '<style>\n§/* n */\na { color: red; }\n</style>\n', ['mic', 'mac'], 'css comment inside html');
+inj('inj-html-element-outside-script', 'html', '<div><script>f(1)</script><p>§x</p></div>\n', ['mix', 'max'], 'html elements next to a script');
+inj('inj-html-script-element-boundary', 'html', '<div><script>f(§11)</script></div>\n', ['mix', 'mi(', 'mif'], 'cursor in script inside element: the injected layer wins for objects');
+inj('inj-html-script-type-module', 'html', '<script type="module">\nexport function f(a) {\n  return §a;\n}\n</script>\n', ['mif', 'maf'], 'script type module');
+inj('inj-html-inline-style-attr', 'html', '<p style="color: §red">x</p>\n', ['mie', 'mi"'], 'style attribute css injection (or none)');
+inj('inj-html-inline-event-attr', 'html', '<button onclick="f(§1)">x</button>\n', ['mi(', 'mi"', 'mim'], 'event handler attribute');
+inj('inj-vue-script-template', 'vue', '<template>\n  <div>§a</div>\n</template>\n<script>\nfunction f(a) { return a; }\n</script>\n', ['mix', 'max'], 'vue template element');
+inj('inj-vue-script-js', 'vue', '<template>\n  <div>a</div>\n</template>\n<script>\nfunction f(a) { return §a; }\n</script>\n', ['mif', 'maf'], 'vue script js layer');
+inj('inj-svelte-script', 'svelte', '<script>\n  function f(a) { return §a; }\n</script>\n<div>x</div>\n', ['mif', 'maf'], 'svelte script layer');
+inj('inj-svelte-style', 'svelte', '<style>\n  a { color: §red; }\n</style>\n', ['mie', 'mae'], 'svelte style layer');
+inj('inj-rust-doc-comment-markdown', 'rust', '/// text (a §b)\nfn f() {}\n', ['mi(', 'ma(', 'mim', 'mic'], 'rust doc comment markdown injection pairs');
+inj('inj-rust-regex-string', 'rust', 'fn f() { let r = Regex::new(r"a(§b)").unwrap(); }\n', ['mi(', 'ma(', 'mim'], 'regex injection in a string argument');
+inj('inj-rust-macro-html', 'rust', 'fn f() { let s = sql!("select (§1)"); }\n', ['mi(', 'ma(', 'mim'], 'string in macro');
+inj('inj-js-template-html', 'javascript', 'const t = html`<div><p>§x</p></div>`;\nfunction f(a) { return a; }\n', ['mif', 'mi`', 'mix'], 'html tagged template injection');
+inj('inj-js-jsdoc-comment', 'javascript', '§/** @param {number} a x */\nfunction f(a) { return a; }\n', ['mic', 'mac'], 'jsdoc comment injection');
+inj('inj-js-regex-literal', 'javascript', 'const r = /a(§b)/;\n', ['mi(', 'ma(', 'mim'], 'regex literal injection');
+inj('inj-php-html', 'php', '<div><?php echo f(§11); ?></div>\n', ['mi(', 'mix', 'mif'], 'php inside html text');
+inj('inj-yaml-no-injection-control', 'yaml', 'a: |\n  text (§b)\nb: 1\n', ['mi(', 'ma(', 'mie'], 'yaml block scalar');
+inj('inj-toml-in-markdown-frontmatter', 'markdown', '---\na: §11\n---\n\ntext\n', ['mie', 'mi(', 'mim'], 'markdown front matter');
+inj('inj-comment-layer-todo', 'rust', '// TODO (§x)\nfn f() {}\n', ['mi(', 'mic', 'mim'], 'comment injection layer pairs');
+inj('inj-python-docstring-markdown-none', 'python', 'def f():\n    """doc (§x)"""\n', ['mi(', 'mi"', 'mif'], 'python docstring');
+inj('inj-md-rust-nested-fence-in-list', 'markdown', '- item\n\n  ```rust\n  fn f() {\n      §1\n  }\n  ```\n', ['mif', 'maf'], 'fence inside a list item');
+inj('inj-md-rust-fence-tilde', 'markdown', '~~~rust\nfn f() {\n    §1\n}\n~~~\n', ['mif', 'maf'], 'tilde fence');
+inj('inj-md-rust-fence-info-string', 'markdown', '```rust,no_run\nfn f() {\n    §1\n}\n```\n', ['mif', 'maf'], 'fence info string with attributes');
+inj('inj-md-rust-fence-uppercase', 'markdown', '```Rust\nfn f() {\n    §1\n}\n```\n', ['mif', 'maf'], 'fence language name case');
+inj('inj-md-ts-tsx-fence-inherited', 'markdown', '```tsx\nconst e = <div><p>§hi</p></div>;\nfunction f(a: number) {}\n```\n', ['mix', 'max', 'mif'], 'fenced tsx: inherited queries through the injected layer');
+inj('inj-md-rust-unterminated-fence', 'markdown', '```rust\nfn f() {\n    §1\n}\n', ['mif', 'maf'], 'unterminated fence');
+inj('inj-md-rust-crlf', 'markdown', '```rust\r\nfn f() {\r\n    §1\r\n}\r\n```\r\n', ['mif', 'maf'], 'CRLF fence');
+groups[G2][groups[G2].length - 1].input.eol = 'crlf';
+
+// ---------------- before/after edits (incremental syntax updates)
+function ed(id, lang, text, steps, desc) { add(G2, id, desc, 'spec Syntax lifecycle contract; update after native edits', mk(lang, text, steps)); }
+ed('edit-rust-delete-body-then-objects', 'rust', 'fn f() {\n    §1\n}\nfn g(a: i32) { a }\n', ['mif', 'd', 'mif', 'maf'], 'select the body, delete it, ask again');
+ed('edit-rust-delete-function-then-next', 'rust', 'fn f() { 1 }\nfn g(a: i32) { §a }\n', ['maf', 'd', 'mif'], 'delete a function with maf d then mif at the next');
+ed('edit-rust-insert-text-then-pairs', 'rust', 'fn f() { g(§a); }\n', ['mi(', 'ma(', 'd', 'mi(', 'mif'], 'delete inside pair then more');
+ed('edit-rust-break-and-repair', 'rust', 'fn f() {\n    g(§a);\n}\n', ['mi(', 'd', 'i)<esc>', 'mi(', 'mif'], 'edit introduces an unbalanced delimiter');
+ed('edit-md-rust-fence-edit-in-layer', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§a);\n}\n```\n\ntext\n', ['mi(', 'd', 'mif', 'maf'], 'edit inside the embedded rust layer then ask in the layer');
+ed('edit-md-rust-fence-edit-delete-fence-line', 'markdown', '# T\n\n```rust\nfn f() { §1 }\n```\n\ntext\n', ['mif', 'd', 'mif', 'maf'], 'embedded delete then objects');
+ed('edit-md-fence-language-change', 'markdown', '```rust\nfn f() { §1 }\n```\n', ['mif', 'maf', '<esc>gg', 'mif'], 'sync step: motion to the top; fence unchanged');
+ed('edit-html-script-edit', 'html', '<script>\nfunction f(a) {\n  return §a;\n}\n</script>\n<p>x</p>\n', ['mif', 'd', 'mif', 'maf'], 'edit in the script layer');
+ed('edit-html-script-edit-outside', 'html', '<p>§x</p>\n<script>\nfunction f(a) { return a; }\n</script>\n', ['mix', 'd', 'mix', 'maf'], 'edit outside then objects');
+ed('edit-js-delete-param', 'javascript', 'function f(a, §b, c) {}\n', ['maa', 'd', 'mia', 'mif'], 'delete a parameter and ask again');
+ed('edit-python-dedent-change', 'python', 'def f():\n    return §1\ndef g():\n    return 2\n', ['mif', 'd', 'mif', 'maf'], 'python edit: body removal');
+ed('edit-toml-delete-entry', 'toml', '[t]\na = §1\nb = 2\n', ['mae', 'd', 'mie', 'mae'], 'toml entry delete');
+ed('edit-json-delete-entry-pairs', 'json', '{\n  "a": §1,\n  "b": [2]\n}\n', ['mae', 'd', 'mi{', 'mie'], 'json entry delete then braces');
+ed('edit-rust-multi-cursor-delete', 'rust', 'fn f() { §1 }\nfn g() { §2 }\n', ['mif', 'd', 'mif'], 'two cursors edit then ask');
+ed('edit-rust-crlf-edit', 'rust', 'fn f() {\r\n    g(§a);\r\n}\r\n', ['mi(', 'd', 'mif'], 'CRLF edit');
+ed('edit-rust-unicode-edit', 'rust', 'fn f() { let s = "😀"; g(§a); }\n', ['mi(', 'd', 'mi(', 'mif'], 'astral text edit');
+groups[G2].find((c) => c.id === 'edit-md-fence-language-change').description = 'sync step with a motion (no text change)';
+
+// ---------------- failure injection (oracle failure + queryOverrides)
+const G3 = 'syntax-failure-2';
+function fl(id, lang, text, steps, extra, desc, src) { add(G3, id, desc, src || 'spec Syntax lifecycle contract', mk(lang, text, steps, extra)); }
+const RFN = 'fn f(a: i32) {\n    g(§aa);\n}\n';
+fl('initial-failure-all-families', 'rust', RFN, ['mif', 'maf', 'mia', 'mic', 'mit', 'mie', 'mix', 'mi(', 'mim'], { failure: { kind: 'initial-parse' } }, 'initial parse failure: capture objects are no-ops, pairs use the plaintext branch');
+fl('initial-failure-quote-plaintext', 'rust', 'fn f() { let s = ")"; g(§aa); }\n', ['mi(', 'ma(', 'mim'], { failure: { kind: 'initial-parse' } }, 'initial failure keeps plaintext pair matching');
+fl('initial-failure-markdown-fence', 'markdown', '# T\n\n```rust\nfn f() {\n    §1\n}\n```\n', ['mif', 'mi{'], { failure: { kind: 'initial-parse' } }, 'initial failure for a markdown document');
+fl('initial-failure-html-script', 'html', '<script>\nfunction f(a) { return §aa; }\n</script>\n', ['mif', 'mi('], { failure: { kind: 'initial-parse' } }, 'initial failure for html');
+fl('incremental-failure-after-edit-objects', 'rust', 'fn f() {\n    g(§aa);\n}\nfn h() { 2 }\n', ['mi(', 'd', 'mif', 'maf', 'mi{'], { failure: { kind: 'incremental-parse', afterStep: 1 } }, 'the edit fails to update the tree: syntax stays disabled for later commands');
+fl('incremental-failure-edit-then-edit-again', 'rust', 'fn f() { g(§aa); }\nfn h() { k(1); }\n', ['mi(', 'd', 'mi(', 'mif', 'd', 'mif'], { failure: { kind: 'incremental-parse', afterStep: 1 } }, 'later edits never re-enable syntax');
+fl('incremental-failure-pairs-become-plaintext', 'rust', 'fn f() { let s = ")"; g(§aa); }\n', ['mi(', 'd', 'i<esc>', 'mi(', 'ma('], { failure: { kind: 'incremental-parse', afterStep: 1 } }, 'after the update failure pairs are plaintext');
+fl('incremental-failure-markdown-embedded', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n\ntext\n', ['mi(', 'd', 'mif', 'mi('], { failure: { kind: 'incremental-parse', afterStep: 1 } }, 'embedded layer disabled with the document');
+fl('incremental-failure-html-script', 'html', '<script>\nfunction f(a) { return g(§aa); }\n</script>\n', ['mi(', 'd', 'mif', 'mi('], { failure: { kind: 'incremental-parse', afterStep: 1 } }, 'html update failure');
+fl('incremental-failure-control-no-failure', 'rust', 'fn f() {\n    g(§aa);\n}\nfn h() { 2 }\n', ['mi(', 'd', 'mif', 'maf', 'mi{'], {}, 'control: the same edits without the injected failure');
+const bad = '(broken';
+fl('query-textobjects-rust-all-families', 'rust', RFN + '\n// c\nstruct S { a: i32 }\n', ['mif', 'maf', 'mia', 'mic', 'mit', 'mie', 'mi(', 'mim'], { queryOverrides: [{ language: 'rust', file: 'textobjects.scm', content: bad }] }, 'textobjects.scm failure: capture objects unavailable, syntax available (pairs syntax-backed)');
+fl('query-textobjects-string-pairs-still-syntax', 'rust', 'fn f() { let s = ")"; g(§aa); }\n', ['mi(', 'ma(', 'mim'], { queryOverrides: [{ language: 'rust', file: 'textobjects.scm', content: bad }] }, 'textobjects.scm failure keeps syntax-backed pair matching');
+fl('query-textobjects-markdown-fence', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n', ['mif', 'mi(', 'mim'], { queryOverrides: [{ language: 'rust', file: 'textobjects.scm', content: bad }] }, 'injected layer language textobjects failure');
+fl('query-textobjects-inherited-ecma', 'typescript', 'function f(a: number) {\n  return §aa;\n}\n', ['mif', 'mia', 'mi('], { queryOverrides: [{ language: 'ecma', file: 'textobjects.scm', content: bad }] }, 'inherited (ecma) textobjects failure affects typescript');
+fl('query-textobjects-inherited-ecma-tsx', 'tsx', 'const e = <div><p>§hi</p></div>;\n', ['mix', 'mif'], { queryOverrides: [{ language: 'ecma', file: 'textobjects.scm', content: bad }] }, 'ecma failure also hits tsx (and its jsx part)');
+fl('query-textobjects-inherited-jsx', 'tsx', 'const e = <div><p>§hi</p></div>;\n', ['mix', 'mif'], { queryOverrides: [{ language: '_jsx', file: 'textobjects.scm', content: bad }] }, '_jsx textobjects failure');
+for (const f of ['highlights.scm', 'injections.scm', 'locals.scm']) {
+  fl(`query-root-${f.replace('.scm', '')}-rust`, 'rust', RFN, ['mif', 'maf', 'mia', 'mi(', 'mim'], { queryOverrides: [{ language: 'rust', file: f, content: bad }] }, `root ${f} failure: syntax initialization fails (initial_failure); pairs plaintext`);
+}
+fl('query-root-highlights-string-pair', 'rust', 'fn f() { let s = ")"; g(§aa); }\n', ['mi(', 'ma(', 'mim'], { queryOverrides: [{ language: 'rust', file: 'highlights.scm', content: bad }] }, 'root highlights failure: plaintext pair matching');
+fl('query-root-inherited-ecma-highlights', 'javascript', 'function f(a) { return §aa; }\n', ['mif', 'mi('], { queryOverrides: [{ language: 'ecma', file: 'highlights.scm', content: bad }] }, 'inherited root highlights failure');
+fl('query-root-markdown-highlights-fence', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n', ['mif', 'mi(', 'mim'], { queryOverrides: [{ language: 'markdown', file: 'highlights.scm', content: bad }] }, 'root (markdown) highlights failure: no layers at all');
+fl('query-root-markdown-injections-fence', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n', ['mif', 'mi(', 'mim'], { queryOverrides: [{ language: 'markdown', file: 'injections.scm', content: bad }] }, 'root (markdown) injections failure');
+fl('query-injected-rust-highlights-markdown-fence', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n\ntext (b)\n', ['mif', 'mi(', 'mim', 'maf'], { queryOverrides: [{ language: 'rust', file: 'highlights.scm', content: bad }] }, 'injected rust config failure: only that layer is affected');
+fl('query-injected-rust-highlights-prose-parens', 'markdown', '# T\n\ntext (§b)\n\n```rust\nfn f() { 1 }\n```\n', ['mi(', 'ma(', 'mim'], { queryOverrides: [{ language: 'rust', file: 'highlights.scm', content: bad }] }, 'enclosing layer still valid when the injected rust config fails');
+fl('query-injected-rust-injections-markdown-fence', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n', ['mif', 'mi('], { queryOverrides: [{ language: 'rust', file: 'injections.scm', content: bad }] }, 'injected rust injections.scm failure');
+fl('query-injected-rust-locals-markdown-fence', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n', ['mif', 'mi('], { queryOverrides: [{ language: 'rust', file: 'locals.scm', content: bad }] }, 'injected rust locals.scm failure');
+fl('query-injected-javascript-html-script', 'html', '<script>\nfunction f(a) { return g(§aa); }\n</script>\n<p>x</p>\n', ['mif', 'mi(', 'mim'], { queryOverrides: [{ language: 'ecma', file: 'highlights.scm', content: bad }] }, 'html script layer language config failure');
+fl('query-injected-css-html-style', 'html', '<style>\na { color: §red; }\n</style>\n<p>x</p>\n', ['mie', 'mi{'], { queryOverrides: [{ language: 'css', file: 'highlights.scm', content: bad }] }, 'html style layer language config failure');
+fl('query-injected-css-html-element-outside', 'html', '<style>\na { color: red; }\n</style>\n<p>§x</p>\n', ['mix', 'max'], { queryOverrides: [{ language: 'css', file: 'highlights.scm', content: bad }] }, 'html elements still work');
+fl('query-injected-textobjects-html-script', 'html', '<script>\nfunction f(a) { return g(§aa); }\n</script>\n', ['mif', 'mi('], { queryOverrides: [{ language: 'ecma', file: 'textobjects.scm', content: bad }] }, 'script layer textobjects failure only');
+fl('query-edit-after-injected-failure', 'markdown', '# T\n\n```rust\nfn f() {\n    g(§aa);\n}\n```\n', ['mi(', 'd', 'mif', 'maf'], { queryOverrides: [{ language: 'rust', file: 'highlights.scm', content: bad }] }, 'edits after an injected layer config failure');
+fl('query-edit-after-textobjects-failure', 'rust', 'fn f() {\n    g(§aa);\n}\n', ['mi(', 'd', 'mif', 'mi{'], { queryOverrides: [{ language: 'rust', file: 'textobjects.scm', content: bad }] }, 'edits after a textobjects failure');
+fl('query-textobjects-empty-file-control', 'rust', RFN, ['mif', 'mia'], { queryOverrides: [{ language: 'rust', file: 'textobjects.scm', content: '' }] }, 'empty textobjects.scm is the no-query result');
+fl('query-textobjects-missing-capture-only', 'rust', RFN, ['mif', 'mia'], { queryOverrides: [{ language: 'rust', file: 'textobjects.scm', content: '(comment) @comment.inside' }] }, 'valid query without the requested captures: absent captures stay absent');
+
+// excluded / absent grammar and language-less behavior
+fl('no-grammar-wren-pairs', 'wren', 'class A {\n  f() { g(§1) }\n}\n', ['mi(', 'ma(', 'mim', 'mif'], {}, 'wren (excluded grammar): plaintext pairs, no captures');
+fl('no-grammar-gemini-all', 'gemini', '# t\n=> http://x (§y)\n', ['mi(', 'mif', 'mic'], {}, 'gemini (excluded grammar)');
+fl('no-textobject-query-language-markdown', 'markdown', '# T\n\ntext §(a)\n', ['mif', 'mic', 'mi(', 'mim'], {}, 'language without a textobjects.scm');
+fl('no-textobject-query-language-diff', 'diff', '--- a\n+++ b\n@@ -1 +1 @@\n-§x (a)\n+y\n', ['mif', 'mi('], {}, 'diff without text-object query');
+for (const [g, docs] of Object.entries(groups)) {
+  const doc = { schemaVersion: 1, group: g, provenance: { generator: 'mini-helix-match-oracle (native/oracle) driving helix-term key dispatch; expected results are never produced by extension code', reference: 'native/helix-lock.json: helix revision, patched source tree hash, runtime hash (also recorded in every expected.reference)', regenerate: 'npm run test:match:oracle -- --update, then review the diff' }, cases: docs };
+  fs.writeFileSync(path.join(out, g + '.json'), JSON.stringify(doc, null, 2) + '\n');
+  console.log(g, docs.length);
+}

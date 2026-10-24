@@ -1,0 +1,18 @@
+x86_64
+NAME="Alpine Linux"
+== helper
+/stage/mini-helix-match-feasibility: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=7c2c38be11350d743fe655e942e0dcc72a946298, not stripped
+	/lib/ld-musl-x86_64.so.1 (0x7f7360f94000)
+== rust.so
+	/lib/ld-musl-x86_64.so.1 (0x7f4e51a13000)
+	libc.musl-x86_64.so.1 => /lib/ld-musl-x86_64.so.1 (0x7f4e51a13000)
+== NEEDED
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.musl-x86_64.so.1]
+== probe
+PASS initialize ok {"helixRevision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc", "languageCount": 342, "runtimeDirs": ["/tmp/mini-helix-match-feasibility-iso-15/helix/runtime", "/stage/runtime"]}
+FAIL open rust: syntax available (grammar dlopen succeeded) {"diffState": "unavailable", "selectedLanguage": "rust", "syntaxState": "initial_failure", "timingsMs": {"syntaxNew": 0.039524000000000004}, "version": 1}
+FAIL mif selects function body via tree-sitter ["a"]
+FAIL mif through markdown injection (rust layer) {"text": ["1"], "layer": null}
+FAIL grammar .so files are mapped into the helper process []
+{"checks": [{"check": "initialize ok", "pass": true, "detail": {"helixRevision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc", "languageCount": 342, "runtimeDirs": ["/tmp/mini-helix-match-feasibility-iso-15/helix/runtime", "/stage/runtime"]}}, {"check": "open rust: syntax available (grammar dlopen succeeded)", "pass": false, "detail": {"diffState": "unavailable", "selectedLanguage": "rust", "syntaxState": "initial_failure", "timingsMs": {"syntaxNew": 0.039524000000000004}, "version": 1}}, {"check": "mif selects function body via tree-sitter", "pass": false, "detail": ["a"]}, {"check": "mif through markdown injection (rust layer)", "pass": false, "detail": {"text": ["1"], "layer": null}}, {"check": "grammar .so files are mapped into the helper process", "pass": false, "detail": []}], "allPass": false}
+probe exit code: 2

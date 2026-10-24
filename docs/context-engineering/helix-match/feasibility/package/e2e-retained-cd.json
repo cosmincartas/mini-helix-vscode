@@ -1,0 +1,1838 @@
+{
+ "pass": true,
+ "lossyRows": 12,
+ "dTextDiverges": 0,
+ "cTextDiverges": 5,
+ "cNoMergeLineBreakControlsDiverge": "3/3",
+ "helperOutputsIdenticalForSemanticAndMergedInput": true,
+ "cursorProxyDiverges": 0,
+ "controlsTextEqual": {
+  "control-abc-def:d": true,
+  "control-abc-def:c": true,
+  "control-crlf-line:d": true,
+  "control-crlf-line:c": true,
+  "control-single-range-one-LF:d": true,
+  "control-single-range-one-LF:c": true,
+  "control-single-range-one-CRLF:d": true,
+  "control-single-range-one-CRLF:c": true,
+  "control-single-range-LF-at-EOF:d": true,
+  "control-single-range-LF-at-EOF:c": true,
+  "control-single-range-CRLF-at-EOF:d": true,
+  "control-single-range-CRLF-at-EOF:c": true,
+  "control-blank-line-break-after-text:d": true,
+  "control-blank-line-break-after-text:c": false,
+  "control-blank-line-break-only-LF:d": true,
+  "control-blank-line-break-only-LF:c": false,
+  "control-blank-line-break-only-CRLF:d": true,
+  "control-blank-line-break-only-CRLF:c": false
+ },
+ "rows": [
+  {
+   "transition": 95,
+   "doc": "eof-no-newline",
+   "key": "d",
+   "control": false,
+   "textBefore": " ",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      1,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 95,
+   "doc": "eof-no-newline",
+   "key": "c",
+   "control": false,
+   "textBefore": " ",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      1,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 453,
+   "doc": "crlf-lines",
+   "key": "d",
+   "control": false,
+   "textBefore": "\r\n\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      4
+     ],
+     [
+      4,
+      4
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     2,
+     4
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      2,
+      4,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "\r\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\r\n",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     2,
+     2
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     2
+    ],
+    "extensionSelectionStartsAfter": [
+     2
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 453,
+   "doc": "crlf-lines",
+   "key": "c",
+   "control": false,
+   "textBefore": "\r\n\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      4
+     ],
+     [
+      4,
+      4
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     2,
+     4
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      2,
+      4,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "\r\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\r\n\r\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     2,
+     2
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     2
+    ],
+    "extensionSelectionStartsAfter": [
+     2
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 567,
+   "doc": "crlf-no-final-eol",
+   "key": "d",
+   "control": false,
+   "textBefore": "\r\n\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      4
+     ],
+     [
+      4,
+      4
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     2,
+     4
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      2,
+      4,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "\r\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\r\n",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     2,
+     2
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     2
+    ],
+    "extensionSelectionStartsAfter": [
+     2
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 567,
+   "doc": "crlf-no-final-eol",
+   "key": "c",
+   "control": false,
+   "textBefore": "\r\n\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      4
+     ],
+     [
+      4,
+      4
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     2,
+     4
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      2,
+      4,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "\r\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\r\n\r\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     2,
+     2
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     2
+    ],
+    "extensionSelectionStartsAfter": [
+     2
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 771,
+   "doc": "only-crlf",
+   "key": "d",
+   "control": false,
+   "textBefore": "\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      2
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     0,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 771,
+   "doc": "only-crlf",
+   "key": "c",
+   "control": false,
+   "textBefore": "\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      2
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     0,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\r\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 885,
+   "doc": "combining-marks",
+   "key": "d",
+   "control": false,
+   "textBefore": "\n\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     1,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\n",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 885,
+   "doc": "combining-marks",
+   "key": "c",
+   "control": false,
+   "textBefore": "\n\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     1,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\n\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 1103,
+   "doc": "emoji-zwj-sequence",
+   "key": "d",
+   "control": false,
+   "textBefore": "\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      1,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": 1103,
+   "doc": "emoji-zwj-sequence",
+   "key": "c",
+   "control": false,
+   "textBefore": "\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 1
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      1,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -1,
+   "doc": "control-abc-def",
+   "key": "d",
+   "control": true,
+   "textBefore": "abc def",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     0,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": " def"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": " def",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -1,
+   "doc": "control-abc-def",
+   "key": "c",
+   "control": true,
+   "textBefore": "abc def",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     0,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": " def"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": " def",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -2,
+   "doc": "control-crlf-line",
+   "key": "d",
+   "control": true,
+   "textBefore": "ab cd\r\nef\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      3,
+      5
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     3,
+     5
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      3,
+      5,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      3,
+      5
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "ab \r\nef\r\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "ab \r\nef\r\n",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     3,
+     3
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     3
+    ],
+    "extensionSelectionStartsAfter": [
+     3
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -2,
+   "doc": "control-crlf-line",
+   "key": "c",
+   "control": true,
+   "textBefore": "ab cd\r\nef\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      3,
+      5
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     3,
+     5
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      3,
+      5,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      3,
+      5
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "ab \r\nef\r\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "ab \r\nef\r\n",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     3,
+     3
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     3
+    ],
+    "extensionSelectionStartsAfter": [
+     3
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -3,
+   "doc": "control-single-range-one-LF",
+   "key": "d",
+   "control": true,
+   "textBefore": "x\ny",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "xy"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "xy",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -3,
+   "doc": "control-single-range-one-LF",
+   "key": "c",
+   "control": true,
+   "textBefore": "x\ny",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "xy"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "xy",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -4,
+   "doc": "control-single-range-one-CRLF",
+   "key": "d",
+   "control": true,
+   "textBefore": "x\r\ny",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "xy"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "xy",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -4,
+   "doc": "control-single-range-one-CRLF",
+   "key": "c",
+   "control": true,
+   "textBefore": "x\r\ny",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "xy"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "xy",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -5,
+   "doc": "control-single-range-LF-at-EOF",
+   "key": "d",
+   "control": true,
+   "textBefore": "x\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "x"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "x",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -5,
+   "doc": "control-single-range-LF-at-EOF",
+   "key": "c",
+   "control": true,
+   "textBefore": "x\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      2
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "x"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "x",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -6,
+   "doc": "control-single-range-CRLF-at-EOF",
+   "key": "d",
+   "control": true,
+   "textBefore": "x\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "x"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "x",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -6,
+   "doc": "control-single-range-CRLF-at-EOF",
+   "key": "c",
+   "control": true,
+   "textBefore": "x\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      1,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     1,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      1,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      1,
+      1
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "x"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "x",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     1,
+     1
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     1
+    ],
+    "extensionSelectionStartsAfter": [
+     1
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -7,
+   "doc": "control-blank-line-break-after-text",
+   "key": "d",
+   "control": true,
+   "textBefore": "x\n\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     2,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      2,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "x\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "x\n",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     2,
+     2
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     2
+    ],
+    "extensionSelectionStartsAfter": [
+     2
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -7,
+   "doc": "control-blank-line-break-after-text",
+   "key": "c",
+   "control": true,
+   "textBefore": "x\n\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      2,
+      3
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     2,
+     3
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      2,
+      3,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      2,
+      2
+     ]
+    ],
+    "primary": 0,
+    "expectedText": "x\n"
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "x\n\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     2,
+     2
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     2
+    ],
+    "extensionSelectionStartsAfter": [
+     2
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -8,
+   "doc": "control-blank-line-break-only-LF",
+   "key": "d",
+   "control": true,
+   "textBefore": "\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      1,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -8,
+   "doc": "control-blank-line-break-only-LF",
+   "key": "c",
+   "control": true,
+   "textBefore": "\n",
+   "eol": "LF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      1
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     0,
+     1
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      1,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -9,
+   "doc": "control-blank-line-break-only-CRLF",
+   "key": "d",
+   "control": true,
+   "textBefore": "\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      2
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     0,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "",
+   "textEqualsHelper": true,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  },
+  {
+   "transition": -9,
+   "doc": "control-blank-line-break-only-CRLF",
+   "key": "c",
+   "control": true,
+   "textBefore": "\r\n",
+   "eol": "CRLF",
+   "semantic": {
+    "ranges": [
+     [
+      0,
+      2
+     ]
+    ],
+    "primary": 0
+   },
+   "vscodeReadback": [
+    [
+     0,
+     2
+    ]
+   ],
+   "helperDebugDelete": {
+    "edits": [
+     [
+      0,
+      2,
+      ""
+     ]
+    ],
+    "selections": [
+     [
+      0,
+      0
+     ]
+    ],
+    "primary": 0,
+    "expectedText": ""
+   },
+   "helperDebugDeleteOnMergedReadbackIdentical": true,
+   "textAfter": "\r\n",
+   "textEqualsHelper": false,
+   "selectionsAfter": [
+    [
+     0,
+     0
+    ]
+   ],
+   "insertModeAfterC": true,
+   "cursorProxy": {
+    "helperPostDeleteStarts": [
+     0
+    ],
+    "extensionSelectionStartsAfter": [
+     0
+    ],
+    "equal": true
+   }
+  }
+ ],
+ "pending": [
+  "The helper has no `c` action: INSERT cursor positions for `c` are compared only against the start of the helper post-delete selections (proxy); a Helix-exact `c` expectation needs a helper change action (pending).",
+  "The extension is the existing production `d`/`c` (not Helix code); a divergence from the helper in a control row would be an extension-vs-Helix difference, not projection loss."
+ ]
+}

@@ -1,0 +1,3 @@
+check:helix-runtime FAILED (1 problem(s)) for linux-x64
+ - missing /home/cosmincartas/work/projects/vscode-extension-helix-match/native/helix-lock.json
+exit=1

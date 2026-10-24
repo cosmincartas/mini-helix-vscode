@@ -1,0 +1,9 @@
+    ✔ uses the report only with excludeNetwork set during the call, and restores the setting (0.792639ms)
+    ✖ does not call getReport on a runtime without excludeNetwork (Node 18) and still detects the target (0.902918ms)
+  ✖ host libc detection never resolves names (NFR-3) (2.173902ms)
+✖ Helper layout and target detection (2.779107ms)
+ℹ pass 1
+ℹ fail 1
+✖ failing tests:
+✖ does not call getReport on a runtime without excludeNetwork (Node 18) and still detects the target (0.902918ms)
+  AssertionError [ERR_ASSERTION]: getReport was not called

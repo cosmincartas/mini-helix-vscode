@@ -1,0 +1,40 @@
+   Compiling block-buffer v0.12.1
+   Compiling serde_spanned v1.1.1
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling digest v0.11.3
+   Compiling sha2 v0.11.0
+   Compiling toml v1.1.2+spec-1.1.0
+   Compiling tempfile v3.27.0
+   Compiling thiserror-impl v2.0.18
+   Compiling serde_derive v1.0.228
+   Compiling regex-cursor v0.1.5
+   Compiling regex v1.12.4
+   Compiling globset v0.4.18
+   Compiling helix-stdx v25.7.1 (/native/feasibility/upstream/helix/helix-stdx)
+   Compiling tree-house v0.4.0
+   Compiling hm-cross-grammars v0.0.0 (/native/feasibility/targets/cross-grammars)
+    Finished `release` profile [optimized] target(s) in 21.64s
+== [armv7-unknown-linux-gnueabihf/grammars] fetch
+== [armv7-unknown-linux-gnueabihf/grammars] build for armv7-unknown-linux-gnueabihf (compiler env: CC_armv7_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc)
+Building 5 grammars
+Building grammars (1/5): rust
+Building grammars (2/5): javascript
+Building grammars (3/5): html
+Building grammars (4/5): markdown
+Building grammars (5/5): markdown_inline
+5 grammars built now
+	["html", "javascript", "markdown", "markdown_inline", "rust"]
+== [armv7-unknown-linux-gnueabihf/grammars] exit code: 0
+total 2288
+-rwxr-xr-x. 1 root root   25544 Oct 23 23:50 html.so
+-rwxr-xr-x. 1 root root  415432 Oct 23 23:50 javascript.so
+-rwxr-xr-x. 1 root root  385380 Oct 23 23:50 markdown.so
+-rwxr-xr-x. 1 root root  388920 Oct 23 23:50 markdown_inline.so
+-rwxr-xr-x. 1 root root 1116444 Oct 23 23:50 rust.so
+drwxr-xr-x. 7 root root     140 Oct 23 23:50 sources
+/out/xdg-armv7-unknown-linux-gnueabihf/config/helix/runtime/grammars/html.so:            ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=3315e6df96193f60c5ada649479bedafcc72240d, not stripped
+/out/xdg-armv7-unknown-linux-gnueabihf/config/helix/runtime/grammars/javascript.so:      ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=1e8523c6a3dedc78c39d56335a24835ebfeba1cb, not stripped
+/out/xdg-armv7-unknown-linux-gnueabihf/config/helix/runtime/grammars/markdown.so:        ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=9175ee94af39c55fd38511a5543281be34100ac2, not stripped
+/out/xdg-armv7-unknown-linux-gnueabihf/config/helix/runtime/grammars/markdown_inline.so: ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=ceeafc77c480730057953cfb259526fa4f77b70b, not stripped
+/out/xdg-armv7-unknown-linux-gnueabihf/config/helix/runtime/grammars/rust.so:            ELF 32-bit LSB shared object, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=1753feaa7836dd166edff9458ce4dc6e57986338, not stripped
+exit 0

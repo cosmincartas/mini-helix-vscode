@@ -1,0 +1,2 @@
+<class 'dict'> 24
+baseline files checked: 24 differing: [('package.json', 'differs')]

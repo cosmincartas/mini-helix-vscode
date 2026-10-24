@@ -1,0 +1,37 @@
+     Running unittests src/lib.rs (native/target/debug/deps/mini_helix_match_helper-c68e3f412d499d87)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/main.rs (native/target/debug/deps/mini_helix_match_helper-3cf52392fb713d2e)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/bin/runtime_builder.rs (native/target/debug/deps/mini_helix_runtime_builder-1898e7332113c249)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/protocol.rs (native/target/debug/deps/protocol-c5818780b634f292)
+test constants_fixtures_and_implementation_agree_on_one_compatibility_check ... ok
+test eof_in_the_middle_of_a_frame_is_an_explicit_failure_and_the_partial_frame_is_never_executed ... ok
+test requests_before_initialize_are_rejected_but_shutdown_is_allowed ... ok
+test several_frames_in_one_write_are_answered_in_order_and_nothing_after_shutdown_runs ... ok
+test unsupported_protocol_version_fixture_terminates_the_session ... ok
+test shutdown_replies_then_exits_zero_with_no_children ... ok
+test initialize_params_are_validated_and_second_initialize_is_rejected_without_ending_the_session ... ok
+test initialize_returns_actual_identity_and_capabilities_then_serves_requests ... ok
+test envelope_fields_are_validated_with_precise_stable_errors ... ok
+test unknown_and_not_yet_implemented_methods_return_a_typed_error_and_do_not_crash ... ok
+test clean_eof_exits_zero_without_output_before_and_after_initialize ... ok
+test diagnostics_never_contain_request_or_document_text ... ok
+test malformed_json_and_invalid_bytes_get_explicit_errors_and_the_stream_stays_in_sync ... ok
+test identity_mismatches_fail_explicitly_and_end_the_session ... ok
+test wrong_protocol_version_fails_explicitly_and_ends_the_session ... ok
+test corrupted_runtime_is_runtime_unavailable_and_no_library_is_loaded ... ok
+test fragmented_frames_including_mid_utf8_and_mid_json_are_reassembled ... ok
+test eof_after_oversize_discard_is_reported_once_and_exits ... ok
+test oversized_frames_are_rejected_whole_without_truncation_and_the_session_continues ... ok
+test fixtures_round_trip_through_the_real_helper_with_the_real_runtime ... ok
+test corrupted_or_missing_assets_in_a_scratch_copy_of_the_real_runtime_are_runtime_unavailable ... ok
+test a_stalled_partial_frame_times_out_explicitly_instead_of_hanging ... ok
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.01s
+     Running tests/runtime_isolation.rs (native/target/debug/deps/runtime_isolation-c37e90a8f2d13ae7)
+test intact_runtime_verifies_and_excluded_grammars_are_not_missing ... ok
+test lock_mismatches_are_reported ... ok
+test tampering_is_reported_with_the_right_installation_error_class ... ok
+test ambient_helix_state_does_not_change_runtime_resolution ... ok
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

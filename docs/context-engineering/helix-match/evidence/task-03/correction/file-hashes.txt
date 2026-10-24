@@ -1,0 +1,10 @@
+1b23b2820a062b1286b61bff2caae477d2b769f819607143439480c42f8e7a04  native/oracle/src/main.rs
+0e6d76521ef221e8a1df20402ba9e4f306c3b33a2a21b9a23db9156253060b5e  test/fixtures/helix-match/README.md
+45d48a6ed2c3934736a7c08f5a23418588b126a734a134e5ace978f8d6c0cbe1  test/fixtures/helix-match/cases/counts-pending.json
+c3f74014ffead370e1c030feaf07dde6e4b04eb6d854ea658be4c630e4ae8580  test/fixtures/helix-match/cases/git-hunks.json
+d3b3d6e0d9dea9ea8c3d45b03b4cb5a11e420b3400d74e4c67c5d5a9fbb01206  test/fixtures/helix-match/cases/plaintext-objects.json
+77ec8bf7eaf61ddc7b0bda67492d46a803fa243c1358f74376871a7d2bcbcf1e  test/fixtures/helix-match/cases/selections-eol.json
+967fb5bf84a5a086bf40a9d34e723a50b3d980422343b3477a12c98372088a98  test/fixtures/helix-match/cases/surround.json
+ea138013f69099e919491678212cefc7a59c6dfce9ae5c4556b60c0d2b0e4a5c  test/fixtures/helix-match/cases/syntax-failure.json
+fa2b8de3db4ec66605a09c4830583ff7e75e93720ada87c705fb261cbaf8e4a9  test/fixtures/helix-match/cases/syntax-objects.json
+ba7aa9ceda18cb803fcd593ed407d08468ade084369805057b3c24d39cc1537d  docs/context-engineering/helix-match/evidence/task-03/README.md

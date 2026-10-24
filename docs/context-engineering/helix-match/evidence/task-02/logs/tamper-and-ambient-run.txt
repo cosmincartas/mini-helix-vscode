@@ -1,0 +1,122 @@
+### baseline
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime OK for linux-x64
+exit=0
+
+### altered query (queries/rust/textobjects.scm)
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=58192205948710d2e9f4390e0d159b7e1ba0c9ad995b199c63dcacceb6964c67
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (5 problem(s)) for linux-x64
+ - checksum-mismatch queries/rust/textobjects.scm: manifest 116179281a8d0c1033d1460166134e85f18dd6a0a7422eb447ab761539f59bc5 actual a4a7d0fdcf3cfa9dc9ffda34b954901abee08073cebaa8c2fa9bef6fd38c4ab2
+ - runtime-hash-mismatch: manifest fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 58192205948710d2e9f4390e0d159b7e1ba0c9ad995b199c63dcacceb6964c67
+ - queries-hash-mismatch: manifest 05be673fd12ef24b164ac20434c9188d55d897db68f811693a50918482d9f893 actual d3a6459ec4896612056d792e716483335b9b397372ae3476ff6ebd1c499312b4
+ - queries-hash-mismatch: lock 05be673fd12ef24b164ac20434c9188d55d897db68f811693a50918482d9f893 actual d3a6459ec4896612056d792e716483335b9b397372ae3476ff6ebd1c499312b4
+ - lock-runtime-hash-mismatch: lock fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 58192205948710d2e9f4390e0d159b7e1ba0c9ad995b199c63dcacceb6964c67
+exit=1
+
+### removed grammar library (grammars/rust.so)
+runtime linux-x64: 1798 assets, 301 selected grammars, load check run, runtimeHash=deb0e63204bc454c91196460492ef795768509f5d03e9dbd444b74e7748143bf
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (6 problem(s)) for linux-x64
+ - missing-grammar-library grammars/rust.so: listed in the manifest but absent
+ - runtime-hash-mismatch: manifest fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual deb0e63204bc454c91196460492ef795768509f5d03e9dbd444b74e7748143bf
+ - lock-runtime-hash-mismatch: lock fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual deb0e63204bc454c91196460492ef795768509f5d03e9dbd444b74e7748143bf
+ - lock-asset-count-mismatch: lock 1799 actual 1798
+ - missing-grammar-library grammars/rust.so: pinned loader found no library
+ - grammar rust is absent
+exit=1
+
+### stray query asset
+runtime linux-x64: 1800 assets, 301 selected grammars, load check run, runtimeHash=88c1d44227b5d71dd200b5f89b3ba36962ba3937f6fa5b59900dd36c952a33d6
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (6 problem(s)) for linux-x64
+ - unexpected-asset queries/rust/stray.scm: present on disk but not in the manifest
+ - runtime-hash-mismatch: manifest fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 88c1d44227b5d71dd200b5f89b3ba36962ba3937f6fa5b59900dd36c952a33d6
+ - queries-hash-mismatch: manifest 05be673fd12ef24b164ac20434c9188d55d897db68f811693a50918482d9f893 actual f22ebc469d1b4f34c1b5032e5ee02a13c5fb47caadc42d66f0bbfff87a8ec587
+ - queries-hash-mismatch: lock 05be673fd12ef24b164ac20434c9188d55d897db68f811693a50918482d9f893 actual f22ebc469d1b4f34c1b5032e5ee02a13c5fb47caadc42d66f0bbfff87a8ec587
+ - lock-runtime-hash-mismatch: lock fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 88c1d44227b5d71dd200b5f89b3ba36962ba3937f6fa5b59900dd36c952a33d6
+ - lock-asset-count-mismatch: lock 1799 actual 1800
+exit=1
+
+### stray grammars/wren.so (excluded grammar)
+runtime linux-x64: 1800 assets, 301 selected grammars, load check run, runtimeHash=96d636722ee7b8d0c1dfcb1c7a2b969cc63c5faac04578fe156b95ea3f502bca
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (4 problem(s)) for linux-x64
+ - unexpected-asset grammars/wren.so: present on disk but not in the manifest
+ - runtime-hash-mismatch: manifest fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 96d636722ee7b8d0c1dfcb1c7a2b969cc63c5faac04578fe156b95ea3f502bca
+ - lock-runtime-hash-mismatch: lock fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 96d636722ee7b8d0c1dfcb1c7a2b969cc63c5faac04578fe156b95ea3f502bca
+ - lock-asset-count-mismatch: lock 1799 actual 1800
+exit=1
+
+### altered grammar library (1 byte of grammars/python.so)
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=7f34228c7696817d563f370dfcb0ddf41098f85645b79ad3dacdea61fea04622
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (3 problem(s)) for linux-x64
+ - checksum-mismatch grammars/python.so: manifest 85a042e9a753584d3120355dbecf7eb5fa0aca45af5f182200c6ab676a948cea actual 5eedd55abffe0c15355340be2a269ff44fe61a3a8d5bc64fbd2e80ccb5ca5e78
+ - runtime-hash-mismatch: manifest fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 7f34228c7696817d563f370dfcb0ddf41098f85645b79ad3dacdea61fea04622
+ - lock-runtime-hash-mismatch: lock fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 7f34228c7696817d563f370dfcb0ddf41098f85645b79ad3dacdea61fea04622
+exit=1
+
+### removed injections query (queries/markdown/injections.scm)
+runtime linux-x64: 1798 assets, 301 selected grammars, load check run, runtimeHash=e4876cfdbb54906359fca09c89fb47b57246cc3d18131ee53a7a48b7295a059d
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (6 problem(s)) for linux-x64
+ - missing-asset queries/markdown/injections.scm: listed in the manifest but absent
+ - runtime-hash-mismatch: manifest fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual e4876cfdbb54906359fca09c89fb47b57246cc3d18131ee53a7a48b7295a059d
+ - queries-hash-mismatch: manifest 05be673fd12ef24b164ac20434c9188d55d897db68f811693a50918482d9f893 actual ae682f92dcaffa0829e0ef5a8357cbb6278ec4016f423a7a1d6fc98b55940aae
+ - queries-hash-mismatch: lock 05be673fd12ef24b164ac20434c9188d55d897db68f811693a50918482d9f893 actual ae682f92dcaffa0829e0ef5a8357cbb6278ec4016f423a7a1d6fc98b55940aae
+ - lock-runtime-hash-mismatch: lock fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual e4876cfdbb54906359fca09c89fb47b57246cc3d18131ee53a7a48b7295a059d
+ - lock-asset-count-mismatch: lock 1799 actual 1798
+exit=1
+
+### removed manifest.json
+runtime linux-x64: 0 assets, 0 selected grammars, load check run, runtimeHash=null
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (1 problem(s)) for linux-x64
+ - manifest-missing manifest.json: reading /home/cosmincartas/work/projects/vscode-extension-helix-match/native/runtime/out/linux-x64/runtime/manifest.json: No such file or directory (os error 2)
+exit=1
+
+### asset + manifest + hashes rewritten consistently (only the lock can catch it)
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=0ac92f70e516bb286d44b675ec09b6269811fbb1fbb87c7204ef6aecb8d1ea81
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (3 problem(s)) for linux-x64
+ - queries-hash-mismatch: lock 05be673fd12ef24b164ac20434c9188d55d897db68f811693a50918482d9f893 actual a53acd0ec7a76b590befa2a325c73335d5320e00b5ce2e93e9b9bf015947d579
+ - lock-runtime-hash-mismatch: lock fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b actual 0ac92f70e516bb286d44b675ec09b6269811fbb1fbb87c7204ef6aecb8d1ea81
+ - lock-manifest-mismatch manifest.json: lock 1adc4aa0cf6c1463e67b0c61656a00ccb93e45bc3375a2d87125ee73753a568b actual 30e4195cb90b0e44fb3fe1e76a8b0abb1783814c562ea7def01679aeef0502a4
+exit=1
+
+### lock runtimeHash altered
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime FAILED (1 problem(s)) for linux-x64
+ - lock-runtime-hash-mismatch: lock 0000000000000000000000000000000000000000000000000000000000000000 actual fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b
+exit=1
+
+### restored
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime OK for linux-x64
+exit=0
+      2 0e9b85388f9770befc48d6ab8505bc69dec4a31c2f81a502517fd9d32860692b
+      2 1adc4aa0cf6c1463e67b0c61656a00ccb93e45bc3375a2d87125ee73753a568b
+
+### ambient overrides on the whole check (HOME, XDG_CONFIG_HOME, HELIX_RUNTIME, cwd with .helix)
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime OK for linux-x64
+exit=0
+
+### helper directly under the same ambient state
+{
+  "effectiveQueries": {
+    "rust/highlights.scm": {
+      "bytes": 11067,
+      "effectiveSha256": "267939a0e02e015167c62024c86811bf17fdc7235f3861278887497d1b928945"
+    },
+    "rust/injections.scm": {
+      "bytes": 5962,
+      "effectiveSha256": "74b25f1224cdb57d990545943d7949c547e563491d268d81fce9e4f4022124c9"
+    },
+    "rust/textobjects.scm": {
+      "bytes": 1884,

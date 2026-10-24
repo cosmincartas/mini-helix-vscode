@@ -1,0 +1,15 @@
+valid   brackets.json
+valid   counts-pending.json
+valid   git-hunks-2.json
+valid   git-hunks.json
+valid   plaintext-objects-2.json
+valid   plaintext-objects.json
+valid   selection-identity.json
+valid   selections-eol.json
+valid   surround-add.json
+valid   surround.json
+valid   syntax-failure-2.json
+valid   syntax-failure.json
+valid   syntax-objects-2.json
+valid   syntax-objects.json
+files=14 cases=940 result=ALL VALID

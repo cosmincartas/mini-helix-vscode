@@ -1,0 +1,75 @@
+valid   counts-pending.json
+valid   git-hunks-2.json
+valid   git-hunks.json
+valid   plaintext-objects-2.json
+valid   plaintext-objects.json
+INVALID selection-identity.json
+[
+ {
+  "instancePath": "/cases/0/tags/0",
+  "schemaPath": "#/properties/tags/items/enum",
+  "keyword": "enum",
+  "params": {
+   "allowedValues": [
+    "quirk",
+    "quirk-control"
+   ]
+  },
+  "message": "must be equal to one of the allowed values"
+ },
+ {
+  "instancePath": "/cases/0/input/steps",
+  "schemaPath": "#/properties/steps/minItems",
+  "keyword": "minItems",
+  "params": {
+   "limit": 1
+  },
+  "message": "must NOT have fewer than 1 items"
+ },
+ {
+  "instancePath": "/cases/1/tags/0",
+  "schemaPath": "#/properties/tags/items/enum",
+  "keyword": "enum",
+  "params": {
+   "allowedValues": [
+    "quirk",
+    "quirk-control"
+   ]
+  },
+  "message": "must be equal to one of the allowed values"
+ },
+ {
+  "instancePath": "/cases/1/input/steps",
+  "schemaPath": "#/properties/steps/minItems",
+  "keyword": "minItems",
+  "params": {
+   "limit": 1
+  },
+  "message": "must NOT have fewer than 1 items"
+ },
+ {
+  "instancePath": "/cases/2/tags/0",
+  "schemaPath": "#/properties/tags/items/enum",
+  "keyword": "enum",
+  "params": {
+   "allowedValues": [
+    "quirk",
+    "quirk-control"
+   ]
+  },
+  "message": "must be equal to one of the allowed values"
+ }
+]
+valid   selections-eol.json
+valid   surround-add.json
+valid   surround.json
+valid   syntax-failure-2.json
+valid   syntax-failure.json
+valid   syntax-objects-2.json
+valid   syntax-objects.json
+files=13 cases=674 result=FAILURES
+selection-identity.json error summary (not git related): {
+ "enum #/properties/tags/items/enum": 28,
+ "minItems #/properties/steps/minItems": 28
+}
+git-hunks-2 attributes/config occurrences 8

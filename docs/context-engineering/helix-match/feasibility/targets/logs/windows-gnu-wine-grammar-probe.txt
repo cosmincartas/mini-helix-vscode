@@ -1,0 +1,9 @@
+Version: 10.0~repack-6
+wine-10.0 (Debian 10.0~repack-6)
+PASS initialize ok {"helixRevision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc", "languageCount": 342, "runtimeDirs": ["C:\\users\\root\\AppData\\Roaming\\helix\\runtime", "\\\\?\\Z:\\stage\\runtime"]}
+PASS open rust: syntax available (grammar dlopen succeeded) {"diffState": "unavailable", "selectedLanguage": "rust", "syntaxState": "available", "timingsMs": {"syntaxNew": 58.5234}, "version": 1}
+PASS mif selects function body via tree-sitter ["{\n    a + 1\n}"]
+PASS mif through markdown injection (rust layer) {"text": ["{\n    1 + 2\n}"], "layer": "rust"}
+INFO grammar files mapped (informational under a wrapper): ['/stage/runtime/grammars/markdown.dll', '/stage/runtime/grammars/markdown_inline.dll', '/stage/runtime/grammars/rust.dll']
+{"checks": [{"check": "initialize ok", "pass": true, "detail": {"helixRevision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc", "languageCount": 342, "runtimeDirs": ["C:\\users\\root\\AppData\\Roaming\\helix\\runtime", "\\\\?\\Z:\\stage\\runtime"]}}, {"check": "open rust: syntax available (grammar dlopen succeeded)", "pass": true, "detail": {"diffState": "unavailable", "selectedLanguage": "rust", "syntaxState": "available", "timingsMs": {"syntaxNew": 58.5234}, "version": 1}}, {"check": "mif selects function body via tree-sitter", "pass": true, "detail": ["{\n    a + 1\n}"]}, {"check": "mif through markdown injection (rust layer)", "pass": true, "detail": {"text": ["{\n    1 + 2\n}"], "layer": "rust"}}], "allPass": true}
+probe exit code: 0

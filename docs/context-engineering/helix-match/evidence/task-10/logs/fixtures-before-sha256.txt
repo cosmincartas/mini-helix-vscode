@@ -1,0 +1,12 @@
+45d48a6ed2c3934736a7c08f5a23418588b126a734a134e5ace978f8d6c0cbe1  test/fixtures/helix-match/cases/counts-pending.json
+c3f74014ffead370e1c030feaf07dde6e4b04eb6d854ea658be4c630e4ae8580  test/fixtures/helix-match/cases/git-hunks.json
+eeeb79ded566fec81c08a2f5129619b6099281b22f7ff87b224d87362b6d40bf  test/fixtures/helix-match/cases/plaintext-objects-2.json
+d3b3d6e0d9dea9ea8c3d45b03b4cb5a11e420b3400d74e4c67c5d5a9fbb01206  test/fixtures/helix-match/cases/plaintext-objects.json
+4b92b6836cbb9071255ca56c69ee009c792d5080ee40f65da6bd7d6dc6ac7d8c  test/fixtures/helix-match/cases/selection-identity.json
+77ec8bf7eaf61ddc7b0bda67492d46a803fa243c1358f74376871a7d2bcbcf1e  test/fixtures/helix-match/cases/selections-eol.json
+054eaa538dd4c09e52b02b01c9dbd0c1ec664d848d8aa40671a26be0be04d9ee  test/fixtures/helix-match/cases/surround-add.json
+967fb5bf84a5a086bf40a9d34e723a50b3d980422343b3477a12c98372088a98  test/fixtures/helix-match/cases/surround.json
+fa5417015ed29f2cdfce456b761afb00cd25b901d0a1c82074a7a4ef24e3d4d7  test/fixtures/helix-match/cases/syntax-failure-2.json
+ea138013f69099e919491678212cefc7a59c6dfce9ae5c4556b60c0d2b0e4a5c  test/fixtures/helix-match/cases/syntax-failure.json
+ebfd64a98bf01e3e53015fd24855add0deb181c6c21e4666e838897ec6cc57cb  test/fixtures/helix-match/cases/syntax-objects-2.json
+fa2b8de3db4ec66605a09c4830583ff7e75e93720ada87c705fb261cbaf8e4a9  test/fixtures/helix-match/cases/syntax-objects.json

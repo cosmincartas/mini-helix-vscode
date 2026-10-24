@@ -1,0 +1,11 @@
+warning: unused import: `path`
+ --> /home/cosmincartas/work/projects/vscode-extension-helix-match/native/upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+warning: `helix-loader` (lib) generated 1 warning (1 duplicate)
+    Finished `dev` profile [optimized] target(s) in 0.09s

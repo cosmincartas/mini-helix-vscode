@@ -1,0 +1,9 @@
+== native/oracle/target/debug/mini-helix-match-oracle
+
+thread 'main' panicked at /home/cosmincartas/work/projects/vscode-extension-helix-match/native/upstream/helix/helix-core/src/match_brackets.rs:154:48:
+attempt to subtract with overflow
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+rc=101
+== /tmp/hm-p11-oracle-nocheck/debug/mini-helix-match-oracle
+rc=0
+/tmp/hm-p11-ws/out-hm-p11-oracle-nocheck.json [(1, 2)] {'category': 'none', 'message': None}

@@ -1,7 +1,8 @@
 # Mini Helix
 
 A minimal VS Code extension with **NORMAL / INSERT modes**, Helix-style
-selection-first **word motions** (`w`, `b`, `e`, `W`, `B`, `E`), the **selection
+**`h`/`j`/`k`/`l`** and selection-first **word motions** (`w`, `b`, `e`, `W`,
+`B`, `E`), **counts** (`3w`, `5j`), the **selection
 edits** `i`, `a`, `c`, `d`, **undo/redo** with `u` and `U`, and **`gw` word jumps**. Add other individual bindings as you need them; this is not a full Helix
 emulator.
 
@@ -24,6 +25,8 @@ Open this folder in VS Code, select **Run Mini Helix** in Run and Debug, and pre
 - Press **`d`** to delete the selection, or **`c`** to delete it and type a
   replacement.
 - In NORMAL, press **`g` then `w`**, then type a word's two-letter label to select it.
+- Use **`gd` / `gr`** for definitions/references, **Alt+O / Alt+I** to expand/shrink
+  selections, and **Ctrl+O / Ctrl+I** to navigate back/forward.
 - Click the status-bar mode indicator to switch modes.
 - Run **Mini Helix: Suspend / Resume Modal Editing** from the Command Palette to
   temporarily return to native VS Code input. Click **HELIX OFF** to resume.
@@ -45,7 +48,8 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - One global mode shared by the window's text editors.
 - NORMAL blocks ordinary printable keys (including numeric keypad digits and
   operators), Space, Enter, Tab, Backspace, Delete, and their Shift variants,
-  except `i`, `a`, `c`, `d`, `u`, `U`, the word motions, and the `g w` chord.
+  except `i`, `a`, `c`, `d`, `u`, `U`, `h`, `j`, `k`, `l`, the word motions,
+  count digits, and the `gw`, `gd`, `gr` chords.
 - INSERT uses VS Code's native typing, completion, and cursor style.
 - `i` collapses each selection to its start, so typing inserts before the
   selection rather than replacing it. This also works with multiple and reversed
@@ -54,15 +58,37 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
   Suspending the extension restores each editor's configured cursor style.
 - Blocker bindings are limited to editable text-editor focus. Search fields,
   Quick Input boxes, and terminals keep their native input. Read-only editors
-  keep native input too, except for word motions, `gw`, and its temporary label
-  input; `a`, `c`, `d`, `u`, and `U` are not bound there.
-- Arrow keys remain native outside word jumps; Ctrl/Cmd/Alt shortcuts always
-  remain native. NORMAL is **not read-only**: paste, cut, undo, command-driven
+  keep native input too, except for motions, navigation/selection bindings below,
+  `gw`, and its temporary label input; `a`, `c`, `d`, `u`, and `U` are not bound there.
+  While a count is pending, the blockers also run in read-only editors, so that
+  any other key clears the count.
+- Arrow keys remain native outside word jumps; Ctrl/Cmd/Alt shortcuts remain
+  native except for the NORMAL-mode bindings below. NORMAL is **not read-only**: paste, cut, undo, command-driven
   edits, and other native editing shortcuts can still modify the document.
 
-There are deliberately **no** bindings for `gs`, `gl`, `x`,
-`%`, `gd`, `gr`, Ctrl+O/I, or Alt+O/I. No language server, parser, custom buffer,
-custom jump history, or global `type` override is installed.
+There are deliberately **no** bindings for `gs`, `gl`, `x`, or `%`.
+No language server, parser, custom buffer, custom jump history, or global `type`
+override is installed.
+
+### Navigation and selection
+
+These bindings work in NORMAL, including read-only editors, outside word-label
+sessions. INSERT, suspended mode, and non-editor inputs keep native shortcuts.
+
+| Key | Does (native VS Code action) |
+| --- | --- |
+| `gd` | Go to definition |
+| `gr` | Go to references |
+| Alt+O | Expand selection (Smart Select) |
+| Alt+I | Shrink selection (Smart Select) |
+| Ctrl+O | Navigate back |
+| Ctrl+I | Navigate forward |
+
+Press `g`, then `d` or `r` for the chords. Definitions and references require a
+language extension providing them. Selection expansion uses VS Code's selection
+range providers and fallback rules, not Helix's tree-sitter syntax nodes. Back
+and forward use VS Code's navigation history, not a separate Helix jumplist.
+These commands clear a count prefix without repeating the native action.
 
 ### Word motions (`w`, `b`, `e`, `W`, `B`, `E`)
 
@@ -94,8 +120,68 @@ adaptations:
   where Helix draws it *on* that character. The selected text is the same.
 
 Every cursor moves independently, and overlapping results are merged by VS Code.
-Motions also work in read-only editors. There is no count prefix (`3w`) and no
-select/extend mode (`v`) yet.
+Motions also work in read-only editors and take a count: `3w` repeats `w` three
+times, stopping early at the end of the text. There is no select/extend mode
+(`v`) yet.
+
+### Character and line motions (`h`, `j`, `k`, `l`)
+
+| Key | Command | Does |
+| --- | --- | --- |
+| `h` | `miniHelix.moveCharLeft` | move the cursor one character left |
+| `j` | `miniHelix.moveVisualLineDown` | move the cursor one line down |
+| `k` | `miniHelix.moveVisualLineUp` | move the cursor one line up |
+| `l` | `miniHelix.moveCharRight` | move the cursor one character right |
+
+These are ports of Helix's `move_horizontally` and `move_vertically`. Each one
+starts from the block cursor, so a selection collapses to a cursor first: after
+`w` selects `one ` in `one two`, `h` lands on `e`, as in Helix. `h` and `l` cross
+line endings, and can stop on a line ending, like Helix.
+
+`j` and `k` keep the cursor's visual column. Tabs count up to the next tab stop
+(the editor's tab size), and wide characters such as CJK count as two columns,
+using the same character-width table as Helix. The column is remembered across
+`j`/`k` presses, so moving through a short line and on to a long one returns to
+the original column. Any other key forgets it.
+
+With `editor.wordWrap` off (the default, matching Helix's default of no soft
+wrap), results are identical to Helix's. With word wrap on, `j` and `k` move
+by screen line, as Helix's do with soft wrap enabled, but VS Code's own cursor
+movement does the work, because only VS Code knows where it wrapped lines. Its
+column rules then apply: for example, `k` on the first screen line moves to the
+start of the line, where Helix stays put. Toggling wrap with **View: Toggle Word Wrap** does not
+change the setting, so `j` and `k` keep moving by whole lines. Helix has no
+folding; how `j` and `k` behave around folded regions is untested.
+
+Set `miniHelix.hjklMotions` to `false` to leave these keys unbound; NORMAL then
+blocks them like other unbound keys. Arrow keys stay native unless a count is
+pending (see below), although Helix maps them to the same motions.
+
+### Counts
+
+Type digits before a key to repeat it, as in Helix: `3w`, `5j`, `10l`, `2u`.
+`1`–`9` start a count, any digit (including `0`) continues it, and numeric-keypad
+digits work too. A lone `0` does nothing, as in Helix. The pending count shows
+next to the mode in the status bar (`NORMAL 12`).
+
+The next key uses the count and clears it, whether or not it uses it:
+
+- `h`, `j`, `k`, `l`, the word motions, `u`, and `U` repeat.
+- `i`, `a`, `c`, `d`, `gw`, `gd`, and `gr` ignore it, as in Helix.
+- With a count, the arrow keys act as `h`, `j`, `k`, and `l`, so `3` Down moves
+  three lines, as in Helix. Home, End, Page Up, and Page Down clear the count,
+  then act natively.
+- Escape, unbound keys, and unbound `g` chords (such as `gx`) just clear it.
+
+Like Helix, a count stops growing at 100,000,000. Mode changes, suspending, and
+switching editors also clear it. Other native VS Code shortcuts and mouse clicks
+neither use nor clear a pending count. Unlike Helix, a digit after `g` (as in
+`2g3w`) cancels the chord instead of continuing the count.
+
+Escape, the arrow keys, and the blockers in read-only editors rely on the
+`miniHelix.countPending` context key, so a key typed in the instant after the
+first digit, before VS Code receives that update, can still act natively. Digits
+themselves and every other Mini Helix key never wait for it.
 
 ### Selection edits (`i`, `a`, `c`, `d`)
 
@@ -132,7 +218,7 @@ instead of keeping the selection while you type. Escape then shows the block
 cursor where Helix would, but the text you typed is not selected. Unlike Helix,
 `d` and `c` do not copy the deleted text to a register; there is no paste
 command yet. Alt+D and Alt+C (delete or change without yanking) are not bound,
-because Alt shortcuts stay native.
+because those Alt shortcuts stay native.
 
 ### Undo and redo (`u`, `U`)
 
@@ -140,6 +226,9 @@ because Alt shortcuts stay native.
 | --- | --- | --- |
 | `u` | `miniHelix.undo` | undo the last change |
 | `U` | `miniHelix.redo` | redo the last undone change |
+
+With a count, `3u` undoes up to three changes, stopping with the message below
+when there is nothing left.
 
 Like Helix, these undo whole changes. Each NORMAL-mode edit (`d`, or a paste)
 is one change, and so is each INSERT session, from `i`, `a`, or `c` through
@@ -194,7 +283,7 @@ Like Helix's default `gw`:
 
 Labels are cleared on scrolling, cursor/selection changes, edits, tab changes,
 window focus loss, mode changes, or suspension. Modified shortcuts remain native
-VS Code commands. Visible ranges are vertical: full soft-wrapped document lines
+VS Code commands during label input. Visible ranges are vertical: full soft-wrapped document lines
 can get labels, including portions outside the viewport horizontally. Folded
 text does not get labels.
 
@@ -203,14 +292,47 @@ native navigation history; it does not add Helix's select mode or a custom
 jumplist. Input blocking and label keys share the keyboard-layout and context
 update limitations below.
 
+### Match text objects and surround (`mi`, `ma`, `mr`)
+
+| Keys | Does |
+| --- | --- |
+| `miw` / `maw` | select inside or around the word under each cursor |
+| `mi<d>` / `ma<d>` | select inside or around the enclosing `<d>` pair |
+| `[count]mi<d>` / `[count]ma<d>` | select the n-th enclosing pair (the count is ignored for `w`) |
+| `mr<old><new>` | replace the enclosing `<old>` pair with `<new>`; for example `mr([` turns `(text)` into `[text]` |
+
+`<d>` and `<old>` can be `'` `"` `(` `)` `[` `]` `{` `}` `<` `>`; a closing
+character is an alias for its pair, so `mi)` is the same as `mi(`. `<new>` can
+be any of those, or any other printable character, which is used on both sides:
+`mr"*` turns `"x"` into `*x*`.
+
+- `mi` and `ma` work on every cursor; a cursor with no match stays where it is.
+- `mr` works with multiple cursors and is one undo step (and one `u` revision).
+  If any cursor has no match, nothing changes.
+- Escape or an invalid key after `m`, `mi`, `ma`, `mr` or `mr<old>` cancels the
+  command, clears the count, and types nothing.
+
+Limitations:
+
+- Matching is lexical, not syntax-aware. Brackets inside comments and strings,
+  and operators such as `->`, count like any other bracket.
+- Quotes pair up on a single line from left to right and do not nest.
+- The punctuation keys follow the US keyboard layout.
+- There are no `mm`, `ms`, or `md` commands and no syntax objects (function,
+  class, argument). This is not exact Helix parity.
+
 ### Settings
 
 ```json
 {
   "miniHelix.enabled": true,
-  "miniHelix.defaultMode": "normal"
+  "miniHelix.defaultMode": "normal",
+  "miniHelix.hjklMotions": true
 }
 ```
+
+`hjklMotions` binds `h`, `j`, `k`, and `l` in NORMAL (see above) and takes effect
+immediately.
 
 `enabled` takes effect immediately. `defaultMode` can be `normal` or `insert` and
 applies on activation; reload the window after changing it. The suspend command
@@ -220,7 +342,8 @@ is session-only and does not modify settings. Resuming preserves the last mode.
 
 This version uses VS Code's normal caret/selection model, not Helix's inclusive,
 non-empty character selections; word motions translate between the two (see
-above). Syntax selection can be added later. Input blocking uses normal VS Code keybindings, primarily tested
+above). Syntax selection uses native Smart Select rather than Helix's tree-sitter
+model. Input blocking uses normal VS Code keybindings, primarily tested
 with a US keyboard layout. IME composition and alternate keyboard layouts are
 not guaranteed to be fully blocked in NORMAL. Existing user keybindings can
 override the extension's defaults intentionally. Mode context updates travel
@@ -235,11 +358,6 @@ you want. User keybindings take precedence over the NORMAL-mode blockers:
 ```json
 [
   {
-    "key": "g d",
-    "command": "editor.action.revealDefinition",
-    "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
-  },
-  {
     "key": "g l",
     "command": "cursorEnd",
     "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
@@ -252,9 +370,8 @@ you want. User keybindings take precedence over the NORMAL-mode blockers:
 ]
 ```
 
-`g d` means press `g`, then `d`; VS Code handles the chord. `gd` requires a
-language extension that provides definitions. `shift+5` is `%` on a US keyboard;
-use the shortcut recorder for your layout.
+`g l` means press `g`, then `l`; VS Code handles the chord. `shift+5` is `%` on
+a US keyboard; use the shortcut recorder for your layout.
 
 These bindings are restricted to NORMAL outside word jumps. Include
 `!miniHelix.wordJumpActive` on user bindings so they don't steal label input.
@@ -268,10 +385,13 @@ VS Code keybinding resolver
   ├── i / Escape ───────────> ModeController
   │                            ├── publish mode/enabled context keys
   │                            └── update cursor/status presentation
-  ├── w b e W B E ──────────> registerMotion → word motion selections
+  ├── 0–9 ──────────────────> Count → pending count, status bar
+  ├── w b e W B E h l ──────> registerMotion → word/character motion selections
+  ├── j k ──────────────────> CharMotions → line moves, remembered columns
   ├── a c d ────────────────> SelectionEdits → document edits, then mode
   ├── u U ──────────────────> UndoHistory → native undo/redo, whole revisions
   ├── g w / label input ────> WordJump → decorations / word selection
+  ├── gd gr / Alt+O/I / Ctrl+O/I → native VS Code navigation / Smart Select
   ├── unbound NORMAL key ───> no-op
   ├── your native binding ──> VS Code command
   └── your custom binding ──> registerMotion → selection transformation
@@ -286,14 +406,19 @@ src/
     registerMotion.ts       Guarded multi-selection command runner
     wordJump.ts             Visible word targets and Helix-style label order
     wordMotion.ts           Helix word motions (w/b/e/W/B/E), Node-testable
+    charMotion.ts           Helix h/j/k/l, Node-testable
+    unicodeWidth.ts         Helix's character widths (unicode-width 0.1.12 tables)
+    count.ts                Helix's count prefix
     editing.ts              Helix selection edits (a/c/d), Node-testable
     history.ts              Helix revisions over VS Code's undo stack (u/U)
   motions/
     word.ts                 Word motion commands for registerMotion
+    hjkl.ts                 h/j/k/l commands, remembered columns, word wrap
   vscode/
     editing.ts              a/c/d commands: edits, carets, append restore
     history.ts              u/U commands: revision tracking and undo stops
     queue.ts                Runs edit, undo, and mode commands in key order
+    navigation.ts           Native definitions, references, Smart Select, back/forward
     presentation.ts         Temporary cursors and mode indicator
     wordJump.ts             Interactive jump session, labels, and cleanup
 scripts/
@@ -311,23 +436,24 @@ Create a module under `src/motions/` that exports a function of type `Motion`:
 ```ts
 import { Motion } from '../core/registerMotion';
 
-export const myMotion: Motion = (_document, selection) => {
-  // Compute a new vscode.Selection. Do not edit the document here.
+export const myMotion: Motion = (_document, selection, _count) => {
+  // Compute a new vscode.Selection, repeating `count` times if that makes
+  // sense. Do not edit the document here.
   return selection; // Replace with your motion's implementation.
 };
 ```
 
-Register it in `activate()`, after creating `modes`:
+Register it in `activate()`, after creating `modes` and `count`:
 
 ```ts
 context.subscriptions.push(
-  registerMotion('miniHelix.myMotion', myMotion, modes)
+  registerMotion('miniHelix.myMotion', myMotion, modes, count)
 );
 ```
 
 Import `registerMotion` and your function in `extension.ts`, compile, then add a
 user keybinding pointing to `miniHelix.myMotion`. The runner handles mode guards,
-multiple selections, and revealing the result. Commands are available after the
+multiple selections, counts, and revealing the result. Commands are available after the
 modal core activates; no new keyboard parser is needed.
 
 Helix ranges are gap positions, so they map directly onto VS Code's
@@ -346,14 +472,21 @@ such as the `gw` session, can be independent modules.
 | `miniHelix.undo` / `redo` | `u` / `U` |
 | `miniHelix.toggleEnabled` | Suspend / resume for this session |
 | `miniHelix.gotoWord` | Show word labels (`gw`) |
+| `miniHelix.gotoDefinition` / `gotoReferences` | `gd` / `gr` |
+| `miniHelix.expandSelection` / `shrinkSelection` | Alt+O / Alt+I |
+| `miniHelix.jumpBack` / `jumpForward` | Ctrl+O / Ctrl+I |
 | `miniHelix.moveNextWordStart` / `movePrevWordStart` / `moveNextWordEnd` | `w` / `b` / `e` |
 | `miniHelix.moveNextLongWordStart` / `movePrevLongWordStart` / `moveNextLongWordEnd` | `W` / `B` / `E` |
+| `miniHelix.moveCharLeft` / `moveVisualLineDown` / `moveVisualLineUp` / `moveCharRight` | `h` / `j` / `k` / `l` |
+| `miniHelix.count` | Internal count digit (argument: the digit) |
+| `miniHelix.clearCount` | Clear a pending count (Escape) |
 | `miniHelix.wordJumpInput` | Internal label input |
 | `miniHelix.cancelWordJump` | Cancel labels |
 | `miniHelix.noop` | Internal NORMAL input blocker |
 
-Bindings can use `miniHelix.enabled`, `miniHelix.mode` (`normal` / `insert`), and
-`miniHelix.wordJumpActive` (temporary label-input session).
+Bindings can use `miniHelix.enabled`, `miniHelix.mode` (`normal` / `insert`),
+`miniHelix.wordJumpActive` (temporary label-input session), and
+`miniHelix.countPending` (a count has been typed).
 Always include `editorTextFocus` in editor-specific user bindings.
 
 ## Development and verification
@@ -371,6 +504,13 @@ selection notation. They port the Helix test suite's `i`, `a`, and `c` cases,
 plus edge cases whose expected outputs were produced by running real Helix's
 integration harness. Each case notes when only the cursor position, not the
 whole selection, can match.
+
+Motion tests port helix-core's `movement.rs` tests for the bound motions
+(`test/unit/helixMovement.test.ts`): the `h`/`j`/`k`/`l` tests and every case of
+the `w`, `b`, `e`, `W`, `B`, and `E` tables, including counts.
+`test/unit/charMotionCases.ts` adds 102 key sequences for `h`/`j`/`k`/`l` and
+counts, with outputs from real Helix. Unit tests run them through the core, and
+`test/integration/hjkl.ts` replays them with real keystrokes in VS Code.
 
 Undo tests replay 48 key sequences with real keystrokes in VS Code
 (`test/integration/history.ts`), against outputs produced the same way by real

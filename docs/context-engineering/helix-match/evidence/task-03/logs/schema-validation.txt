@@ -1,0 +1,3 @@
+$ node validate.cjs (ajv draft-07, non-strict)
+negative control (bad direction) valid? false
+ajv 8.20.0 files 7 cases 106 invalid 0

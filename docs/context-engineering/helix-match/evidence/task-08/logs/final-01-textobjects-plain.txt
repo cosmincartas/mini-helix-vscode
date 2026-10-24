@@ -1,0 +1,127 @@
+$ cargo +1.90.0 test --locked --manifest-path native/Cargo.toml -p mini-helix-match-helper --test textobjects_plain -- --nocapture (after the last doc-comment edit)
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.28s
+     Running tests/textobjects_plain.rs (native/target/debug/deps/textobjects_plain-27e58e969ce210f0)
+
+running 6 tests
+in scope: 156 cases; excluded: 99
+excluded counts-pending/m0-zero: command outside inside/around: Char('0', []) in AfterM
+excluded counts-pending/ms-ctrl-x: command outside inside/around: Char('s', []) in AfterM
+excluded counts-pending/ms3-digit-surround: command outside inside/around: Char('s', []) in AfterM
+excluded git-hunks/mag-modified-line: git (Task 9+)
+excluded git-hunks/mig-added-line: git (Task 9+)
+excluded git-hunks/mig-bom-baseline: git (Task 9+)
+excluded git-hunks/mig-crlf-head: git (Task 9+)
+excluded git-hunks/mig-modified-line: git (Task 9+)
+excluded git-hunks/mig-multi-selection: git (Task 9+)
+excluded git-hunks/mig-no-repository: capture or hunk object (Tasks 9 and 10)
+excluded git-hunks/mig-outside-hunk: git (Task 9+)
+excluded git-hunks/mig-pure-deletion-at-line-end: git (Task 9+)
+excluded git-hunks/mig-pure-deletion-on-neighbour: git (Task 9+)
+excluded git-hunks/mig-untracked-unavailable: git (Task 9+)
+excluded git-hunks/mig-untrusted-same: git (Task 9+)
+excluded plaintext-objects/mm-jump-bracket: command outside inside/around: Char('m', []) in AfterM
+excluded selection-identity/combining-cursor-inside-grapheme: no steps (selection normalization only: Task 7)
+excluded selection-identity/combining-range-end-inside-grapheme: no steps (selection normalization only: Task 7)
+excluded selection-identity/crlf-cursor-before-eol: no steps (selection normalization only: Task 7)
+excluded selection-identity/crlf-cursor-between-cr-lf: no steps (selection normalization only: Task 7)
+excluded selection-identity/crlf-line-break-range: no steps (selection normalization only: Task 7)
+excluded selection-identity/crlf-range-anchor-inside-reversed: no steps (selection normalization only: Task 7)
+excluded selection-identity/crlf-range-head-inside: no steps (selection normalization only: Task 7)
+excluded selection-identity/emoji-nonbmp-cursors: no steps (selection normalization only: Task 7)
+excluded selection-identity/emoji-nonbmp-range: no steps (selection normalization only: Task 7)
+excluded selection-identity/emoji-zwj-cursor-inside-grapheme: no steps (selection normalization only: Task 7)
+excluded selection-identity/emoji-zwj-reversed-inside: no steps (selection normalization only: Task 7)
+excluded selection-identity/empty-document: no steps (selection normalization only: Task 7)
+excluded selection-identity/eof-range-covers-final-newline: no steps (selection normalization only: Task 7)
+excluded selection-identity/eof-with-final-newline: no steps (selection normalization only: Task 7)
+excluded selection-identity/eof-without-final-newline-range: no steps (selection normalization only: Task 7)
+excluded selection-identity/mixed-widths-emoji-multi: no steps (selection normalization only: Task 7)
+excluded selection-identity/overlapping-nested-duplicate: no steps (selection normalization only: Task 7)
+excluded selection-identity/overlapping-reversed-merge: no steps (selection normalization only: Task 7)
+excluded selection-identity/primary-not-first-unsorted: no steps (selection normalization only: Task 7)
+excluded selection-identity/reversed-multi-primary-last: no steps (selection normalization only: Task 7)
+excluded selection-identity/reversed-range: no steps (selection normalization only: Task 7)
+excluded selection-identity/scalar-point-at-eof-no-newline: no steps (selection normalization only: Task 7)
+excluded selection-identity/scalar-point-cursors: no steps (selection normalization only: Task 7)
+excluded selection-identity/touching-eof-cursor-after-crlf-range: no steps (selection normalization only: Task 7)
+excluded selection-identity/touching-eof-cursor-after-linebreak-range: no steps (selection normalization only: Task 7)
+excluded selection-identity/touching-eof-cursor-after-range: no steps (selection normalization only: Task 7)
+excluded selection-identity/touching-ranges: no steps (selection normalization only: Task 7)
+excluded selection-identity/zero-width-inside-range: no steps (selection normalization only: Task 7)
+excluded selections-eol/crlf-ms-paren: command outside inside/around: Char('s', []) in AfterM
+excluded selections-eol/multi-ms-merge: command outside inside/around: Char('s', []) in AfterM
+excluded selections-eol/select-mode-ms: select mode
+excluded surround/md-astral-both-delimiters-selected-error: command outside inside/around: Char('d', []) in AfterM
+excluded surround/md-astral-custom-pair: command outside inside/around: Char('d', []) in AfterM
+excluded surround/md-nested-same-kind: command outside inside/around: Char('d', []) in AfterM
+excluded surround/md-no-pair-error: command outside inside/around: Char('d', []) in AfterM
+excluded surround/md-paren: command outside inside/around: Char('d', []) in AfterM
+excluded surround/mr-escape-restores: command outside inside/around: Char('r', []) in AfterM
+excluded surround/mr-lookup-fails-replays-d: command outside inside/around: Char('r', []) in AfterM
+excluded surround/mr-m-closest: command outside inside/around: Char('r', []) in AfterM
+excluded surround/mr-multi-selection-preview: command outside inside/around: Char('r', []) in AfterM
+excluded surround/mr-preview-and-final: command outside inside/around: Char('r', []) in AfterM
+excluded surround/ms-ctrl-modifier-quirk: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-escape-cancels: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-m-literal: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-multi-selection: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-paren: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-quote: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-reversed-selection: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-unicode-guillemet: command outside inside/around: Char('s', []) in AfterM
+excluded surround/ms-unicode-nonbmp: command outside inside/around: Char('s', []) in AfterM
+excluded syntax-failure/control-syntax-available: language (syntax-backed: Task 9)
+excluded syntax-failure/incremental-failure-disables-for-good: language (syntax-backed: Task 9)
+excluded syntax-failure/incremental-no-failure-control: language (syntax-backed: Task 9)
+excluded syntax-failure/initial-failure-mif-noop: language (syntax-backed: Task 9)
+excluded syntax-failure/initial-failure-pair-plaintext: language (syntax-backed: Task 9)
+excluded syntax-failure/query-highlights-failure: language (syntax-backed: Task 9)
+excluded syntax-failure/query-injected-failure: language (syntax-backed: Task 9)
+excluded syntax-failure/query-textobjects-failure: language (syntax-backed: Task 9)
+excluded syntax-objects/absent-capture-toml-mif: language (syntax-backed: Task 9)
+excluded syntax-objects/excluded-gemini-mif-absent: language (syntax-backed: Task 9)
+excluded syntax-objects/excluded-gemini-miw: language (syntax-backed: Task 9)
+excluded syntax-objects/excluded-wren-mif-absent: language (syntax-backed: Task 9)
+excluded syntax-objects/excluded-wren-miw: language (syntax-backed: Task 9)
+excluded syntax-objects/injected-markdown-control-prose: language (syntax-backed: Task 9)
+excluded syntax-objects/injected-markdown-rust-maf: language (syntax-backed: Task 9)
+excluded syntax-objects/injected-markdown-rust-mif: language (syntax-backed: Task 9)
+excluded syntax-objects/quirk-control-mif-with-final-newline: language (syntax-backed: Task 9)
+excluded syntax-objects/quirk-mac-inside-comment-injection: language (syntax-backed: Task 9)
+excluded syntax-objects/quirk-maf-function-ends-at-eof: language (syntax-backed: Task 9)
+excluded syntax-objects/quirk-mic-inside-comment-injection: language (syntax-backed: Task 9)
+excluded syntax-objects/quirk-mif-function-ends-at-eof: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-crlf-mif: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-maa-parameter: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-maf: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mi-paren-after-string-noop: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mi-paren-inside-string: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mia-parameter: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mic-comment-marker: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mif: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mif-counted: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mif-multi-selection: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mim-string-delimiter-syntax: language (syntax-backed: Task 9)
+excluded syntax-objects/rust-mim-with-syntax: language (syntax-backed: Task 9)
+test scope_accounting ... ok
+test proposal_has_the_exact_wire_shape ... ok
+test non_character_keys_do_nothing_like_the_upstream_callback ... ok
+cases: 156, evaluate requests: 178, multi-evaluate chains: 17
+test every_in_scope_oracle_case_matches_step_by_step_through_evaluate_chains ... ok
+normalized inputs checked: 210
+test evaluate_normalizes_the_input_selection_exactly_like_the_oracle_initial_snapshot ... ok
+test evaluate_rejects_bad_requests_with_stable_errors_and_never_touches_the_replica ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.97s
+
+exit=0

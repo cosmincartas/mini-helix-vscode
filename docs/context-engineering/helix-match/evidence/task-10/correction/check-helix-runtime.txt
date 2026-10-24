@@ -1,0 +1,8 @@
+
+> mini-helix@0.1.0 check:helix-runtime
+> node scripts/check-helix-runtime.cjs
+
+runtime linux-x64: 1799 assets, 301 selected grammars, load check run, runtimeHash=fd5ee12cf7562458cc18a3c419f829aa100abafd3c685bc5b4680206dffbea2b
+ambient overrides ignored: 6 variants x (workspace .helix, exe-sibling decoy runtime)
+check:helix-runtime OK for linux-x64
+exit=0

@@ -1,0 +1,23 @@
+A: after initialize, {"protocolVersion":2,"id":"a","method":"initialize"}
+  init  -> ok=true helperEpoch=3394763139864503
+  send  -> {"protocolVersion":2,"id":"a","method":"initialize"}
+  reply -> {"protocolVersion":1,"requestId":null,"helperEpoch":3394763139864503,"ok":false,"error":{"code":"invalid_request","detail":"unsupported_protocol_version","message":"the request protocol version is not supported by this helper","data":{"supported":1}}}
+  EXIT code: 10
+B: after initialize, {"protocolVersion":2,"requestId":"abc","method":"initialize"}
+  init  -> ok=true helperEpoch=7820443917645155
+  send  -> {"protocolVersion":2,"requestId":"abc","method":"initialize"}
+  reply -> {"protocolVersion":1,"requestId":null,"helperEpoch":7820443917645155,"ok":false,"error":{"code":"invalid_request","detail":"unsupported_protocol_version","message":"the request protocol version is not supported by this helper","data":{"supported":1}}}
+  EXIT code: 10
+C: after initialize, request with helperEpoch = current+1 (then shutdown with the right epoch)
+  init  -> ok=true helperEpoch=2884935425577048
+  send  -> {"protocolVersion":1,"requestId":5,"helperEpoch":2884935425577049,"method":"x"}
+  reply -> {"protocolVersion":1,"requestId":5,"helperEpoch":2884935425577049,"ok":false,"error":{"code":"resync_required","detail":"helper_epoch_mismatch","message":"the request targets a different helper instance; resynchronize all documents","data":{"actual":2884935425577048}}}
+  send  -> {"protocolVersion":1,"requestId":6,"helperEpoch":2884935425577048,"method":"shutdown"}
+  reply -> {"protocolVersion":1,"requestId":6,"helperEpoch":2884935425577048,"ok":true,"result":{}}
+  EXIT code: 0
+D: before initialize, request carrying helperEpoch 5 (then shutdown)
+  send  -> {"protocolVersion":1,"requestId":3,"helperEpoch":5,"method":"initialize","params":{}}
+  reply -> {"protocolVersion":1,"requestId":3,"helperEpoch":5,"ok":false,"error":{"code":"invalid_request","detail":"invalid_field","message":"an envelope field has an invalid value","data":{"actual":null,"field":"helperEpoch"}}}
+  send  -> {"protocolVersion":1,"requestId":4,"method":"shutdown"}
+  reply -> {"protocolVersion":1,"requestId":4,"helperEpoch":null,"ok":true,"result":{}}
+  EXIT code: 0

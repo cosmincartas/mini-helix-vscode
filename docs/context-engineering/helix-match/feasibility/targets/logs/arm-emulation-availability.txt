@@ -1,0 +1,8 @@
+# host binfmt_misc entries
+register
+status
+# docker run --platform linux/arm64 alpine:3.22 uname -m
+exec /bin/uname: exec format error
+# docker run --platform linux/arm/v7 alpine:3.22 uname -m
+Status: Image is up to date for alpine:3.22
+exec /bin/uname: exec format error

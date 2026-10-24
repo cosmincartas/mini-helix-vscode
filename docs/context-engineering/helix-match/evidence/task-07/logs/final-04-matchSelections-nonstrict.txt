@@ -1,0 +1,15 @@
+$ npm run compile && node --test out/test/unit/matchSelections.test.js (no strict flag)
+  ✔ refuses malformed UTF-16 document text with a controlled result and creates no replica to select in (4302.301409ms)
+  ✔ keeps selections valid across document changes: a new version is addressed by its own version (4351.516043ms)
+✔ selection import/export with the real helper (34995.417849ms)
+▶ production helper
+  ✔ does not expose the test-only selection method (4220.680898ms)
+✔ production helper (4220.838176ms)
+ℹ tests 23
+ℹ suites 6
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39265.794642

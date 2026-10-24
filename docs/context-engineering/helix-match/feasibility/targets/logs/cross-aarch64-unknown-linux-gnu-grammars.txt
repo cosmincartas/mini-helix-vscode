@@ -1,0 +1,40 @@
+   Compiling sha2 v0.11.0
+   Compiling tree-house-bindings v0.3.2
+   Compiling tempfile v3.27.0
+   Compiling regex-automata v0.4.14
+   Compiling thiserror-impl v2.0.18
+   Compiling serde_derive v1.0.228
+   Compiling serde_spanned v1.1.1
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling toml v1.1.2+spec-1.1.0
+   Compiling regex-cursor v0.1.5
+   Compiling regex v1.12.4
+   Compiling globset v0.4.18
+   Compiling helix-stdx v25.7.1 (/native/feasibility/upstream/helix/helix-stdx)
+   Compiling tree-house v0.4.0
+   Compiling hm-cross-grammars v0.0.0 (/native/feasibility/targets/cross-grammars)
+    Finished `release` profile [optimized] target(s) in 26.16s
+== [aarch64-unknown-linux-gnu/grammars] fetch
+== [aarch64-unknown-linux-gnu/grammars] build for aarch64-unknown-linux-gnu (compiler env: CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc)
+Building 5 grammars
+Building grammars (1/5): rust
+Building grammars (2/5): javascript
+Building grammars (3/5): html
+Building grammars (4/5): markdown
+Building grammars (5/5): markdown_inline
+5 grammars built now
+	["html", "javascript", "markdown", "markdown_inline", "rust"]
+== [aarch64-unknown-linux-gnu/grammars] exit code: 0
+total 2308
+-rwxr-xr-x. 1 root root   71992 Oct 23 23:50 html.so
+-rwxr-xr-x. 1 root root  466072 Oct 23 23:50 javascript.so
+-rwxr-xr-x. 1 root root  403960 Oct 23 23:50 markdown.so
+-rwxr-xr-x. 1 root root  403384 Oct 23 23:50 markdown_inline.so
+-rwxr-xr-x. 1 root root 1187840 Oct 23 23:50 rust.so
+drwxr-xr-x. 7 root root     140 Oct 23 23:50 sources
+/out/xdg-aarch64-unknown-linux-gnu/config/helix/runtime/grammars/html.so:            ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=8c1060eb4cd2764bf7f007ae40fbec8b6b1f3346, not stripped
+/out/xdg-aarch64-unknown-linux-gnu/config/helix/runtime/grammars/javascript.so:      ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=982dfcf75bae3b232723fd299a9b67eba50ad115, not stripped
+/out/xdg-aarch64-unknown-linux-gnu/config/helix/runtime/grammars/markdown.so:        ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=93036a3dbda16603ed3b9fe14ac346b004868a48, not stripped
+/out/xdg-aarch64-unknown-linux-gnu/config/helix/runtime/grammars/markdown_inline.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=09c38de738ae28882a078cc85d6b68548c613715, not stripped
+/out/xdg-aarch64-unknown-linux-gnu/config/helix/runtime/grammars/rust.so:            ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=107375fa150b90d65fee0d65ddb4c04a870d5862, not stripped
+exit 0

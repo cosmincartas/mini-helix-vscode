@@ -1,0 +1,37 @@
+vsix bytes: 4359810
+vsix sha256: bcbfe6375c6b2d81d811eeece0f3f32b0fba1e6b9c727d60a69b64bb6238ae2b
+entries: 1225  uncompressed bytes: 11880792  compressed bytes: 4095654
+runtime/queries: 1193 files, 1087532 bytes uncompressed, 376887 compressed (listed as a group)
+columns: uncompressed compressed mode path
+      1895        726  mode=100664  extension.vsixmanifest
+       549        227  mode=100664  [Content_Types].xml
+    103894       3992  mode=100644  extension/package.json
+     24994       9340  mode=100664  extension/readme.md
+      7490       2237  mode=100644  extension/out/src/extension.js
+   7946704    3254634  mode=100755  extension/native/linux-x64/mini-helix-match-feasibility
+    188089      49169  mode=100644  extension/native/linux-x64/asset-manifest.json
+     16725       5275  mode=100644  extension/native/linux-x64/HELIX-LICENSE-MPL-2.0.txt
+      7825       2385  mode=100644  extension/out/src/vscode/wordJump.js
+       458        274  mode=100644  extension/out/src/vscode/queue.js
+      4887       1700  mode=100644  extension/out/src/vscode/presentation.js
+      2663       1032  mode=100644  extension/out/src/vscode/navigation.js
+      9028       2845  mode=100644  extension/out/src/vscode/history.js
+      5389       1823  mode=100644  extension/out/src/vscode/editing.js
+      3088       1173  mode=100644  extension/out/src/motions/word.js
+      6509       2096  mode=100644  extension/out/src/motions/hjkl.js
+      4666       1610  mode=100644  extension/out/src/core/wordMotion.js
+      2542        984  mode=100644  extension/out/src/core/wordJump.js
+     12505       3846  mode=100644  extension/out/src/core/unicodeWidth.js
+      1827        733  mode=100644  extension/out/src/core/selections.js
+      2421        987  mode=100644  extension/out/src/core/registerMotion.js
+      1787        595  mode=100644  extension/out/src/core/mode.js
+      3863       1284  mode=100644  extension/out/src/core/history.js
+      4984       1790  mode=100644  extension/out/src/core/editing.js
+      1634        683  mode=100644  extension/out/src/core/count.js
+      4376       1556  mode=100644  extension/out/src/core/charMotion.js
+      2844       1056  mode=100644  extension/native/linux-x64/runtime/manifest.json
+   1140656     127526  mode=100755  extension/native/linux-x64/runtime/grammars/rust.so
+    404376      83734  mode=100755  extension/native/linux-x64/runtime/grammars/markdown_inline.so
+    409136      82602  mode=100755  extension/native/linux-x64/runtime/grammars/markdown.so
+    431576      58646  mode=100755  extension/native/linux-x64/runtime/grammars/javascript.so
+     33880      12207  mode=100755  extension/native/linux-x64/runtime/grammars/html.so

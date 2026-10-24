@@ -1,0 +1,28 @@
+warning: unused import: `path`
+ --> upstream/helix/helix-loader/src/lib.rs:5:44
+  |
+5 | use helix_stdx::{env::current_working_dir, path};
+  |                                            ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `helix-loader` (lib) generated 1 warning (run `cargo fix --lib -p helix-loader` to apply 1 suggestion)
+   Compiling mini-helix-match-helper v0.0.0 (/home/cosmincartas/work/projects/vscode-extension-helix-match/native/match-helper)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.75s
+     Running tests/surround_replace.rs (native/target/debug/deps/surround_replace-e451d263664a15f0)
+
+running 9 tests
+in scope: 433 cases; excluded: 0
+test scope_accounting ... ok
+test every_modifier_combination_of_a_replacement_character_is_the_same_character ... ok
+test nested_pairs_give_sorted_edits_and_utf16_base_coordinates ... ok
+test the_replacement_proposal_has_the_exact_wire_shape ... ok
+test the_proposal_never_edits_the_replica_and_only_a_mirrored_change_commits ... ok
+test the_token_is_consumed_once_and_other_sessions_are_unaffected ... ok
+test a_rejected_replacement_attempt_never_edits_and_keeps_the_token ... ok
+cases: 433 (skipped 0), previews: 378, lookup failures: 58, callback-less non-character keys: 5, restores: 43, replacements: 201 (modified keys 7, non-BMP keys 6, identical-text 18), ordinary input after a failure: 5, later commands: 5 (with edits 1)
+test every_in_scope_oracle_case_matches_the_final_transaction_and_selections ... ok
+test every_release_event_makes_a_replacement_attempt_stale ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.41s
+

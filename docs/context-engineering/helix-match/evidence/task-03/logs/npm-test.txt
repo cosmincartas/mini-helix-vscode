@@ -1,0 +1,17 @@
+$ npm test
+✔ only supplied visible regions get targets; overlaps are deduplicated (0.13763ms)
+✔ label pairs roll over at az and stop at zz (1.431759ms)
+✔ empty content, single-letter words, and a lone current word have no targets (0.113605ms)
+✔ all words may precede or follow an off-viewport cursor (0.189599ms)
+✔ W, B, and E treat punctuation and word characters as one WORD (1.775318ms)
+✔ motions never split grapheme clusters or CRLF line endings (0.2329ms)
+✔ moving forward from the end of the text keeps the selection (0.089158ms)
+ℹ tests 77
+ℹ suites 0
+ℹ pass 77
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 65.513065
+exit=0

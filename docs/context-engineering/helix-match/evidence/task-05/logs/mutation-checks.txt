@@ -1,0 +1,78 @@
+# Mutation checks: each mutation is applied to the compiled out/ copy only, then restored. Test file = matchClient.test.js
+# Run 1 (M1, M4-M7 valid; M2/M3 patterns did not match or the fake exited on stdin EOF, so they are re-run below)
+=== mutation M1-latch-noop
+  ✖ disables automatic restart when the helper started after a crash fails its own startup (56.597825ms)
+  ✖ fails startup with the helper identity error and exit 10 when the expected runtime hash is wrong (8589.695386ms)
+  ✖ stops restarting after a startup failure until an explicit restart (no restart loop) (37.629834ms)
+ℹ fail 3
+ℹ pass 35
+✖ MatchClient recovery policy (169.24593ms)
+✖ MatchClient with the real current-host helper (25969.945859ms)
+✖ disables automatic restart when the helper started after a crash fails its own startup (56.597825ms)
+✖ failing tests:
+✖ fails startup with the helper identity error and exit 10 when the expected runtime hash is wrong (8589.695386ms)
+✖ stops restarting after a startup failure until an explicit restart (no restart loop) (37.629834ms)
+=== mutation M2-no-kill
+ℹ fail 0
+ℹ pass 38
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+AssertionError: pattern not found: if (this.size + (end - start) > this.maxFrameBytes) throw new FrameError('frame_too_large');
+=== mutation M3-no-frame-limit
+ℹ fail 0
+ℹ pass 38
+=== mutation M4-full-env
+  ✖ does not pass inherited runtime overrides to the helper (F-10) (19.061759ms)
+ℹ fail 1
+ℹ pass 37
+✖ MatchClient handshake (430.384442ms)
+✖ does not pass inherited runtime overrides to the helper (F-10) (19.061759ms)
+✖ failing tests:
+=== mutation M5-shell-true
+  ✖ never runs a shell: hostile characters in paths arrive verbatim as arguments (21.614207ms)
+ℹ fail 1
+ℹ pass 37
+✖ MatchClient handshake (428.223062ms)
+✖ failing tests:
+✖ never runs a shell: hostile characters in paths arrive verbatim as arguments (21.614207ms)
+=== mutation M6-no-epoch-check
+  ✖ terminates the session on malformed, non-object, invalid UTF-8, mismatched or oversized frames (135.558233ms)
+ℹ fail 1
+ℹ pass 37
+✖ MatchClient failure model F-6 (crash, hang, malformed frame) (427.584255ms)
+✖ failing tests:
+✖ terminates the session on malformed, non-object, invalid UTF-8, mismatched or oversized frames (135.558233ms)
+=== mutation M7-raw-stderr
+  ✖ keeps only bounded, allow-listed fields of stderr records and never request text (20.008279ms)
+ℹ fail 1
+ℹ pass 37
+✖ MatchClient diagnostics (NFR-3) (40.489193ms)
+✖ failing tests:
+✖ keeps only bounded, allow-listed fields of stderr records and never request text (20.008279ms)
+
+[exited with code 0]
+
+# Run 2 (hung fakes now ignore stdin EOF, so only a kill ends them)
+=== mutation M2-no-kill
+  ✖ dispose during startup rejects the start and leaves no child (5116.857168ms)
+  ✖ dispose rejects pending requests, kills the child, releases pipes and listeners, and is idempotent (5035.829265ms)
+  ✖ times out a helper that never answers initialize and kills it (5158.113203ms)
+  ✖ times out a hung request, rejects all pending requests and kills the helper (5234.052587ms)
+ℹ fail 4
+ℹ pass 34
+✖ MatchClient failure model F-6 (crash, hang, malformed frame) (5529.738897ms)
+✖ MatchClient handshake (5410.162709ms)
+✖ MatchClient shutdown and dispose (10183.774074ms)
+✖ dispose during startup rejects the start and leaves no child (5116.857168ms)
+✖ dispose rejects pending requests, kills the child, releases pipes and listeners, and is idempotent (5035.829265ms)
+✖ failing tests:
+✖ out/test/unit/matchClient.test.js (99980.139481ms)
+✖ times out a helper that never answers initialize and kills it (5158.113203ms)
+✖ times out a hung request, rejects all pending requests and kills the helper (5234.052587ms)
+=== mutation M3-no-frame-limit
+  ✖ terminates the session on malformed, non-object, invalid UTF-8, mismatched or oversized frames (5211.371465ms)
+ℹ fail 1
+ℹ pass 37
+✖ MatchClient failure model F-6 (crash, hang, malformed frame) (5510.658576ms)
+✖ failing tests:
+✖ terminates the session on malformed, non-object, invalid UTF-8, mismatched or oversized frames (5211.371465ms)

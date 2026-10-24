@@ -1,0 +1,11 @@
+  ✔ allows one new start after a first startup failure, then stops until an explicit restart (no restart loop) (73.597881ms)
+  ✔ recovers on the next explicit action when only the first startup failed (37.136298ms)
+✔ MatchClient recovery policy (111.805135ms)
+  ✔ kills a helper that ignores shutdown after the grace period and ends in a deterministic stopped state (188.714561ms)
+✔ MatchClient shutdown and dispose (188.990903ms)
+    ✔ uses the report only with excludeNetwork set during the call, and restores the setting (0.307331ms)
+    ✔ does not call getReport on a runtime without excludeNetwork (Node 18) and still detects the target (0.503582ms)
+  ✔ host libc detection never resolves names (NFR-3) (0.91988ms)
+✔ Helper layout and target detection (1.050116ms)
+ℹ pass 5
+ℹ fail 0

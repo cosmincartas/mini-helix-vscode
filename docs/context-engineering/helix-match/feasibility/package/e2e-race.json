@@ -1,0 +1,1023 @@
+{
+ "variants": {
+  "A": "real CDP typing of 'k' during a 200 ms helper delay, then synchronous version check + TextEditor.edit",
+  "B": "helper answer arrives, key sent from a worker thread, host thread blocked 10/20/40 ms (stale host mirror), then synchronous check + TextEditor.edit"
+ },
+ "tally": {
+  "A": {
+   "n": 60,
+   "syncCheckCaught": 60,
+   "editCalled": 0,
+   "corrupted": 0,
+   "nativeBeforeResponse": 60,
+   "recovered": 20,
+   "staleEvalRejected": 20,
+   "undoRestored": 40
+  },
+  "B": {
+   "n": 30,
+   "syncCheckCaught": 0,
+   "editCalled": 30,
+   "editRejected": 30,
+   "editServial": 0,
+   "corrupted": 0,
+   "undoRestored": 30
+  }
+ },
+ "trials": [
+  {
+   "trial": 0,
+   "variant": "A",
+   "nativeVersionSeenAt": 28,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 1,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 2,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 3,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 4,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 5,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 6,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 7,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 8,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 9,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 10,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 11,
+   "variant": "A",
+   "nativeVersionSeenAt": 25,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 12,
+   "variant": "A",
+   "nativeVersionSeenAt": 21,
+   "helperMs": 201,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 13,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 201,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 14,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 15,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 201,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 16,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 17,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 18,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 19,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 20,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 21,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 22,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 23,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 24,
+   "variant": "A",
+   "nativeVersionSeenAt": 21,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 25,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 26,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 27,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 28,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 29,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 30,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 31,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 32,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 33,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 34,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 35,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 36,
+   "variant": "A",
+   "nativeVersionSeenAt": 42,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 37,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 38,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 39,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 40,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 41,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 42,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 43,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 44,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 45,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 46,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 47,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 48,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 49,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 50,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 51,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 52,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 53,
+   "variant": "A",
+   "nativeVersionSeenAt": 23,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 54,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 55,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 56,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 57,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "resync": {
+    "change": true,
+    "staleEvalError": "resync_required",
+    "freshOk": true,
+    "freshApplied": true
+   },
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 58,
+   "variant": "A",
+   "nativeVersionSeenAt": 24,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 59,
+   "variant": "A",
+   "nativeVersionSeenAt": 22,
+   "helperMs": 200,
+   "versionAtResponse": 1,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "sync-version-check-caught"
+  },
+  {
+   "trial": 60,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 61,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 62,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 63,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 64,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 65,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 66,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 67,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 68,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 69,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 70,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 71,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 72,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 73,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 74,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 75,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 76,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 77,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 78,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 79,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 80,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 81,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 82,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 83,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 84,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 85,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 86,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 87,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 88,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  },
+  {
+   "trial": 89,
+   "variant": "B",
+   "helperMs": 200,
+   "mirrorVersionSameAtCheck": true,
+   "finalText": "khello world",
+   "ok": true,
+   "outcome": "TextEditor.edit-returned-false"
+  }
+ ],
+ "trialCount": 90,
+ "corrupted": 0,
+ "staleApplied": 0,
+ "pass": true
+}
