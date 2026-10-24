@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 artifact: spec
-status: validated
+status: superseded
 subject: helix-match
 intent: supplied in conversation
 intent_sha256: not applicable
@@ -10,6 +10,8 @@ language: TypeScript and Rust
 created: 2026-10-24
 updated: 2026-10-24
 ---
+
+> **SUPERSEDED (2026-10-24), historical only.** The user switched to a TypeScript-only implementation; see [../helix-match-typescript/spec.md](../helix-match-typescript/spec.md). Native code archived at /home/cosmincartas/work/archives/vscode-extension-helix-match-native-20261024.
 
 # Helix Match Specification
 

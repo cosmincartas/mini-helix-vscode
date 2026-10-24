@@ -8,6 +8,7 @@ import { registerLineSelections } from './motions/line';
 import { wordMotion, wordMotions } from './motions/word';
 import { SelectionEdits } from './vscode/editing';
 import { UndoHistory } from './vscode/history';
+import { Match } from './vscode/match';
 import { Presentation } from './vscode/presentation';
 import { registerNavigation } from './vscode/navigation';
 import { CommandQueue } from './vscode/queue';
@@ -49,7 +50,10 @@ export async function activate(
       restoreAppendCursor: () => edits.restoreAppendCursor(),
       commitInsert: () => history.commitInsert(),
       render: state => {
-        if (!state.enabled || state.mode !== 'normal') { void jump.cancel(); }
+        if (!state.enabled || state.mode !== 'normal') {
+          void jump.cancel();
+          void match.cancel();
+        }
         // Helix's mode changes consume the count and rebuild the selections,
         // which forgets j/k columns.
         count.clear();
@@ -68,11 +72,13 @@ export async function activate(
   const queue = new CommandQueue();
   const history = new UndoHistory(() => modes.current, queue);
   const edits = new SelectionEdits(history, queue);
+  const match = new Match(modes, count, queue, history);
 
   context.subscriptions.push(
     ui,
     jump,
     history,
+    match,
     vscode.commands.registerCommand('miniHelix.count', (digit: number) => {
       if (vscode.window.activeTextEditor && modes.current.enabled && modes.current.mode === 'normal') {
         count.digit(digit);
@@ -104,6 +110,7 @@ export async function activate(
     ...registerLineSelections(modes, count, queue),
     ...edits.register(modes, count),
     ...history.register(count),
+    ...match.register(),
     ...registerNavigation(modes, count, queue),
     // Mode keys wait for queued edits: `ui` must not type into an unfinished undo.
     vscode.commands.registerCommand('miniHelix.enterNormal', () => {
@@ -167,5 +174,6 @@ export async function deactivate(): Promise<void> {
     vscode.commands.executeCommand('setContext', 'miniHelix.mode', undefined),
     vscode.commands.executeCommand('setContext', 'miniHelix.wordJumpActive', false),
     vscode.commands.executeCommand('setContext', 'miniHelix.countPending', false),
+    vscode.commands.executeCommand('setContext', 'miniHelix.surroundReplacePending', false),
   ]);
 }
