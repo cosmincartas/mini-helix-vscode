@@ -4,6 +4,10 @@
   "description": "A minimal NORMAL/INSERT modal core with Helix-style h/j/k/l and word motions, counts, selection edits (i, a, c, d), undo/redo (u, U), and word jumps.",
   "version": "0.1.0",
   "publisher": "local",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cosmincartas/mini-helix-vscode.git"
+  },
   "license": "UNLICENSED",
   "private": true,
   "engines": {
