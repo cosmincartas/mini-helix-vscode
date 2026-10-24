@@ -38,8 +38,18 @@ export async function checkWordJump(api: MiniHelixApi, keyboard: Keyboard): Prom
         return { content: style.content, width: style.width, color: style.color };
       }).filter(style => /^"[a-z]"$/.test(style.content))
   `);
+  const paintedLabels = async (count: number) => {
+    const deadline = Date.now() + 5000;
+    let labels = await renderedLabels();
+    // CDP key dispatch can finish before the older Electron compositor paints decorations.
+    while (labels.length !== count && Date.now() < deadline) {
+      await pause();
+      labels = await renderedLabels();
+    }
+    return labels;
+  };
   await start();
-  const labels = await renderedLabels();
+  const labels = await paintedLabels(16);
   assert.equal(labels.length, 16, 'the eight eligible words each render two label glyphs');
   assert.ok(labels.every(label => label.width === '0px' && label.color !== 'rgba(0, 0, 0, 0)'),
     'labels must be visible overlays that do not shift text');
@@ -47,7 +57,7 @@ export async function checkWordJump(api: MiniHelixApi, keyboard: Keyboard): Prom
   assert.deepEqual(await renderedLabels(), labels, 'the first letter leaves labels unchanged');
   await input('a');
   await pause();
-  assert.deepEqual(await renderedLabels(), [], 'jump completion removes decorations');
+  assert.deepEqual(await paintedLabels(0), [], 'jump completion removes decorations');
   assert.equal(document.getText(editor.selection), 'three', 'gw aa selects the next whole word');
   assert.deepEqual(snapshot(), [[0, 13, 0, 18]], 'successful jumps are forward selections');
   assert.equal(document.getText(), baseline);
@@ -107,7 +117,7 @@ export async function checkWordJump(api: MiniHelixApi, keyboard: Keyboard): Prom
     const before = snapshot();
     if (prefix) { await input(prefix); }
     await keyboard.press('Escape', 'Escape', 27);
-    assert.deepEqual(await renderedLabels(), [], 'Escape removes decorations');
+    assert.deepEqual(await paintedLabels(0), [], 'Escape removes decorations');
     assert.deepEqual(snapshot(), before, 'Escape preserves selections');
     await press('i');
     assert.equal(api.getState().mode, 'insert');

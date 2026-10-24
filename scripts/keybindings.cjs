@@ -22,6 +22,11 @@ const motions = [
   ['shift+e', 'miniHelix.moveNextLongWordEnd'],
 ];
 
+const lines = [
+  ['x', 'miniHelix.extendLineBelow'],
+  ['shift+x', 'miniHelix.extendToLineBounds'],
+];
+
 // Helix selection edits; like `i`, they need a writable editor.
 const edits = [
   ['a', 'miniHelix.append'],
@@ -55,12 +60,22 @@ function createKeybindings() {
       command: 'miniHelix.noop',
       when: normalWhen,
     })),
+    // Read-only ignored input cannot edit, but it still ends a count.
+    // Keep these separate from writable-only editing blockers.
+    ...[...printable, ...numpad, 'backspace', 'delete', 'enter'].flatMap(key => [key, `shift+${key}`]).map(key => ({
+      key, command: 'miniHelix.clearCount',
+      when: 'editorTextFocus && editorReadonly && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive',
+    })),
     // These must follow the blockers: the last matching extension binding wins.
     { key: 'i', command: 'miniHelix.enterInsert', when: normalWhen },
     ...[...edits, ...history].map(([key, command]) => ({ key, command, when: normalWhen })),
     { key: 'escape', command: 'miniHelix.enterNormal', when: insertWhen },
+    { key: 'escape', command: 'miniHelix.enterNormal', when: idleMotionWhen },
     { key: 'g w', command: 'miniHelix.gotoWord', when: idleMotionWhen },
-    ...motions.map(([key, command]) => ({ key, command, when: idleMotionWhen })),
+    ...[...motions, ...lines].map(([key, command]) => ({ key, command, when: idleMotionWhen })),
+    ...Array.from({ length: 10 }, (_, digit) => [String(digit), `numpad${digit}`].map(key => ({
+      key, command: 'miniHelix.countDigit', args: digit, when: idleMotionWhen,
+    }))).flat(),
     // While labels are visible, i/g/etc. are label input, not mode/chord keys.
     ...[...blocked, 'escape', 'left', 'right', 'up', 'down', 'home', 'end',
       'pageup', 'pagedown', 'insert'].map(key => /^[a-z]$/.test(key) ? {

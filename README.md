@@ -2,8 +2,15 @@
 
 A minimal VS Code extension with **NORMAL / INSERT modes**, Helix-style
 selection-first **word motions** (`w`, `b`, `e`, `W`, `B`, `E`), the **selection
-edits** `i`, `a`, `c`, `d`, **undo/redo** with `u` and `U`, and **`gw` word jumps**. Add other individual bindings as you need them; this is not a full Helix
+edits** `i`, `a`, `c`, `d`, **line selections** (`x`, `X`), **count prefixes**,
+**undo/redo** with `u` and `U`, and **`gw` word jumps**. Add other individual bindings as you need them; this is not a full Helix
 emulator.
+
+Exact Helix line-selection parity requires **`"editor.multiCursorMergeOverlapping": false`**.
+With VS Code's default value, an EOF cursor touching another selection is merged
+away, so that configuration cannot preserve Helix's complete selection set.
+Mini Helix never changes this setting automatically; choose it in your settings
+before relying on exact multi-selection parity.
 
 ## Try it
 
@@ -21,6 +28,8 @@ Open this folder in VS Code, select **Run Mini Helix** in Run and Debug, and pre
 - Press **`i`** to enter **INSERT** and type normally; **`a`** appends instead.
 - Press **Escape** to return to **NORMAL**.
 - In NORMAL, press **`w`**, **`b`**, or **`e`** to select the next/previous word.
+- Press **`x`** to select whole lines and repeat to extend below; **`Shift+x`**
+  expands to line boundaries while preserving direction. **`2x`** selects two lines.
 - Press **`d`** to delete the selection, or **`c`** to delete it and type a
   replacement.
 - In NORMAL, press **`g` then `w`**, then type a word's two-letter label to select it.
@@ -45,7 +54,8 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - One global mode shared by the window's text editors.
 - NORMAL blocks ordinary printable keys (including numeric keypad digits and
   operators), Space, Enter, Tab, Backspace, Delete, and their Shift variants,
-  except `i`, `a`, `c`, `d`, `u`, `U`, the word motions, and the `g w` chord.
+  except `i`, `a`, `c`, `d`, `u`, `U`, `x`, `X`, count digits, the word motions,
+  and the `g w` chord.
 - INSERT uses VS Code's native typing, completion, and cursor style.
 - `i` collapses each selection to its start, so typing inserts before the
   selection rather than replacing it. This also works with multiple and reversed
@@ -54,13 +64,14 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
   Suspending the extension restores each editor's configured cursor style.
 - Blocker bindings are limited to editable text-editor focus. Search fields,
   Quick Input boxes, and terminals keep their native input. Read-only editors
-  keep native input too, except for word motions, `gw`, and its temporary label
+  keep native input too, except for word motions, line selections, count digits,
+  `gw`, and its temporary label
   input; `a`, `c`, `d`, `u`, and `U` are not bound there.
 - Arrow keys remain native outside word jumps; Ctrl/Cmd/Alt shortcuts always
   remain native. NORMAL is **not read-only**: paste, cut, undo, command-driven
   edits, and other native editing shortcuts can still modify the document.
 
-There are deliberately **no** bindings for `gs`, `gl`, `x`,
+There are deliberately **no** bindings for `gs`, `gl`,
 `%`, `gd`, `gr`, Ctrl+O/I, or Alt+O/I. No language server, parser, custom buffer,
 custom jump history, or global `type` override is installed.
 
@@ -94,8 +105,34 @@ adaptations:
   where Helix draws it *on* that character. The selected text is the same.
 
 Every cursor moves independently, and overlapping results are merged by VS Code.
-Motions also work in read-only editors. There is no count prefix (`3w`) and no
-select/extend mode (`v`) yet.
+Motions also work in read-only editors. Count prefixes such as `3w` repeat a
+motion. There is no select/extend mode (`v`) yet.
+
+### Line selections (`x`, `X`) and counts
+
+| Key | Command | Selects |
+| --- | --- | --- |
+| `x` | `miniHelix.extendLineBelow` | covered logical lines; repeat extends below |
+| `X` (`Shift+x`) | `miniHelix.extendToLineBounds` | covered logical lines, keeping direction |
+
+`x` counts its first expansion as a step: `2x` expands a partial selection to
+two lines, while `x2x` first selects a line and then adds two more. `X` is
+idempotent and consumes a count without repeating expansion (`2Xx` leaves an
+ordinary single `x`). These commands change selections without changing text,
+dirty state, or undo history, and work in read-only editors.
+
+Top-row and keypad digits accumulate counts in NORMAL. Leading zero is ignored;
+a digit that would exceed `100000000` is ignored. The next command consumes the
+count. Escape, blocked input, mode changes, suspension, word-jump entry and editor
+switches clear it. INSERT, Quick Input and suspension retain native digit input.
+Existing word motions and undo/redo use the count; unrelated edit commands keep
+their existing behavior.
+
+The pure core follows pinned Helix `ba40e547426b0f9896c8bdc699a4ab11f2b37dbc`,
+including whole-set normalization and primary selection preservation. Its logical
+lines split at LF, with CRLF kept together as a grapheme; a lone CR is content,
+as in that Helix build. See [oracle provenance and regeneration](test/fixtures/line-selection-oracle.md)
+and the [upstream test inventory](test/fixtures/helix-selection-upstream.md).
 
 ### Selection edits (`i`, `a`, `c`, `d`)
 
@@ -269,6 +306,7 @@ VS Code keybinding resolver
   │                            ├── publish mode/enabled context keys
   │                            └── update cursor/status presentation
   ├── w b e W B E ──────────> registerMotion → word motion selections
+  ├── x X / count digits ──> Count → queued whole-set line selections
   ├── a c d ────────────────> SelectionEdits → document edits, then mode
   ├── u U ──────────────────> UndoHistory → native undo/redo, whole revisions
   ├── g w / label input ────> WordJump → decorations / word selection
@@ -317,11 +355,11 @@ export const myMotion: Motion = (_document, selection) => {
 };
 ```
 
-Register it in `activate()`, after creating `modes`:
+Register it in `activate()`, using the existing shared `modes` and `count`:
 
 ```ts
 context.subscriptions.push(
-  registerMotion('miniHelix.myMotion', myMotion, modes)
+  registerMotion('miniHelix.myMotion', myMotion, modes, count)
 );
 ```
 
@@ -348,6 +386,8 @@ such as the `gw` session, can be independent modules.
 | `miniHelix.gotoWord` | Show word labels (`gw`) |
 | `miniHelix.moveNextWordStart` / `movePrevWordStart` / `moveNextWordEnd` | `w` / `b` / `e` |
 | `miniHelix.moveNextLongWordStart` / `movePrevLongWordStart` / `moveNextLongWordEnd` | `W` / `B` / `E` |
+| `miniHelix.extendLineBelow` / `extendToLineBounds` | `x` / `X` |
+| `miniHelix.countDigit` | Internal count-prefix input (`0`–`9`) |
 | `miniHelix.wordJumpInput` | Internal label input |
 | `miniHelix.cancelWordJump` | Cancel labels |
 | `miniHelix.noop` | Internal NORMAL input blocker |

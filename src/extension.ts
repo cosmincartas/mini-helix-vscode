@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { Count } from './core/count';
+import { registerLineSelections } from './motions/line';
 import { Mode, ModeController, ModeState } from './core/mode';
 import { registerMotion } from './core/registerMotion';
 import { prepareInsert } from './core/selections';
@@ -22,6 +24,7 @@ export async function activate(
   const config = vscode.workspace.getConfiguration('miniHelix');
   const ui = new Presentation();
   presentation = ui;
+  const count = new Count();
   const jump = new WordJump();
   wordJump = jump;
 
@@ -35,6 +38,7 @@ export async function activate(
       restoreAppendCursor: () => edits.restoreAppendCursor(),
       commitInsert: () => history.commitInsert(),
       render: state => {
+        count.clear();
         if (!state.enabled || state.mode !== 'normal') { void jump.cancel(); }
         ui.render(state);
       },
@@ -55,33 +59,67 @@ export async function activate(
     ui,
     jump,
     history,
-    vscode.commands.registerCommand('miniHelix.gotoWord', () => jump.start(modes.current)),
-    vscode.commands.registerCommand('miniHelix.wordJumpInput', character => jump.input(character)),
-    vscode.commands.registerCommand('miniHelix.cancelWordJump', () => jump.cancel()),
-    vscode.commands.registerCommand('miniHelix.noop', () => undefined),
+    vscode.commands.registerCommand('miniHelix.gotoWord', () => {
+      count.clear();
+      return jump.start(modes.current);
+    }),
+    vscode.commands.registerCommand('miniHelix.wordJumpInput', character => {
+      count.clear();
+      return jump.input(character);
+    }),
+    vscode.commands.registerCommand('miniHelix.cancelWordJump', () => {
+      count.clear();
+      return jump.cancel();
+    }),
+    vscode.commands.registerCommand('miniHelix.noop', () => count.clear()),
+    vscode.commands.registerCommand('miniHelix.clearCount', () => count.clear()),
+    vscode.commands.registerCommand('miniHelix.countDigit', (digit: unknown) => {
+      if (typeof digit !== 'number' || !Number.isInteger(digit) || digit < 0 || digit > 9) { return; }
+      if (!vscode.window.activeTextEditor || !modes.current.enabled || modes.current.mode !== 'normal') { return; }
+      count.digit(digit);
+    }),
     ...Object.entries(wordMotions).map(([id, target]) =>
-      registerMotion(id, wordMotion(target), modes)
+      registerMotion(id, wordMotion(target), modes, count)
     ),
-    ...edits.register(modes),
-    ...history.register(),
+    ...registerLineSelections(modes, count, queue),
+    ...edits.register(modes, count),
+    ...history.register(count),
     // Mode keys wait for queued edits: `ui` must not type into an unfinished undo.
-    vscode.commands.registerCommand('miniHelix.enterNormal', () => queue.run(async () => {
-      await modes.enter('normal');
-      // Escape should not leave completion UI open behind NORMAL mode.
-      if (modes.current.enabled) {
-        await vscode.commands.executeCommand('hideSuggestWidget');
-        await vscode.commands.executeCommand('closeParameterHints');
-      }
-    })),
-    vscode.commands.registerCommand('miniHelix.enterInsert', () => queue.run(() => modes.enter('insert'))),
-    vscode.commands.registerCommand('miniHelix.toggleMode', () => queue.run(() =>
-      modes.enter(modes.current.mode === 'normal' ? 'insert' : 'normal')
-    )),
-    vscode.commands.registerCommand('miniHelix.toggleEnabled', () =>
-      modes.setEnabled(!modes.current.enabled)
-    ),
-    vscode.window.onDidChangeActiveTextEditor(() => ui.render(modes.current)),
+    vscode.commands.registerCommand('miniHelix.enterNormal', () => {
+      count.clear();
+      return queue.run(async () => {
+        await modes.enter('normal');
+        // Escape should not leave completion UI open behind NORMAL mode.
+        if (modes.current.enabled) {
+          await vscode.commands.executeCommand('hideSuggestWidget');
+          await vscode.commands.executeCommand('closeParameterHints');
+        }
+      });
+    }),
+    vscode.commands.registerCommand('miniHelix.enterInsert', () => {
+      count.clear();
+      return queue.run(() => modes.enter('insert'));
+    }),
+    vscode.commands.registerCommand('miniHelix.toggleMode', () => {
+      count.clear();
+      return queue.run(() => modes.enter(modes.current.mode === 'normal' ? 'insert' : 'normal'));
+    }),
+    vscode.commands.registerCommand('miniHelix.toggleEnabled', () => {
+      count.clear();
+      return modes.setEnabled(!modes.current.enabled);
+    }),
+    vscode.window.onDidChangeActiveTextEditor(() => {
+      count.clear();
+      ui.render(modes.current);
+    }),
     vscode.window.onDidChangeVisibleTextEditors(() => ui.render(modes.current)),
+    // Older hosts can apply native cursor settings after the configuration event.
+    vscode.window.onDidChangeTextEditorOptions(event => {
+      if (modes.current.enabled && modes.current.mode === 'normal' &&
+          event.options.cursorStyle !== vscode.TextEditorCursorStyle.Block) {
+        ui.render(modes.current);
+      }
+    }),
     vscode.workspace.onDidChangeConfiguration(event => {
       if (event.affectsConfiguration('miniHelix.enabled')) {
         void modes.setEnabled(
