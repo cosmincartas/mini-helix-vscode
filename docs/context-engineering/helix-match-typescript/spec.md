@@ -27,7 +27,7 @@ The native Rust experiment (`../helix-match/`) is superseded and archived outsid
 | `[count]mi<d>` / `[count]ma<d>` | Use the count-th enclosing pair. A count on `miw`/`maw` is ignored (Helix ignores it there too). |
 | `[count]mr<old><new>` | Replace the count-th enclosing `<old>` pair with the `<new>` pair, e.g. `mr([` turns `(text)` into `[text]`. |
 
-`<d>` and `<old>` take any of `'`, `"`, `(`, `)`, `[`, `]`, `{`, `}`, `<`, `>`. A closing character is an alias for its pair.
+`<d>` and `<old>` take any of `'`, `"`, `` ` ``, `(`, `)`, `[`, `]`, `{`, `}`, `<`, `>`. A closing character is an alias for its pair.
 `<new>` takes those characters, which map to their pair, or any other single printable non-whitespace character, which is used on both sides (`mr"*` turns `"x"` into `*x*`).
 Keys follow the US layout like the rest of the generated bindings: `shift+9` is `(`, `shift+'` is `"`, and so on.
 
@@ -54,7 +54,7 @@ The word uses the categories from `src/core/wordMotion.ts` (`WordMotionText`): w
 - Count `n` selects the n-th enclosing pair. The search continues outward from the previous pair, so the work is bounded by the document size, not by the numeric count.
 - An unbalanced or missing pair means there is no match.
 
-### Quote pairs `'` and `"`
+### Quote pairs `'`, `"` and `` ` ``
 
 - Quotes pair up within a single line, from left to right: the 1st with the 2nd, the 3rd with the 4th, and so on. A quote preceded by an odd number of backslashes is skipped.
 - The cursor must be inside a pair or on one of its quotes. A cursor between pairs, or on a line with an unmatched quote that has no partner, gets no match.

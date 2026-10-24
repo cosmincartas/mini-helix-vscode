@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import {
-  append, changeSelection, deleteSelection, EditResult, IndentOptions, restoreAppendCursor,
+  append, changeSelection, deleteSelection, EditResult, IndentOptions, openedBlankLine, openReferences, restoreAppendCursor,
 } from '../core/editing';
 import { Count } from '../core/count';
 import { InsertEntry, ModeController } from '../core/mode';
@@ -18,7 +18,13 @@ const commands: Readonly<Record<string, [Edit, InsertEntry?]>> = {
   'miniHelix.deleteSelection': [deleteSelection],
 };
 
-export const editCommands = Object.keys(commands);
+/** Command id → the native command that inserts the line, and the Helix direction it opens in. */
+const opens: Readonly<Record<string, [string, 'below' | 'above']>> = {
+  'miniHelix.openBelow': ['editor.action.insertLineAfter', 'below'],
+  'miniHelix.openAbove': ['editor.action.insertLineBefore', 'above'],
+};
+
+export const editCommands = [...Object.keys(commands), ...Object.keys(opens)];
 
 function eol(document: vscode.TextDocument): string {
   return document.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n';
@@ -45,20 +51,28 @@ function select(editor: vscode.TextEditor, ranges: readonly OffsetRange[]): void
   editor.selections = ranges.map(range => new vscode.Selection(position(range.anchor), position(range.head)));
 }
 
-/** Helix's `a`, `c`, and `d` on every selection of the active editor. */
+/** Helix's `a`, `c`, `d`, `o`, and `O` on every selection of the active editor. */
 export class SelectionEdits {
   private appended: vscode.TextDocument | undefined;
+  /** The document and its text before `o` or `O`, for Helix's `try_restore_indent`. */
+  private opened: { readonly document: vscode.TextDocument; readonly text: string } | undefined;
 
   constructor(private readonly history: UndoHistory, private readonly queue: CommandQueue) {}
 
   /** Helix ignores a count on these, but the key still clears it. */
   register(modes: ModeController, count: Count): vscode.Disposable[] {
-    return Object.entries(commands).map(([id, [edit, entry]]) =>
-      vscode.commands.registerCommand(id, () => {
-        count.clear();
-        return this.run(modes, edit, entry);
-      })
-    );
+    return [
+      ...Object.entries(commands).map(([id, [edit, entry]]) =>
+        vscode.commands.registerCommand(id, () => {
+          count.clear();
+          return this.run(modes, edit, entry);
+        })),
+      ...Object.entries(opens).map(([id, [line, direction]]) =>
+        vscode.commands.registerCommand(id, () => {
+          count.clear();
+          return this.open(modes, line, direction);
+        })),
+    ];
   }
 
   /** Called by the mode controller when `a`'s INSERT ends. */
@@ -70,10 +84,54 @@ export class SelectionEdits {
     select(editor, restoreAppendCursor(new WordMotionText(document.getText()), offsets(editor)));
   }
 
-  private run(modes: ModeController, edit: Edit, entry?: InsertEntry): Promise<void> {
+  /** Called by the mode controller when `o` or `O`'s INSERT ends, before its revision is committed. */
+  async restoreOpenIndent(): Promise<void> {
+    const opened = this.opened;
+    this.opened = undefined;
+    const editor = vscode.window.activeTextEditor;
+    if (!opened || !editor || editor.document !== opened.document || editor.selections.length !== 1) { return; }
+    const blank = openedBlankLine(opened.text, opened.document.getText(), offsets(editor)[0].head);
+    if (!blank) { return; }
+    const { document } = opened;
+    await editor.edit(builder =>
+      builder.delete(new vscode.Range(document.positionAt(blank.from), document.positionAt(blank.to))));
+  }
+
+  private queued(modes: ModeController, work: (editor: vscode.TextEditor) => Promise<void>): Promise<void> {
     return this.queue.run(async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor || !modes.current.enabled || modes.current.mode !== 'normal') { return; }
+      await work(editor);
+    });
+  }
+
+  /**
+   * Helix's `o` and `O`: VS Code's native line command indents the new line, so
+   * each selection first becomes a caret on the line Helix would open from.
+   */
+  private open(modes: ModeController, line: string, direction: 'below' | 'above'): Promise<void> {
+    return this.queued(modes, async editor => {
+      const document = editor.document;
+      const original = editor.selections;
+      const references = openReferences(new WordMotionText(document.getText()), offsets(editor), direction);
+      const version = document.version;
+      const text = document.getText();
+      this.history.hold(document);
+      select(editor, references);
+      await vscode.commands.executeCommand(line);
+      if (document.version === version) {
+        editor.selections = original;
+        this.history.commit(editor);
+        return;
+      }
+      editor.revealRange(editor.selection);
+      this.opened = { document, text };
+      await modes.enter('insert', 'open');
+    });
+  }
+
+  private run(modes: ModeController, edit: Edit, entry?: InsertEntry): Promise<void> {
+    return this.queued(modes, async editor => {
       const document = editor.document;
       const result = edit(new WordMotionText(document.getText()), offsets(editor), editor);
       // Like Helix, `a` and `c` share one revision with the INSERT they start.

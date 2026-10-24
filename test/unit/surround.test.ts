@@ -43,6 +43,8 @@ test('mr replaces quotes with brackets and back', () => {
   assert.equal(surround("say 'he|llo' now", "'", '['), 'say [hello] now');
   assert.equal(surround('say (he|llo) now', '(', '"'), 'say "hello" now');
   assert.equal(surround('say "he|llo" now', '"', "'"), "say 'hello' now");
+  assert.equal(surround('say `he|llo` now', '`', '"'), 'say "hello" now');
+  assert.equal(surround('say "he|llo" now', '"', '`'), 'say `hello` now');
 });
 
 test('mr uses a symmetric pair for other printable characters', () => {

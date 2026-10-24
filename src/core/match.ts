@@ -3,7 +3,7 @@
  * text scanning: no parser, no syntax awareness. Offsets are UTF-16 offsets
  * shared with VS Code selections. Word objects use the grapheme categories of
  * `wordMotion.ts`; brackets are matched lexically over the whole document;
- * quotes pair up left to right within one line.
+ * quotes (`'`, `"`, backtick) pair up left to right within one line.
  */
 import { Edit } from './editing';
 import { OffsetRange, WordMotionText } from './wordMotion';
@@ -23,7 +23,7 @@ export interface PairPosition {
 
 const pairs: Readonly<Record<string, Pair>> = (() => {
   const result: Record<string, Pair> = {};
-  for (const [open, close] of ['()', '[]', '{}', '<>', `''`, '""']) {
+  for (const [open, close] of ['()', '[]', '{}', '<>', `''`, '""', '``']) {
     const pair = { open, close };
     result[open] = pair;
     result[close] = pair;
@@ -31,7 +31,7 @@ const pairs: Readonly<Record<string, Pair>> = (() => {
   return result;
 })();
 
-/** `' " ( ) [ ] { } < >`; a closing character is an alias for its pair. Otherwise undefined. */
+/** `'` `"` `` ` `` `( ) [ ] { } < >`; a closing character is an alias for its pair. Otherwise undefined. */
 export function delimiterPair(char: string): Pair | undefined {
   return Object.hasOwn(pairs, char) ? pairs[char] : undefined;
 }

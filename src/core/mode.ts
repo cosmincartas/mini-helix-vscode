@@ -3,9 +3,9 @@ export type Mode = 'normal' | 'insert';
 /**
  * The command entering INSERT: `i` has its selections prepared here, while
  * `a` and `c` edit and place carets first. Leaving `a`'s INSERT restores the
- * cursor onto the appended text, like Helix.
+ * cursor onto the appended text, like Helix. `o` and `O` open a line first.
  */
-export type InsertEntry = 'insert' | 'append' | 'change';
+export type InsertEntry = 'insert' | 'append' | 'change' | 'open';
 
 export interface ModeState {
   readonly enabled: boolean;
@@ -16,6 +16,8 @@ export interface ModeState {
 export interface ModeHost {
   prepareInsert(): void;
   restoreAppendCursor(): void;
+  /** An INSERT entered by `o` or `O` ended: remove its untouched indentation. */
+  restoreOpenIndent(): void | Promise<void>;
   /** INSERT ended: what it typed becomes one undo revision, as in Helix. */
   commitInsert(): void;
   render(state: ModeState): void;
@@ -25,6 +27,7 @@ export interface ModeHost {
 export class ModeController {
   private state: ModeState;
   private appending = false;
+  private opening = false;
 
   constructor(initial: ModeState, private readonly host: ModeHost) {
     this.state = Object.freeze({ ...initial });
@@ -46,9 +49,14 @@ export class ModeController {
     if (mode === 'insert') {
       if (entry === 'insert') { this.host.prepareInsert(); }
       this.appending = entry === 'append';
+      this.opening = entry === 'open';
     } else {
-      if (this.appending) { this.host.restoreAppendCursor(); }
+      const { appending, opening } = this;
       this.appending = false;
+      this.opening = false;
+      if (appending) { this.host.restoreAppendCursor(); }
+      // Its deletion must land before the revision is committed.
+      if (opening) { await this.host.restoreOpenIndent(); }
       this.host.commitInsert();
     }
     this.state = Object.freeze({ ...this.state, mode });
@@ -59,8 +67,9 @@ export class ModeController {
     if (this.state.enabled === enabled) {
       return;
     }
-    // Text typed while suspended was not appended by `a`.
+    // Text typed while suspended was not appended by `a`, nor opened by `o`.
     this.appending = false;
+    this.opening = false;
     if (this.state.mode === 'insert') { this.host.commitInsert(); }
     this.state = Object.freeze({ ...this.state, enabled });
     await this.refresh();

@@ -15,6 +15,7 @@ const punctuation: Record<string, Key> = {
   '{': ['{', 'BracketLeft', 219, '{', shift], '}': ['}', 'BracketRight', 221, '}', shift],
   '<': ['<', 'Comma', 188, '<', shift], '>': ['>', 'Period', 190, '>', shift],
   "'": ["'", 'Quote', 222, "'"], '"': ['"', 'Quote', 222, '"', shift],
+  '`': ['`', 'Backquote', 192, '`'],
   '.': ['.', 'Period', 190, '.'], ';': [';', 'Semicolon', 186, ';'],
   '/': ['/', 'Slash', 191, '/'], '=': ['=', 'Equal', 187, '='],
   '<tab>': ['Tab', 'Tab', 9], '<bs>': ['Backspace', 'Backspace', 8],
@@ -95,6 +96,7 @@ export async function checkMatch(api: MiniHelixApi, keyboard: Keyboard): Promise
     ['x <e> y', 4, 'mi<', 'e'], ['x <e> y', 4, 'ma>', '<e>'],
     ['x "f g" y', 5, 'mi"', 'f g'], ['x "f g" y', 5, 'ma"', '"f g"'],
     ["x 'g h' y", 5, "mi'", 'g h'], ["x 'g h' y", 5, "ma'", "'g h'"],
+    ['x `i j` y', 5, 'mi`', 'i j'], ['x `i j` y', 5, 'ma`', '`i j`'],
   ] as const) {
     await reset(text, caret(at));
     await type(keys);
@@ -130,6 +132,12 @@ export async function checkMatch(api: MiniHelixApi, keyboard: Keyboard): Promise
   await reset('say "hi" now', caret(6));
   await type("mr\"'");
   assert.equal(document.getText(), "say 'hi' now");
+  await reset('say "hi" now', caret(6));
+  await type('mr"`');
+  assert.equal(document.getText(), 'say `hi` now');
+  await reset('say `hi` now', caret(6));
+  await type('mr`"');
+  assert.equal(document.getText(), 'say "hi" now');
   await reset('<a> {b}', caret(1));
   await type('mr<(');
   assert.equal(document.getText(), '(a) {b}');

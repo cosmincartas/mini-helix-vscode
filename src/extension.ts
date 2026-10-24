@@ -48,6 +48,7 @@ export async function activate(
     {
       prepareInsert: () => prepareInsert(vscode.window.activeTextEditor),
       restoreAppendCursor: () => edits.restoreAppendCursor(),
+      restoreOpenIndent: (): Promise<void> => edits.restoreOpenIndent(),
       commitInsert: () => history.commitInsert(),
       render: state => {
         if (!state.enabled || state.mode !== 'normal') {

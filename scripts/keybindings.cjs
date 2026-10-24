@@ -71,6 +71,8 @@ const edits = [
   ['a', 'miniHelix.append'],
   ['c', 'miniHelix.changeSelection'],
   ['d', 'miniHelix.deleteSelection'],
+  ['o', 'miniHelix.openBelow'],
+  ['shift+o', 'miniHelix.openAbove'],
 ];
 
 // Helix history: whole revisions on VS Code's undo stack.
@@ -93,6 +95,7 @@ const navigation = [
 const delimiterKeys = [
   ["'", "'"], ["shift+'", '"'], ['shift+9', '('], ['shift+0', ')'], ['[', '['],
   [']', ']'], ['shift+[', '{'], ['shift+]', '}'], ['shift+,', '<'], ['shift+.', '>'],
+  ['`', '`'],
 ];
 // Text objects add the word to the delimiters.
 const textObjectKeys = [['w', 'w'], ...delimiterKeys];

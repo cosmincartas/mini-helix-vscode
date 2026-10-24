@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { append, changeSelection, deleteSelection, restoreAppendCursor } from '../../src/core/editing';
+import {
+  append, changeSelection, deleteSelection, openedBlankLine, openReferences, restoreAppendCursor,
+} from '../../src/core/editing';
 import { WordMotionText } from '../../src/core/wordMotion';
 import { applyEdits, cursors, normalize, ordered, parse, print, Session } from './helix';
 
@@ -184,6 +186,108 @@ test('restoring the append cursor leaves selections and the end of the text alon
   ]), [
     { anchor: 2, head: 2 }, { anchor: 0, head: 2 }, { anchor: 5, head: 5 }, { anchor: 0, head: 0 },
   ]);
+});
+
+/**
+ * Helix `open` (helix-term/src/commands.rs at ba40e547) opens the new line
+ * after the line of `prev_grapheme_boundary(text, range.to())`, or before the
+ * line of `range.from()`. The reference caret is that offset: VS Code's native
+ * line command then opens the line, so each one stays a distinct empty caret.
+ */
+const openRefs: [input: string, direction: 'below' | 'above', carets: string][] = [
+  // A forward and a reversed multi-line selection end on their last grapheme.
+  ['#[o|]#ne\ntwo\n', 'below', '#[|]#one\ntwo\n'],
+  ['#[one\ntw|]#o\n', 'below', 'one\nt#[|]#wo\n'],
+  ['#[|one\ntw]#o\n', 'below', 'one\nt#[|]#wo\n'],
+  // A caret is the block over the grapheme after it.
+  ['on#[e|]#\ntwo\n', 'below', 'on#[|]#e\ntwo\n'],
+  ['abc#[\n|]#', 'below', 'abc#[|]#\n'],
+  // Only a caret at the very end of the text has no grapheme after it.
+  ['abc\n#[|]#', 'below', 'abc#[|]#\n'],
+  ['abc#[|]#', 'below', 'ab#[|]#c'],
+  ['#[ab\n|]#cd\n', 'below', 'ab#[|]#\ncd\n'],
+  ['#[|]#', 'below', '#[|]#'],
+  ['#[👋🏽|]#x\n', 'below', '#[|]#👋🏽x\n'],
+  ['a#[\r\n|]#b', 'below', 'a#[|]#\r\nb'],
+  ['#[a|]#b\n#(c|)#d\n#(e|)#\n', 'below', '#[|]#ab\n#(|)#cd\n#(|)#e\n'],
+  // Above starts at the range start.
+  ['one\n#[two\nth|]#ree\n', 'above', 'one\n#[|]#two\nthree\n'],
+  ['one\n#[|two\nth]#ree\n', 'above', 'one\n#[|]#two\nthree\n'],
+  ['one\n#[t|]#wo\n', 'above', 'one\n#[|]#two\n'],
+  ['abc\n#[|]#', 'above', 'abc\n#[|]#'],
+  ['#[|]#', 'above', '#[|]#'],
+  ['#[o|]#ne\n#(t|)#wo\n', 'above', '#[|]#one\n#(|)#two\n'],
+  // The primary selection stays first, wherever VS Code lists it.
+  ['one\n#[t|]#wo\n#(o|)#ne\n', 'below', 'one\n#[|]#two\n#(|)#one\n'],
+  // Two selections on one line keep two carets, so two lines open.
+  ['#[o|]#n#(e|)#\n', 'below', '#[|]#on#(|)#e\n'],
+  ['#[o|]#n#(e|)#\n', 'above', '#[|]#on#(|)#e\n'],
+];
+
+test('open references are Helix\'s line selection offsets, one per selection', () => {
+  for (const [input, direction, carets] of openRefs) {
+    const { text, ranges } = parse(input);
+    const actual = openReferences(new WordMotionText(text), ranges, direction);
+    const expected = parse(carets);
+    const message = `${JSON.stringify(input)} ${direction} gave ${JSON.stringify(print({ text, ranges: actual }))}`;
+    assert.deepEqual(actual, expected.ranges, message);
+  }
+});
+
+/**
+ * Helix `try_restore_indent` (helix-view/src/editor.rs at ba40e547) removes
+ * the whitespace before the caret when INSERT ends right after `open`, with
+ * the line still blank. The native `o` leaves the same net change: one
+ * insertion that ends at the caret and starts with the line ending.
+ */
+test('an opened line is blank when the net change is one line ending and whitespace', () => {
+  const blank = (before: string, after: string, caret: number) => {
+    const range = openedBlankLine(before, after, caret);
+    return range && after.slice(range.from, range.to);
+  };
+  assert.equal(blank('  a', '  a\n    ', 8), '    ');
+  assert.equal(blank('  a\nb', '  a\n\t\t\nb', 6), '\t\t');
+  assert.equal(blank('  a\r\nb', '  a\r\n  \r\nb', 7), '  ');
+  assert.equal(blank('a\r\n', 'a\r\n    ', 7), undefined, 'no line ending after the insertion');
+  assert.equal(blank('a', 'a\r\n    ', 7), '    ');
+  // Inserting above: the line ending ends the net change but not the caret.
+  assert.equal(blank('b', '    \nb', 4), undefined);
+
+  const range = openedBlankLine('a', 'a\n    ', 6);
+  assert.deepEqual(range, { from: 2, to: 6 });
+  assert.equal('a\n    '.slice(0, range!.from) + 'a\n    '.slice(range!.to), 'a\n');
+});
+
+test('an opened line without indentation has nothing to remove', () => {
+  for (const [before, after, caret] of [['a', 'a\n', 2], ['a\nb', 'a\n\nb', 2], ['a', 'a\r\n', 3]] as const) {
+    const range = openedBlankLine(before, after, caret);
+    const removed = range ? after.slice(0, range.from) + after.slice(range.to) : after;
+    assert.equal(removed, after);
+  }
+});
+
+test('an opened line keeps its whitespace once the session changed anything else', () => {
+  const kept = (before: string, after: string, caret: number) =>
+    assert.equal(openedBlankLine(before, after, caret), undefined, JSON.stringify([before, after, caret]));
+  // Typed text after the indentation.
+  kept('a', 'a\n    x', 7);
+  kept('a', 'a\n    x\n    ', 12);
+  // The caret moved off the end of the insertion, before or after it.
+  kept('a', 'a\n    ', 5);
+  kept('a\nb', 'a\n    \nb', 7);
+  // Text follows the caret on its line.
+  kept('ab', 'a\n    b', 6);
+  kept('a b', 'a\n     b', 6);
+  // The insertion does not start with a line ending.
+  kept('b', '    \nb', 5);
+  kept('a', 'a  \n  ', 6);
+  // Two separate insertions.
+  kept('ab', 'a\n b\n  ', 8);
+  kept('a\nb', 'a\n  \n b', 6);
+  // Other text changed, or nothing did.
+  kept('abc', 'a\n  c', 5);
+  kept('a\n    ', 'a\n    ', 6);
+  kept('a\n    b', 'a\n    ', 6);
 });
 
 test('Helix notation round-trips, including adjacent and reversed ranges', () => {
