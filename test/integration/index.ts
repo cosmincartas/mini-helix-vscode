@@ -8,6 +8,7 @@ import { registerMotion } from '../../src/core/registerMotion';
 import { Keyboard } from './keyboard';
 import { checkEditing } from './editing';
 import { checkHistory } from './history';
+import { checkGotoMotions } from './goto';
 import { checkCharMotions } from './hjkl';
 import { checkWordJump } from './wordJump';
 import { checkWordMotions } from './wordMotion';
@@ -99,13 +100,13 @@ export async function run(): Promise<void> {
       assert.equal(editor.options.cursorStyle, vscode.TextEditorCursorStyle.Block);
     });
 
-    await check('user-defined g l overrides blockers and uses native VS Code chords', async () => {
-      editor.selection = new vscode.Selection(0, 0, 0, 0);
+    await check('user-defined g h overrides blockers and uses native VS Code chords', async () => {
+      editor.selection = new vscode.Selection(0, document.lineAt(0).text.length, 0, document.lineAt(0).text.length);
       await keyboard.press('g', 'KeyG', 71, 'g');
-      await keyboard.press('l', 'KeyL', 76, 'l');
+      await keyboard.press('h', 'KeyH', 72, 'h');
       await until(
-        () => editor.selection.active.character === document.lineAt(0).text.length,
-        'Opt-in g l chord did not move to the end of the line'
+        () => editor.selection.active.character === 0,
+        'Opt-in g h chord did not move to the start of the line'
       );
     });
 
@@ -239,6 +240,7 @@ export async function run(): Promise<void> {
     await checkEditing(api, keyboard);
     await checkHistory(api, keyboard);
     await checkCharMotions(api, keyboard);
+    await checkGotoMotions(api, keyboard);
     await check('match: text objects and surround replacement', () => checkMatch(api, keyboard));
     editor = await vscode.window.showTextDocument(document, vscode.ViewColumn.One);
 

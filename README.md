@@ -3,7 +3,7 @@
 A minimal VS Code extension with **NORMAL / INSERT modes**, Helix-style
 **`h`/`j`/`k`/`l`** and selection-first **word motions** (`w`, `b`, `e`, `W`,
 `B`, `E`), **counts** (`3w`, `5j`), the **selection
-edits** `i`, `a`, `c`, `d`, **line selections** (`x`, `X`), **undo/redo** with `u` and `U`, and **`gw` word jumps**. Add other individual bindings as you need them; this is not a full Helix
+edits** `i`, `a`, `c`, `d`, **line selections** (`x`, `X`), **undo/redo** with `u` and `U`, **`gs`/`gl`/`gg`/`ge` goto motions**, and **`gw` word jumps**. Add other individual bindings as you need them; this is not a full Helix
 emulator.
 
 Exact Helix line-selection parity requires **`"editor.multiCursorMergeOverlapping": false`**.
@@ -57,9 +57,9 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - NORMAL blocks ordinary printable keys (including numeric keypad digits and
   operators), Space, Enter, Tab, Backspace, Delete, and their Shift variants,
   except `i`, `a`, `c`, `d`, `o`, `O`, `u`, `U`, `h`, `j`, `k`, `l`, `x`, `X`, the word motions,
-  count digits, the `gw`, `gd`, `gr` chords, and the `Space f`, `Space b`,
-  `Space s`, `Space S` chords. Every other Space chord is still blocked and does
-  nothing.
+  count digits, the `gw`, `gd`, `gr`, `gs`, `gl`, `gg`, `ge` chords, and the
+  `Space f`, `Space b`, `Space s`, `Space S` chords. Every other Space chord is
+  still blocked and does nothing.
 - INSERT uses VS Code's native typing, completion, and cursor style.
 - `i` collapses each selection to its start, so typing inserts before the
   selection rather than replacing it. This also works with multiple and reversed
@@ -77,7 +77,7 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
   native except for the NORMAL-mode bindings below. NORMAL is **not read-only**: paste, cut, undo, command-driven
   edits, and other native editing shortcuts can still modify the document.
 
-There are deliberately **no** bindings for `gs`, `gl`, or `%`.
+There is deliberately **no** binding for `%`.
 No language server, parser, custom buffer, custom jump history, or global `type`
 override is installed.
 
@@ -159,6 +159,33 @@ Motions also work in read-only editors and take a count: `3w` repeats `w` three
 times, stopping early at the end of the text. There is no select/extend mode
 (`v`) yet.
 
+### Goto motions (`gs`, `gl`, `gg`, `ge`)
+
+| Key | Command | Does |
+| --- | --- | --- |
+| `gs` | `miniHelix.gotoFirstNonWhitespace` | move to the first non-whitespace character of the line |
+| `gl` | `miniHelix.gotoLineEnd` | move to the last character of the line |
+| `gg` | `miniHelix.gotoFileStart` | move to the start of the file, or to line `<n>` with `<n>gg` |
+| `ge` | `miniHelix.gotoLastLine` | move to the start of the last line |
+
+These follow Helix 25.07.1's NORMAL mode: each selection becomes a cursor, and
+every selection moves on its own, so identical results merge into one.
+They work in read-only editors and outside word-label input.
+
+- `gs` and `gl` use the line of the block cursor. After `x`, the head is at the
+  start of the next line, but `gl` still goes to the end of the selected line.
+- `gs` leaves the selection as it is when the line is empty or only whitespace.
+  Whitespace is Unicode `White_Space`, as in Helix.
+- `gl` goes to the last grapheme before the line break, and stays on an empty line.
+- `gg` and `ge` ignore a final empty line (the one after a closing line break):
+  `ge` goes to the line before it, and `<n>gg` with a count beyond that line
+  stops there. That target line can itself be empty.
+- Like all other motions here, they add no entry to a jump history; Helix's `gg`
+  and `ge` do, so Ctrl+O after them returns only through VS Code's own navigation history.
+- Helix's select mode does not exist here, so these never extend a selection.
+
+Other `g` chords (such as `gh` or `gt`) stay unbound and clear the count.
+
 ### Character and line motions (`h`, `j`, `k`, `l`)
 
 | Key | Command | Does |
@@ -203,6 +230,7 @@ The next key uses the count and clears it, whether or not it uses it:
 
 - `h`, `j`, `k`, `l`, the word motions, `x`, `u`, and `U` repeat.
 - `X` consumes the count and expands to line bounds once.
+- `<n>gg` goes to line `<n>` (the first line is 1). `gs`, `gl`, and `ge` ignore the count.
 - `i`, `a`, `c`, `d`, `gw`, `gd`, and `gr` ignore it, as in Helix.
 - `o` and `O` ignore it, unlike Helix, which repeats the opened line. `3o` opens one line.
 - `Space f`, `Space b`, `Space s`, and `Space S` also ignore it.
@@ -461,8 +489,8 @@ you want. User keybindings take precedence over the NORMAL-mode blockers:
 ```json
 [
   {
-    "key": "g l",
-    "command": "cursorEnd",
+    "key": "g h",
+    "command": "cursorLineStart",
     "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive"
   },
   {
@@ -473,7 +501,7 @@ you want. User keybindings take precedence over the NORMAL-mode blockers:
 ]
 ```
 
-`g l` means press `g`, then `l`; VS Code handles the chord. `shift+5` is `%` on
+`g h` means press `g`, then `h`; VS Code handles the chord. `shift+5` is `%` on
 a US keyboard; use the shortcut recorder for your layout.
 
 These bindings are restricted to NORMAL outside word jumps. Include
@@ -494,6 +522,7 @@ VS Code keybinding resolver
   ├── x X ──────────────────> queued whole-set line selections
   ├── a c d ────────────────> SelectionEdits → document edits, then mode
   ├── u U ──────────────────> UndoHistory → native undo/redo, whole revisions
+  ├── gs gl gg ge ──────────> registerMotion → motions/goto.ts → core/gotoMotion.ts
   ├── g w / label input ────> WordJump → decorations / word selection
   ├── gd gr / Alt+O/I / Ctrl+O/I → native VS Code navigation / Smart Select
   ├── unbound NORMAL key ───> no-op
@@ -511,6 +540,7 @@ src/
     wordJump.ts             Visible word targets and Helix-style label order
     wordMotion.ts           Helix word motions (w/b/e/W/B/E), Node-testable
     charMotion.ts           Helix h/j/k/l, Node-testable
+    gotoMotion.ts           Helix gs/gl/gg/ge, Node-testable
     unicodeWidth.ts         Helix's character widths (unicode-width 0.1.12 tables)
     count.ts                Helix's count prefix
     editing.ts              Helix selection edits (a/c/d), Node-testable
@@ -518,6 +548,7 @@ src/
   motions/
     word.ts                 Word motion commands for registerMotion
     hjkl.ts                 h/j/k/l commands, remembered columns, word wrap
+    goto.ts                 gs/gl/gg/ge commands for registerMotion
   vscode/
     editing.ts              a/c/d commands: edits, carets, append restore
     history.ts              u/U commands: revision tracking and undo stops
@@ -584,6 +615,7 @@ such as the `gw` session, can be independent modules.
 | `miniHelix.moveNextWordStart` / `movePrevWordStart` / `moveNextWordEnd` | `w` / `b` / `e` |
 | `miniHelix.moveNextLongWordStart` / `movePrevLongWordStart` / `moveNextLongWordEnd` | `W` / `B` / `E` |
 | `miniHelix.moveCharLeft` / `moveVisualLineDown` / `moveVisualLineUp` / `moveCharRight` | `h` / `j` / `k` / `l` |
+| `miniHelix.gotoFirstNonWhitespace` / `gotoLineEnd` / `gotoFileStart` / `gotoLastLine` | `gs` / `gl` / `gg` / `ge` |
 | `miniHelix.count` | Internal count digit (argument: the digit) |
 | `miniHelix.clearCount` | Clear a pending count (Escape) |
 | `miniHelix.extendLineBelow` / `extendToLineBounds` | `x` / `X` |
@@ -618,6 +650,8 @@ the `w`, `b`, `e`, `W`, `B`, and `E` tables, including counts.
 `test/unit/charMotionCases.ts` adds 102 key sequences for `h`/`j`/`k`/`l` and
 counts, with outputs from real Helix. Unit tests run them through the core, and
 `test/integration/hjkl.ts` replays them with real keystrokes in VS Code.
+`test/unit/gotoMotionCases.ts` does the same for `gs`, `gl`, `gg`, and `ge`
+(`test/integration/goto.ts`), with outputs from real Helix.
 
 Undo tests replay 48 key sequences with real keystrokes in VS Code
 (`test/integration/history.ts`), against outputs produced the same way by real

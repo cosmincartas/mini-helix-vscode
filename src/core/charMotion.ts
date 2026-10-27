@@ -52,7 +52,7 @@ export function textLines(text: string): Lines {
 }
 
 /** Helix's `Range::cursor`: where the block cursor is drawn. */
-function cursorOf(lines: Lines, { anchor, head }: OffsetRange): number {
+export function cursorOf(lines: Lines, { anchor, head }: OffsetRange): number {
   if (head <= anchor) { return head; }
   const line = lines.at(lines.indexAt(head));
   if (head === line.start) {

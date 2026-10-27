@@ -39,7 +39,7 @@ async function main(): Promise<void> {
     // Test-only opt-in binding, not part of the shipped extension.
     await writeFile(path.join(profile, 'User/keybindings.json'), JSON.stringify([
       {
-        key: 'g l', command: 'cursorEnd',
+        key: 'g h', command: 'cursorLineStart',
         when: 'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive',
       },
       {

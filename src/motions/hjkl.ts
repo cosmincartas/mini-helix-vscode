@@ -30,7 +30,7 @@ function offsets(document: vscode.TextDocument, selection: vscode.Selection): Of
   return { anchor: document.offsetAt(selection.anchor), head: document.offsetAt(selection.active) };
 }
 
-function documentLines(document: vscode.TextDocument): Lines {
+export function documentLines(document: vscode.TextDocument): Lines {
   return {
     count: document.lineCount,
     indexAt: offset => document.positionAt(offset).line,
