@@ -57,7 +57,9 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - NORMAL blocks ordinary printable keys (including numeric keypad digits and
   operators), Space, Enter, Tab, Backspace, Delete, and their Shift variants,
   except `i`, `a`, `c`, `d`, `u`, `U`, `h`, `j`, `k`, `l`, `x`, `X`, the word motions,
-  count digits, and the `gw`, `gd`, `gr` chords.
+  count digits, the `gw`, `gd`, `gr` chords, and the `Space f`, `Space b`,
+  `Space s`, `Space S` chords. Every other Space chord is still blocked and does
+  nothing.
 - INSERT uses VS Code's native typing, completion, and cursor style.
 - `i` collapses each selection to its start, so typing inserts before the
   selection rather than replacing it. This also works with multiple and reversed
@@ -67,7 +69,8 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - Blocker bindings are limited to editable text-editor focus. Search fields,
   Quick Input boxes, and terminals keep their native input. Read-only editors
   keep native input too, except for motions, navigation/selection bindings below,
-  `gw`, and its temporary label input; `a`, `c`, `d`, `u`, and `U` are not bound there.
+  `gw` and its temporary label input, and the Space chords; `a`, `c`, `d`, `u`,
+  and `U` are not bound there.
   While a count is pending, the blockers also run in read-only editors, so that
   any other key clears the count.
 - Arrow keys remain native outside word jumps; Ctrl/Cmd/Alt shortcuts remain
@@ -97,6 +100,30 @@ language extension providing them. Selection expansion uses VS Code's selection
 range providers and fallback rules, not Helix's tree-sitter syntax nodes. Back
 and forward use VS Code's navigation history, not a separate Helix jumplist.
 These commands clear a count prefix without repeating the native action.
+
+### Leader pickers (Space)
+
+Press Space, then a key, to open a native VS Code picker.
+
+| Keys | Command | Opens (native VS Code picker) |
+| --- | --- | --- |
+| `Space f` | `miniHelix.filePicker` | Quick Open (file picker) |
+| `Space b` | `miniHelix.bufferPicker` | Show editors in the active editor group |
+| `Space s` | `miniHelix.symbolPicker` | Go to Symbol in Editor |
+| `Space S` | `miniHelix.workspaceSymbolPicker` | Go to Symbol in Workspace |
+
+- They work in NORMAL, including read-only editors. In INSERT and suspended
+  mode, Space keeps its native behavior.
+- Each chord clears a pending count without using it.
+- Any other Space chord (Space then another key) does nothing and clears the
+  count. While `gw` labels are visible or `mr` is pending, Space still cancels
+  them.
+- Unlike Helix, `Space b` lists only the editors of the active editor group,
+  not every open buffer.
+- Quick Open with empty input shows recently opened files first.
+- `Space s` lists symbols in the current file; `Space S` (Shift+S) searches
+  symbols across the workspace. Both need a language extension that provides
+  symbols. There are no other Space keys.
 
 ### Word motions (`w`, `b`, `e`, `W`, `B`, `E`)
 
@@ -177,6 +204,7 @@ The next key uses the count and clears it, whether or not it uses it:
 - `h`, `j`, `k`, `l`, the word motions, `x`, `u`, and `U` repeat.
 - `X` consumes the count and expands to line bounds once.
 - `i`, `a`, `c`, `d`, `gw`, `gd`, and `gr` ignore it, as in Helix.
+- `Space f`, `Space b`, `Space s`, and `Space S` also ignore it.
 - With a count, the arrow keys act as `h`, `j`, `k`, and `l`, so `3` Down moves
   three lines, as in Helix. Home, End, Page Up, and Page Down clear the count,
   then act natively.
@@ -504,6 +532,7 @@ such as the `gw` session, can be independent modules.
 | `miniHelix.gotoDefinition` / `gotoReferences` | `gd` / `gr` |
 | `miniHelix.expandSelection` / `shrinkSelection` | Alt+O / Alt+I |
 | `miniHelix.jumpBack` / `jumpForward` | Ctrl+O / Ctrl+I |
+| `miniHelix.filePicker` / `bufferPicker` / `symbolPicker` / `workspaceSymbolPicker` | `Space f` / `Space b` / `Space s` / `Space S` |
 | `miniHelix.moveNextWordStart` / `movePrevWordStart` / `moveNextWordEnd` | `w` / `b` / `e` |
 | `miniHelix.moveNextLongWordStart` / `movePrevLongWordStart` / `moveNextLongWordEnd` | `W` / `B` / `E` |
 | `miniHelix.moveCharLeft` / `moveVisualLineDown` / `moveVisualLineUp` / `moveCharRight` | `h` / `j` / `k` / `l` |
