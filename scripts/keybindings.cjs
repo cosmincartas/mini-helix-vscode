@@ -99,6 +99,14 @@ const gotos = [
   ['g e', 'miniHelix.gotoLastLine'],
 ];
 
+// Space leader: VS Code's own file, buffer, and symbol pickers.
+const leader = [
+  ['space f', 'miniHelix.filePicker'],
+  ['space b', 'miniHelix.bufferPicker'],
+  ['space s', 'miniHelix.symbolPicker'],
+  ['space shift+s', 'miniHelix.workspaceSymbolPicker'],
+];
+
 // `mi`, `ma`, `mr`, and `md` delimiters on the US layout: key → the character it types.
 const delimiterKeys = [
   ["'", "'"], ["shift+'", '"'], ['shift+9', '('], ['shift+0', ')'], ['[', '['],
@@ -158,10 +166,10 @@ function createKeybindings() {
     ...[...edits, ...history].map(([key, command]) => ({ key, command, when: normalWhen })),
     { key: 'escape', command: 'miniHelix.enterNormal', when: insertWhen },
     { key: 'g w', command: 'miniHelix.gotoWord', when: idleMotionWhen },
-    ...navigation.map(([key, command]) => ({ key, command, when: idleMotionWhen })),
-    ...gotos.map(([key, command]) => ({ key, command, when: idleMotionWhen })),
+    ...[...navigation, ...gotos, ...leader].map(([key, command]) => ({ key, command, when: idleMotionWhen })),
     // Other g chords are unbound keys: they clear the count instead of leaving it pending.
     ...chordNoops('g', ['w', 'd', 'r', 's', 'l', 'g', 'e']),
+    ...chordNoops('space', leader.map(([key]) => key.split(' ')[1])),
     // m i / m a select text objects. m r, m s, and m d edit text, so they need a
     // writable editor: in a read-only one their last key only clears the count.
     ...textObjectKinds.flatMap(([prefix, kind]) => textObjectKeys.map(([key, target]) => ({
@@ -216,7 +224,7 @@ function createKeybindings() {
 }
 
 module.exports = {
-  createKeybindings, motions, charMotions, lines, digits, edits, history, navigation, gotos,
+  createKeybindings, motions, charMotions, lines, digits, edits, history, navigation, gotos, leader,
   normalWhen, insertWhen, jumpWhen, blockWhen, delimiterKeys, textObjectKeys, typedCharacters,
 };
 

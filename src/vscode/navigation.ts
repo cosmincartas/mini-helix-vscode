@@ -3,7 +3,7 @@ import { Count } from '../core/count';
 import { ModeController } from '../core/mode';
 import { CommandQueue } from './queue';
 
-/** Delegate language navigation, smart selection, and jump history to VS Code. */
+/** Delegate language navigation, smart selection, jump history, and the leader pickers to VS Code. */
 export const navigationCommands: Record<string, string> = {
   'miniHelix.gotoDefinition': 'editor.action.revealDefinition',
   'miniHelix.gotoReferences': 'editor.action.goToReferences',
@@ -11,6 +11,10 @@ export const navigationCommands: Record<string, string> = {
   'miniHelix.shrinkSelection': 'editor.action.smartSelect.shrink',
   'miniHelix.jumpBack': 'workbench.action.navigateBack',
   'miniHelix.jumpForward': 'workbench.action.navigateForward',
+  'miniHelix.filePicker': 'workbench.action.quickOpen',
+  'miniHelix.bufferPicker': 'workbench.action.showEditorsInActiveGroup',
+  'miniHelix.symbolPicker': 'workbench.action.gotoSymbol',
+  'miniHelix.workspaceSymbolPicker': 'workbench.action.showAllSymbols',
 };
 
 export function registerNavigation(

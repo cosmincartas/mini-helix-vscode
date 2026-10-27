@@ -40,6 +40,17 @@ test('navigation works in read-only NORMAL editors, yields to labels, and has no
   }
 });
 
+const leader = [
+  ['space f', 'miniHelix.filePicker'], ['space b', 'miniHelix.bufferPicker'],
+  ['space s', 'miniHelix.symbolPicker'], ['space shift+s', 'miniHelix.workspaceSymbolPicker'],
+];
+
+test('Space then f, b, s, or S opens a native picker, also in read-only NORMAL editors', () => {
+  for (const [key, command] of leader) {
+    assert.deepEqual(bindings.filter(binding => binding.key === key), [{ key, command, when: idleWhen }]);
+  }
+});
+
 test('manifest contains the generated bindings', () => {
   assert.deepEqual(bindings, createKeybindings());
 });
@@ -67,6 +78,7 @@ test('i, a, c, d, o, O, u, U, Escape, g w, motions, and counts are the default b
     { key: 'g w', command: 'miniHelix.gotoWord', when: motionWhen },
     ...navigation.map(([key, command]) => ({ key, command, when: motionWhen })),
     ...gotoChords.map(([key, command]) => ({ key, command, when: motionWhen })),
+    ...leader.map(([key, command]) => ({ key, command, when: motionWhen })),
     { key: 'w', command: 'miniHelix.moveNextWordStart', when: motionWhen },
     { key: 'b', command: 'miniHelix.movePrevWordStart', when: motionWhen },
     { key: 'e', command: 'miniHelix.moveNextWordEnd', when: motionWhen },
@@ -104,7 +116,7 @@ test('every bound motion and edit command is contributed and registered', () => 
     ['src/motions/goto.ts', /^miniHelix\.goto(FirstNonWhitespace|LineEnd|FileStart|LastLine)$/],
     ['src/vscode/editing.ts', /^miniHelix\.(append|changeSelection|deleteSelection|openBelow|openAbove)$/],
     ['src/vscode/history.ts', /^miniHelix\.(undo|redo)$/],
-    ['src/vscode/navigation.ts', /^miniHelix\.(gotoDefinition|gotoReferences|expandSelection|shrinkSelection|jumpBack|jumpForward)$/],
+    ['src/vscode/navigation.ts', /^miniHelix\.(gotoDefinition|gotoReferences|expandSelection|shrinkSelection|jumpBack|jumpForward|filePicker|bufferPicker|symbolPicker|workspaceSymbolPicker)$/],
   ] as const) {
     const source = readFileSync(path.join(root, file), 'utf8');
     const bound = bindings.filter(binding => pattern.test(binding.command));
@@ -132,8 +144,8 @@ test('blockers are unique and NORMAL-only, and editable-editor-only unless a cou
     assert.match(binding.when, /editorTextFocus/);
     assert.match(binding.when, /miniHelix.enabled/);
     assert.match(binding.when, /miniHelix.mode == normal/);
-    if (/^[gm] /.test(binding.key)) {
-      // g and m chords are motion keys, like g w, so they work in read-only editors.
+    if (/^(?:[gm]|space) /.test(binding.key)) {
+      // g, m, and Space chords are motion keys, like g w, so they work in read-only editors.
       assert.match(binding.when, /!miniHelix.wordJumpActive/);
     } else {
       assert.match(binding.when, /\(!editorReadonly \|\| miniHelix.countPending\)/);
@@ -154,6 +166,35 @@ test('every other g chord is an unbound key that clears the count', () => {
   for (const [key, command] of gotoChords) {
     assert.deepEqual(bindings.filter(binding => binding.key === key), [{ key, command, when: idleWhen }]);
   }
+});
+
+test('every other Space chord is an unbound key that clears the count', () => {
+  const chords = bindings.filter(binding => binding.key.startsWith('space '));
+  const single = bindings.filter(binding => binding.command === 'miniHelix.noop' && !binding.key.includes(' '));
+  assert.deepEqual(chords.map(binding => binding.key).sort(),
+    [...single.map(binding => binding.key), 'escape', 'left', 'right', 'up', 'down', 'home', 'end',
+      'pageup', 'pagedown'].map(key => `space ${key}`).sort());
+  assert.deepEqual(new Set(chords.map(binding => binding.command)), new Set([
+    'miniHelix.noop', 'miniHelix.filePicker', 'miniHelix.bufferPicker', 'miniHelix.symbolPicker',
+    'miniHelix.workspaceSymbolPicker',
+  ]));
+});
+
+test('every Space chord yields to word jump labels and a pending replacement', () => {
+  const chords = bindings.filter(binding => binding.key.startsWith('space '));
+  assert.ok(chords.length > 3);
+  for (const binding of chords) {
+    assert.equal(binding.when, idleWhen, binding.key);
+  }
+});
+
+test('single-key Space keeps its blocker, its jump cancel, and its pending surround input', () => {
+  assert.deepEqual(bindings.filter(binding => binding.key === 'space')
+    .map(({ command, args }) => ({ command, args })), [
+    { command: 'miniHelix.noop', args: undefined },
+    { command: 'miniHelix.cancelWordJump', args: undefined },
+    { command: 'miniHelix.surroundReplaceInput', args: ' ' },
+  ]);
 });
 
 test('digits are counts in NORMAL and label-free; Escape clears a pending count', () => {
@@ -202,7 +243,7 @@ test('only requested modified shortcuts are bound; arrow keys are captured only 
       // Also while a count is pending, so that the key uses or clears it.
       assert.ok(binding.when.endsWith('&& miniHelix.wordJumpActive') ||
         binding.when.endsWith('&& miniHelix.countPending') || binding.when === pendingWhen ||
-        /^[gm] /.test(binding.key), binding.key);
+        /^(?:[gm]|space) /.test(binding.key), binding.key);
     }
   }
 });

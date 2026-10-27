@@ -14,6 +14,7 @@ import { checkWordJump } from './wordJump';
 import { checkWordMotions } from './wordMotion';
 import { checkNavigation } from './navigation';
 import { checkMatch } from './match';
+import { checkLeader } from './leader';
 
 async function until(predicate: () => boolean, message: string): Promise<void> {
   const deadline = Date.now() + 5000;
@@ -232,6 +233,7 @@ export async function run(): Promise<void> {
     });
 
     await checkNavigation(api, keyboard);
+    await checkLeader(api, keyboard);
     await checkLineSelection(api, keyboard);
     await checkWordJump(api, keyboard);
     await checkWordMotions(api, keyboard);
