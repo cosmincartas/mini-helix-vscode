@@ -1,17 +1,20 @@
 import * as vscode from 'vscode';
 import { Count } from '../core/count';
-import { replaceSurround, selectTextObjects, TextObjectKind } from '../core/match';
+import { Edit } from '../core/editing';
+import { addSurround, deleteSurround, replaceSurround, selectTextObjects, TextObjectKind } from '../core/match';
 import { ModeController } from '../core/mode';
 import { OffsetRange, WordMotionText } from '../core/wordMotion';
 import { UndoHistory } from './history';
 import { CommandQueue } from './queue';
 
+/** What the key of a pending session does: replaces the old delimiter, or adds a pair. */
+type SurroundAction = { readonly kind: 'replace'; readonly old: string; readonly count: number } | { readonly kind: 'add' };
+
 interface SurroundSession {
-  readonly old: string;
-  readonly count: number;
-  /** Cancelled, or replaced by a later `mr`: it records and applies nothing. */
+  readonly action: SurroundAction;
+  /** Cancelled, or replaced by a later `mr` or `ms`: it records and applies nothing. */
   cancelled: boolean;
-  /** Recorded in the queue, after the edits and motions typed before `mr`. */
+  /** Recorded in the queue, after the edits and motions typed before `mr` or `ms`. */
   recorded?: {
     readonly editor: vscode.TextEditor;
     readonly version: number;
@@ -32,7 +35,7 @@ function offsets(editor: vscode.TextEditor): OffsetRange[] {
   }));
 }
 
-/** Helix's `mi`, `ma`, and `mr`: text objects and surround replacement, by plain text scanning. */
+/** Helix's `mi`, `ma`, `mr`, `ms`, and `md`: text objects and surround edits, by plain text scanning. */
 export class Match implements vscode.Disposable {
   private session: SurroundSession | undefined;
   private readonly prompt = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 101);
@@ -78,6 +81,9 @@ export class Match implements vscode.Disposable {
         this.selectTextObject(args?.kind, args?.target)),
       vscode.commands.registerCommand('miniHelix.surroundReplace', (args?: { target?: unknown }) =>
         this.start(args?.target)),
+      vscode.commands.registerCommand('miniHelix.surroundAdd', () => this.startAdd()),
+      vscode.commands.registerCommand('miniHelix.surroundDelete', (args?: { target?: unknown }) =>
+        this.delete(args?.target)),
       vscode.commands.registerCommand('miniHelix.surroundReplaceInput', (character: unknown) =>
         this.input(character)),
       vscode.commands.registerCommand('miniHelix.cancelSurroundReplace', () => this.cancel()),
@@ -113,16 +119,36 @@ export class Match implements vscode.Disposable {
     });
   }
 
+  /** `md<delimiter>`: deletes the count-th enclosing pair of every selection. */
+  private delete(target: unknown): Promise<void> {
+    const count = this.count.take();
+    return this.queue.run(async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor || !this.isNormal() || typeof target !== 'string') { return; }
+      await this.apply(editor,
+        deleteSurround(new WordMotionText(editor.document.getText()), offsets(editor), target, count));
+    });
+  }
+
   /** `mr<old>`: waits for the replacement key with the keys captured by `miniHelix.surroundReplacePending`. */
   private start(old: unknown): Promise<void> {
-    const previous = this.session;
     const count = this.count.take();
-    if (typeof old !== 'string') { return Promise.resolve(this.end(previous)).then(() => undefined); }
-    // A repeated `mr` replaces the session synchronously; the context key stays set.
-    if (previous) { previous.cancelled = true; }
-    const session: SurroundSession = { old, count, cancelled: false };
+    if (typeof old !== 'string') { return Promise.resolve(this.end(this.session)).then(() => undefined); }
+    return this.begin({ kind: 'replace', old, count }, `Replace surround ${old} with: _ (Esc to cancel)`);
+  }
+
+  /** `ms`: waits for the surround key the same way. Helix ignores a count here, and the key clears it. */
+  private startAdd(): Promise<void> {
+    this.count.take();
+    return this.begin({ kind: 'add' }, 'Surround with: _ (Esc to cancel)');
+  }
+
+  private begin(action: SurroundAction, prompt: string): Promise<void> {
+    // A repeated `mr` or `ms` replaces the session synchronously; the context key stays set.
+    if (this.session) { this.session.cancelled = true; }
+    const session: SurroundSession = { action, cancelled: false };
     this.session = session;
-    this.prompt.text = `Replace surround ${old} with: _ (Esc to cancel)`;
+    this.prompt.text = prompt;
     this.prompt.show();
     // Set before queueing: the keys that follow must already be captured.
     const published = vscode.commands.executeCommand('setContext', pendingKey, true);
@@ -138,7 +164,7 @@ export class Match implements vscode.Disposable {
     return Promise.all([published, recorded]).then(() => undefined);
   }
 
-  /** The replacement key: consumes the session at once, so the next key is an ordinary one. */
+  /** The key of `mr` or `ms`: consumes the session at once, so the next key is an ordinary one. */
   private input(character: unknown): Promise<void> {
     const session = this.session;
     // Without a session, never leave the keys captured behind it.
@@ -157,21 +183,38 @@ export class Match implements vscode.Disposable {
         return;
       }
       const document = editor.document;
-      const edits = replaceSurround(
-        new WordMotionText(document.getText()), offsets(editor), session.old, character, session.count);
-      if (!edits?.length) { return; }
-      const ranges = edits.map(edit =>
-        new vscode.Range(document.positionAt(edit.from), document.positionAt(edit.to)));
-      // One revision for `u`, one undo step for native undo.
-      this.history.hold(document);
-      try {
-        await editor.edit(builder => edits.forEach((edit, index) => builder.replace(ranges[index], edit.text)),
-          { undoStopBefore: true, undoStopAfter: true });
-      } finally {
-        this.history.commit(editor);
-      }
+      const text = new WordMotionText(document.getText());
+      const { action } = session;
+      await this.apply(editor, action.kind === 'add'
+        ? addSurround(text, offsets(editor), character, document.eol === vscode.EndOfLine.CRLF ? '\r\n' : '\n')
+        // `mr` leaves the selections to VS Code.
+        : { edits: replaceSurround(text, offsets(editor), action.old, character, action.count) });
     });
     return Promise.all([released, applied]).then(() => undefined);
+  }
+
+  /** Applies a surround edit as one revision for `u` and one undo step for native undo. No edits: nothing happens. */
+  private async apply(
+    editor: vscode.TextEditor,
+    result: { readonly edits?: readonly Edit[]; readonly selections?: readonly OffsetRange[] } | undefined
+  ): Promise<void> {
+    const edits = result?.edits;
+    if (!result || !edits?.length) { return; }
+    const document = editor.document;
+    const ranges = edits.map(edit =>
+      new vscode.Range(document.positionAt(edit.from), document.positionAt(edit.to)));
+    this.history.hold(document);
+    try {
+      const applied = await editor.edit(builder => edits.forEach((edit, index) => builder.replace(ranges[index], edit.text)),
+        { undoStopBefore: true, undoStopAfter: true });
+      if (applied && result.selections) {
+        editor.selections = result.selections.map(range =>
+          new vscode.Selection(document.positionAt(range.anchor), document.positionAt(range.head)));
+        editor.revealRange(editor.selection);
+      }
+    } finally {
+      this.history.commit(editor);
+    }
   }
 
   private end(session: SurroundSession | undefined): Thenable<unknown> {

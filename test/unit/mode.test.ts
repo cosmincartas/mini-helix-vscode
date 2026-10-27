@@ -12,6 +12,7 @@ function fixture(initial: ModeState = { enabled: true, mode: 'normal' }) {
   const host: ModeHost = {
     prepareInsert: () => { insertPreparations++; },
     restoreAppendCursor: () => { restores++; endings.push('restore'); },
+    restoreOpenIndent: () => { endings.push('open'); },
     commitInsert: () => { endings.push('commit'); },
     render: state => { rendered.push(state); },
     publish: async state => { published.push(state); },
@@ -140,4 +141,25 @@ test('rapid transitions render and publish in invocation order', async () => {
     { enabled: true, mode: 'normal' },
     { enabled: false, mode: 'normal' },
   ]);
+});
+
+test('leaving an o or O INSERT removes untouched indentation before committing, once', async () => {
+  const f = fixture();
+  await f.modes.enter('insert', 'open');
+  assert.equal(f.preparations(), 0, 'o and O place their own carets');
+  assert.deepEqual(f.endings, [], 'entering INSERT does not restore');
+  await f.modes.enter('normal');
+  assert.deepEqual(f.endings, ['open', 'commit']);
+  await f.modes.enter('insert');
+  await f.modes.enter('normal');
+  assert.deepEqual(f.endings, ['open', 'commit', 'commit'], 'a later plain INSERT does not restore');
+});
+
+test('suspending INSERT forgets a pending open restore', async () => {
+  const f = fixture();
+  await f.modes.enter('insert', 'open');
+  await f.modes.setEnabled(false);
+  await f.modes.setEnabled(true);
+  await f.modes.enter('normal');
+  assert.ok(f.endings.length > 0 && !f.endings.includes('open'), 'neither ending restores');
 });

@@ -56,7 +56,7 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - One global mode shared by the window's text editors.
 - NORMAL blocks ordinary printable keys (including numeric keypad digits and
   operators), Space, Enter, Tab, Backspace, Delete, and their Shift variants,
-  except `i`, `a`, `c`, `d`, `u`, `U`, `h`, `j`, `k`, `l`, `x`, `X`, the word motions,
+  except `i`, `a`, `c`, `d`, `o`, `O`, `u`, `U`, `h`, `j`, `k`, `l`, `x`, `X`, the word motions,
   count digits, the `gw`, `gd`, `gr` chords, and the `Space f`, `Space b`,
   `Space s`, `Space S` chords. Every other Space chord is still blocked and does
   nothing.
@@ -69,8 +69,8 @@ In VS Code, run **Extensions: Install from VSIX…** and choose
 - Blocker bindings are limited to editable text-editor focus. Search fields,
   Quick Input boxes, and terminals keep their native input. Read-only editors
   keep native input too, except for motions, navigation/selection bindings below,
-  `gw` and its temporary label input, and the Space chords; `a`, `c`, `d`, `u`,
-  and `U` are not bound there.
+  `gw` and its temporary label input, and the Space chords; `a`, `c`, `d`, `o`,
+  `O`, `u`, and `U` are not bound there.
   While a count is pending, the blockers also run in read-only editors, so that
   any other key clears the count.
 - Arrow keys remain native outside word jumps; Ctrl/Cmd/Alt shortcuts remain
@@ -116,8 +116,8 @@ Press Space, then a key, to open a native VS Code picker.
   mode, Space keeps its native behavior.
 - Each chord clears a pending count without using it.
 - Any other Space chord (Space then another key) does nothing and clears the
-  count. While `gw` labels are visible or `mr` is pending, Space still cancels
-  them.
+  count. While `gw` labels are visible, Space still cancels them; while `mr` or
+  `ms` waits for its character, Space is that character.
 - Unlike Helix, `Space b` lists only the editors of the active editor group,
   not every open buffer.
 - Quick Open with empty input shows recently opened files first.
@@ -204,6 +204,7 @@ The next key uses the count and clears it, whether or not it uses it:
 - `h`, `j`, `k`, `l`, the word motions, `x`, `u`, and `U` repeat.
 - `X` consumes the count and expands to line bounds once.
 - `i`, `a`, `c`, `d`, `gw`, `gd`, and `gr` ignore it, as in Helix.
+- `o` and `O` ignore it, unlike Helix, which repeats the opened line. `3o` opens one line.
 - `Space f`, `Space b`, `Space s`, and `Space S` also ignore it.
 - With a count, the arrow keys act as `h`, `j`, `k`, and `l`, so `3` Down moves
   three lines, as in Helix. Home, End, Page Up, and Page Down clear the count,
@@ -239,7 +240,7 @@ lines split at LF, with CRLF kept together as a grapheme; a lone CR is content,
 as in that Helix build. See [oracle provenance and regeneration](test/fixtures/line-selection-oracle.md)
 and the [upstream test inventory](test/fixtures/helix-selection-upstream.md).
 
-### Selection edits (`i`, `a`, `c`, `d`)
+### Selection edits (`i`, `a`, `c`, `d`, `o`, `O`)
 
 These act on every selection, like Helix. An empty selection stands for
 Helix's block cursor, so it covers the character under the cursor: `d` on a
@@ -251,12 +252,20 @@ cursor deletes one character, as in Helix.
 | `a` | `miniHelix.append` | INSERT after each selection |
 | `c` | `miniHelix.changeSelection` | delete each selection, then INSERT |
 | `d` | `miniHelix.deleteSelection` | delete each selection |
+| `o` | `miniHelix.openBelow` | open a line below each selection, then INSERT |
+| `O` (`Shift+o`) | `miniHelix.openAbove` | open a line above each selection, then INSERT |
 
 Typical sequences: `wd` deletes a word and its trailing space, `ec` changes to
 the end of a word, and `ea` appends to a word.
 
+`o` opens a line below the line of each selection's last character, and `O`
+opens one above the line of its first character. Each selection opens its own
+line, with one cursor on it, even when two selections share a line. An empty
+selection uses the line of the character under the cursor, as in Helix. The
+new line uses the document's line ending.
+
 These follow Helix's `insert_mode`, `append_mode`, `change_selection`, and
-`delete_selection`, including:
+`delete_selection`, and `open` for `o` and `O`, including:
 
 - If a selection reaches the end of a document that has no final line ending,
   `a` adds one first, as Helix does to make room for its cursor.
@@ -266,6 +275,9 @@ These follow Helix's `insert_mode`, `append_mode`, `change_selection`, and
   them with one empty line, indented to the level of the line that follows.
   Indentation uses the editor's tab and indent sizes. Helix's language-aware
   (tree-sitter) indentation is not used.
+- Escape right after `o` or `O`, with nothing typed and a single selection,
+  removes the new line's indentation, so the line is empty, as in Helix. Once
+  you type anything, the indentation stays.
 - Overlapping or touching selections merge into one cursor after `c` or `d`.
 - Repeated keys wait for the previous edit, so `ddd` deletes three characters.
 
@@ -275,6 +287,20 @@ cursor where Helix would, but the text you typed is not selected. Unlike Helix,
 `d` and `c` do not copy the deleted text to a register; there is no paste
 command yet. Alt+D and Alt+C (delete or change without yanking) are not bound,
 because those Alt shortcuts stay native.
+
+`o` and `O` differ from Helix in these ways:
+
+- The new line's indentation comes from VS Code's own Insert Line Below and
+  Insert Line Above commands, so it follows `editor.autoIndent` and the
+  document's language configuration. Helix uses its own indent rules.
+- `O` on the first line adds only a line ending and no indentation, because VS
+  Code does the same there.
+- A count is ignored: `3o` opens one line, where Helix opens three.
+- There is no comment continuation: `o` on a `//` line does not start the new
+  line with `// `. VS Code's own language rules can still add text, such as ` * `
+  inside a JSDoc block.
+- The Escape rule above applies only after `o` and `O`. Helix also removes
+  indentation after `i`, `a`, and `c`; Mini Helix does not.
 
 ### Undo and redo (`u`, `U`)
 
@@ -287,8 +313,8 @@ With a count, `3u` undoes up to three changes, stopping with the message below
 when there is nothing left.
 
 Like Helix, these undo whole changes. Each NORMAL-mode edit (`d`, or a paste)
-is one change, and so is each INSERT session, from `i`, `a`, or `c` through
-Escape, including what `a` or `c` changed before you typed. So
+is one change, and so is each INSERT session, from `i`, `a`, `c`, `o`, or `O`
+through Escape, including what `a`, `c`, `o`, or `O` changed before you typed. So
 `ihello world` Escape `u` removes all of it, and `cfoo` Escape `u` brings back
 the replaced text in one step.
 
@@ -348,25 +374,39 @@ native navigation history; it does not add Helix's select mode or a custom
 jumplist. Input blocking and label keys share the keyboard-layout and context
 update limitations below.
 
-### Match text objects and surround (`mi`, `ma`, `mr`)
+### Match text objects and surround (`mi`, `ma`, `ms`, `md`, `mr`)
 
 | Keys | Does |
 | --- | --- |
 | `miw` / `maw` | select inside or around the word under each cursor |
 | `mi<d>` / `ma<d>` | select inside or around the enclosing `<d>` pair |
 | `[count]mi<d>` / `[count]ma<d>` | select the n-th enclosing pair (the count is ignored for `w`) |
+| `ms<char>` | surround each selection with `<char>`; a delimiter gives its pair, and a closing one is an alias, so `ms(` and `ms)` both give `(text)`; any other printable character, including a space, goes on both sides |
+| `ms<Enter>` | surround each selection with the document's line ending on both sides |
+| `[count]md<d>` | delete the n-th enclosing `<d>` pair |
 | `mr<old><new>` | replace the enclosing `<old>` pair with `<new>`; for example `mr([` turns `(text)` into `[text]` |
 
-`<d>` and `<old>` can be `'` `"` `(` `)` `[` `]` `{` `}` `<` `>`; a closing
+`<d>` and `<old>` can be `'` `"` `` ` `` `(` `)` `[` `]` `{` `}` `<` `>`; a closing
 character is an alias for its pair, so `mi)` is the same as `mi(`. `<new>` can
 be any of those, or any other printable character, which is used on both sides:
 `mr"*` turns `"x"` into `*x*`.
 
+`md` accepts the same `<d>` characters and finds pairs the same way as `mr`.
+
 - `mi` and `ma` work on every cursor; a cursor with no match stays where it is.
 - `mr` works with multiple cursors and is one undo step (and one `u` revision).
   If any cursor has no match, nothing changes.
-- Escape or an invalid key after `m`, `mi`, `ma`, `mr` or `mr<old>` cancels the
-  command, clears the count, and types nothing.
+- `ms` ignores a count. Afterwards each selection covers the new pair (the
+  selected text plus the delimiters) and keeps its direction. An empty selection
+  wraps the character under the cursor, so `ms(` on `b` in `abc` gives `a(b)c`
+  with `(b)` selected.
+- `ms` and `md` work with multiple cursors and are one undo step (and one `u`
+  revision). `md` changes nothing if any cursor has no matching pair. After `md`,
+  each selection keeps its direction and moves back by the delimiters deleted
+  before it.
+- In a read-only editor, `ms` and `md` change nothing and clear the count.
+- Escape or an invalid key after `m`, `mi`, `ma`, `ms`, `md`, `mr` or `mr<old>`
+  cancels the command, clears the count, and types nothing.
 
 Limitations:
 
@@ -374,8 +414,15 @@ Limitations:
   and operators such as `->`, count like any other bracket.
 - Quotes pair up on a single line from left to right and do not nest.
 - The punctuation keys follow the US keyboard layout.
-- There are no `mm`, `ms`, or `md` commands and no syntax objects (function,
-  class, argument). This is not exact Helix parity.
+- There is no `mm` command and no syntax objects (function, class, argument).
+  This is not exact Helix parity.
+- `md` accepts only the delimiters (`'` `"` `` ` `` `(` `)` `[` `]` `{` `}` `<`
+  `>`), not any character and not `m` (nearest pair).
+- `md` pairs quotes on a single line; Helix searches across lines.
+- `md` with several cursors in one pair deletes that pair once; Helix rejects
+  this.
+- `md` shows no error message when it finds no pair.
+- `mr<old><space>` does not replace the pair with spaces, as Helix does.
 
 ### Settings
 
@@ -526,6 +573,7 @@ such as the `gw` session, can be independent modules.
 | `miniHelix.enterInsert` | Enter INSERT |
 | `miniHelix.toggleMode` | Switch modes |
 | `miniHelix.append` / `changeSelection` / `deleteSelection` | `a` / `c` / `d` |
+| `miniHelix.openBelow` / `openAbove` | `o` / `O` |
 | `miniHelix.undo` / `redo` | `u` / `U` |
 | `miniHelix.toggleEnabled` | Suspend / resume for this session |
 | `miniHelix.gotoWord` | Show word labels (`gw`) |

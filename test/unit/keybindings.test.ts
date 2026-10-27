@@ -51,18 +51,20 @@ test('manifest contains the generated bindings', () => {
   assert.deepEqual(bindings, createKeybindings());
 });
 
-test('i, a, c, d, u, U, Escape, g w, motions, and counts are the default bindings outside a word jump', () => {
+test('i, a, c, d, o, O, u, U, Escape, g w, motions, and counts are the default bindings outside a word jump', () => {
   const motionWhen = idleWhen;
   const hjklWhen = `${motionWhen} && config.miniHelix.hjklMotions`;
   const editWhen = 'editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal';
   assert.deepEqual(bindings.filter(binding =>
     binding.command !== 'miniHelix.noop' && !binding.when.endsWith('&& miniHelix.wordJumpActive') &&
-    binding.when !== pendingWhen && !/^m [iar] /.test(binding.key)
+    binding.when !== pendingWhen && !/^m ([iard] |s$)/.test(binding.key)
   ), [
     { key: 'i', command: 'miniHelix.enterInsert', when: editWhen },
     { key: 'a', command: 'miniHelix.append', when: editWhen },
     { key: 'c', command: 'miniHelix.changeSelection', when: editWhen },
     { key: 'd', command: 'miniHelix.deleteSelection', when: editWhen },
+    { key: 'o', command: 'miniHelix.openBelow', when: editWhen },
+    { key: 'shift+o', command: 'miniHelix.openAbove', when: editWhen },
     { key: 'u', command: 'miniHelix.undo', when: editWhen },
     { key: 'shift+u', command: 'miniHelix.redo', when: editWhen },
     {
@@ -106,7 +108,7 @@ test('every bound motion and edit command is contributed and registered', () => 
     ['src/motions/word.ts', /^miniHelix\.move(Next|Prev)/],
     ['src/motions/line.ts', /^miniHelix\.(extendLineBelow|extendToLineBounds)$/],
     ['src/motions/hjkl.ts', /^miniHelix\.move(Char|VisualLine)/],
-    ['src/vscode/editing.ts', /^miniHelix\.(append|changeSelection|deleteSelection)$/],
+    ['src/vscode/editing.ts', /^miniHelix\.(append|changeSelection|deleteSelection|openBelow|openAbove)$/],
     ['src/vscode/history.ts', /^miniHelix\.(undo|redo)$/],
     ['src/vscode/navigation.ts', /^miniHelix\.(gotoDefinition|gotoReferences|expandSelection|shrinkSelection|jumpBack|jumpForward|filePicker|bufferPicker|symbolPicker|workspaceSymbolPicker)$/],
   ] as const) {
@@ -175,9 +177,12 @@ test('every Space chord yields to word jump labels and a pending replacement', (
   }
 });
 
-test('single-key Space keeps its blocker and its jump and replacement cancels', () => {
-  assert.deepEqual(bindings.filter(binding => binding.key === 'space').map(binding => binding.command), [
-    'miniHelix.noop', 'miniHelix.cancelWordJump', 'miniHelix.cancelSurroundReplace',
+test('single-key Space keeps its blocker, its jump cancel, and its pending surround input', () => {
+  assert.deepEqual(bindings.filter(binding => binding.key === 'space')
+    .map(({ command, args }) => ({ command, args })), [
+    { command: 'miniHelix.noop', args: undefined },
+    { command: 'miniHelix.cancelWordJump', args: undefined },
+    { command: 'miniHelix.surroundReplaceInput', args: ' ' },
   ]);
 });
 
@@ -232,11 +237,11 @@ test('only requested modified shortcuts are bound; arrow keys are captured only 
   }
 });
 
-test('i, a, c, d, and u override their blockers and label input overrides them during a jump', () => {
+test('i, a, c, d, o, and u override their blockers and label input overrides them during a jump', () => {
   for (const [key, command] of [
     ['i', 'miniHelix.enterInsert'], ['a', 'miniHelix.append'],
     ['c', 'miniHelix.changeSelection'], ['d', 'miniHelix.deleteSelection'],
-    ['u', 'miniHelix.undo'],
+    ['o', 'miniHelix.openBelow'], ['u', 'miniHelix.undo'],
   ]) {
     const matching = bindings.filter(binding => binding.key === key && binding.command !== 'miniHelix.clearCount');
     assert.deepEqual(matching.map(binding => binding.command), [
@@ -245,6 +250,14 @@ test('i, a, c, d, and u override their blockers and label input overrides them d
     // Edits are blocked in read-only editors, like their blockers.
     assert.match(matching[1].when, /!editorReadonly/);
   }
+});
+
+test('O overrides its blocker, needs a writable editor, and cancels a jump', () => {
+  const matching = bindings.filter(binding => binding.key === 'shift+o' && binding.command !== 'miniHelix.clearCount');
+  assert.deepEqual(matching.map(binding => binding.command), [
+    'miniHelix.noop', 'miniHelix.openAbove', 'miniHelix.cancelWordJump', 'miniHelix.surroundReplaceInput',
+  ]);
+  assert.match(matching[1].when, /!editorReadonly/);
 });
 
 test('U overrides its blocker, needs a writable editor, and cancels a jump', () => {
@@ -274,12 +287,12 @@ test('every label character is captured with its argument, only during a jump', 
 const pendingKeys = bindings.filter(binding => binding.when === pendingWhen);
 
 test('m is a chord prefix: m i, m a select text objects and m r starts a replacement', () => {
-  assert.equal(textObjectKeys.length, 11);
-  assert.equal(delimiterKeys.length, 10);
+  assert.equal(textObjectKeys.length, 12);
+  assert.equal(delimiterKeys.length, 11);
   const typed = Object.fromEntries(delimiterKeys);
   assert.deepEqual(typed, {
     "'": "'", "shift+'": '"', 'shift+9': '(', 'shift+0': ')', '[': '[', ']': ']',
-    'shift+[': '{', 'shift+]': '}', 'shift+,': '<', 'shift+.': '>',
+    'shift+[': '{', 'shift+]': '}', 'shift+,': '<', 'shift+.': '>', '`': '`',
   });
   for (const [prefix, kind] of [['i', 'inside'], ['a', 'around']]) {
     for (const [key, target] of [['w', 'w'], ...delimiterKeys]) {
@@ -297,12 +310,30 @@ test('m is a chord prefix: m i, m a select text objects and m r starts a replace
     ]);
   }
   // The word jump and a pending replacement both take over from the text object commands.
-  assert.ok(bindings.filter(binding => /^m [iar] /.test(binding.key) && binding.command !== 'miniHelix.noop')
+  assert.ok(bindings.filter(binding => /^m ([iard] |s$)/.test(binding.key) && binding.command !== 'miniHelix.noop')
     .every(binding => binding.when.includes('!miniHelix.wordJumpActive') &&
       binding.when.includes('!miniHelix.surroundReplacePending')));
 });
 
-test('every other key after m, m i, m a, and m r is an unbound key that clears the count', () => {
+test('m s starts a surround add, and m d <delimiter> deletes a surround; both need a writable editor', () => {
+  const writable = `editorTextFocus && !editorReadonly && miniHelix.enabled && miniHelix.mode == normal && ` +
+    '!miniHelix.wordJumpActive && !miniHelix.surroundReplacePending';
+  assert.deepEqual(bindings.filter(binding => binding.key === 'm s'), [
+    { key: 'm s', command: 'miniHelix.noop', when: `${idleWhen} && editorReadonly` },
+    { key: 'm s', command: 'miniHelix.surroundAdd', when: writable },
+  ]);
+  const add = bindings.find(binding => binding.key === 'm s' && binding.command === 'miniHelix.surroundAdd')!;
+  assert.match(add.when, /!miniHelix\.wordJumpActive/);
+  assert.match(add.when, /!miniHelix\.surroundReplacePending/);
+  for (const [key, target] of delimiterKeys) {
+    assert.deepEqual(bindings.filter(binding => binding.key === `m d ${key}`), [
+      { key: `m d ${key}`, command: 'miniHelix.noop', when: `${idleWhen} && editorReadonly` },
+      { key: `m d ${key}`, command: 'miniHelix.surroundDelete', args: { target }, when: writable },
+    ]);
+  }
+});
+
+test('every other key after m, m i, m a, m r, and m d is an unbound key that clears the count', () => {
   const keys = (prefix: string) => bindings
     .filter(binding => binding.command === 'miniHelix.noop' && binding.key.startsWith(`${prefix} `) &&
       binding.key.split(' ').length === prefix.split(' ').length + 1 && binding.when === idleWhen)
@@ -311,12 +342,13 @@ test('every other key after m, m i, m a, and m r is an unbound key that clears t
     .map(binding => binding.key);
   const all = [...single, 'escape', 'left', 'right', 'up', 'down', 'home', 'end', 'pageup', 'pagedown'];
   const except = (excluded: string[]) => all.filter(key => !excluded.includes(key)).sort();
-  assert.deepEqual(keys('m').sort(), except(['i', 'a', 'r']));
+  assert.deepEqual(keys('m').sort(), except(['i', 'a', 'r', 's', 'd']));
   assert.deepEqual(keys('m i').sort(), except(textObjectKeys.map(([key]) => key)));
   assert.deepEqual(keys('m a').sort(), except(textObjectKeys.map(([key]) => key)));
   assert.deepEqual(keys('m r').sort(), except(delimiterKeys.map(([key]) => key)));
+  assert.deepEqual(keys('m d').sort(), except(delimiterKeys.map(([key]) => key)));
   for (const key of ['escape', 'x', 'space', 'enter', 'left', 'shift+7']) {
-    for (const prefix of ['m', 'm i', 'm a', 'm r']) {
+    for (const prefix of ['m', 'm i', 'm a', 'm r', 'm d']) {
       assert.ok(keys(prefix).includes(key), `${prefix} ${key}`);
     }
   }
@@ -341,7 +373,9 @@ test('a pending replacement captures every printable key as its character, and c
     expected.set(key, plain);
     expected.set(`shift+${key}`, shifted);
   }
-  for (const [key, character] of [['numpad_add', '+'], ['numpad_subtract', '-'], ['numpad_multiply', '*'],
+  // Enter and Space are characters: `ms` wraps with them, and `mr` rejects them without an edit.
+  for (const [key, character] of [['enter', '\n'], ['shift+enter', '\n'], ['space', ' '], ['shift+space', ' '],
+    ['numpad_add', '+'], ['numpad_subtract', '-'], ['numpad_multiply', '*'],
     ['numpad_divide', '/'], ['numpad_decimal', '.'], ['numpad_separator', ',']]) {
     expected.set(key, character);
   }
@@ -355,9 +389,12 @@ test('a pending replacement captures every printable key as its character, and c
   assert.equal(new Set(pendingKeys.map(binding => binding.key)).size, pendingKeys.length);
   const cancelled = pendingKeys.filter(binding => binding.command === 'miniHelix.cancelSurroundReplace')
     .map(binding => binding.key);
-  for (const key of ['escape', 'space', 'shift+space', 'enter', 'tab', 'backspace', 'delete', 'left', 'right', 'up',
-    'down', 'home', 'end', 'pageup', 'pagedown', 'insert']) {
+  for (const key of ['escape', 'tab', 'shift+tab', 'backspace', 'shift+backspace', 'delete', 'shift+delete', 'left',
+    'right', 'up', 'down', 'home', 'end', 'pageup', 'pagedown', 'insert']) {
     assert.ok(cancelled.includes(key), key);
+  }
+  for (const key of ['enter', 'shift+enter', 'space', 'shift+space']) {
+    assert.ok(!cancelled.includes(key), key);
   }
   assert.deepEqual(pendingKeys.filter(binding =>
     !['miniHelix.surroundReplaceInput', 'miniHelix.cancelSurroundReplace'].includes(binding.command)), []);
@@ -371,7 +408,7 @@ test('pending input comes last so that it beats every other binding, and nothing
   for (const binding of bindings.slice(0, firstPending)) {
     if (/^(editorTextFocus && )(miniHelix\.enabled && miniHelix\.mode == insert)/.test(binding.when)) { continue; }
     if (binding.command === 'miniHelix.noop' && !binding.key.includes(' ')) { continue; }
-    if (['i', 'a', 'c', 'd', 'u', 'shift+u'].includes(binding.key)) { continue; }
+    if (['i', 'a', 'c', 'd', 'o', 'shift+o', 'u', 'shift+u'].includes(binding.key)) { continue; }
     if (binding.when.endsWith('&& miniHelix.wordJumpActive')) { continue; }
     assert.match(binding.when, /!miniHelix\.surroundReplacePending/, `${binding.key} ${binding.command}`);
   }
@@ -380,7 +417,8 @@ test('pending input comes last so that it beats every other binding, and nothing
 test('the new commands are contributed and registered', () => {
   const contributed = new Set(manifest.contributes.commands.map((command: { command: string }) => command.command));
   const source = readFileSync(path.join(root, 'src/vscode/match.ts'), 'utf8');
-  for (const id of ['selectTextObject', 'surroundReplace', 'surroundReplaceInput', 'cancelSurroundReplace']) {
+  for (const id of ['selectTextObject', 'surroundReplace', 'surroundReplaceInput', 'cancelSurroundReplace',
+    'surroundAdd', 'surroundDelete']) {
     assert.ok(contributed.has(`miniHelix.${id}`), id);
     assert.ok(source.includes(`'miniHelix.${id}'`), id);
     assert.ok(bindings.some(binding => binding.command === `miniHelix.${id}`), id);

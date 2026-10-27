@@ -244,7 +244,7 @@ export async function run(): Promise<void> {
 
     await check('motion runner supports multiple selections and guards INSERT/disabled states', async () => {
       const modes = new ModeController({ enabled: true, mode: 'normal' }, {
-        prepareInsert() {}, restoreAppendCursor() {}, commitInsert() {}, render() {}, publish: async () => {},
+        prepareInsert() {}, restoreAppendCursor() {}, restoreOpenIndent() {}, commitInsert() {}, render() {}, publish: async () => {},
       });
       let calls = 0;
       const command = registerMotion('miniHelix.testMotion', (doc, selection) => {

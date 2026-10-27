@@ -2,7 +2,8 @@
  * Helix selection edits: `a` (append_mode), `d` (delete_selection), `c`
  * (change_selection), and the cursor restore when `a`'s INSERT ends.
  * Ported from helix-term's `commands.rs`; `i` is `prepareInsert` in
- * `selections.ts`.
+ * `selections.ts`. `o` and `O` open the line with VS Code's native commands;
+ * this file gives the carets to open from and the whitespace Helix removes.
  *
  * Like the word motions, ranges are UTF-16 gap offsets shared with VS Code
  * selections. An empty VS Code selection is Helix's block cursor: it covers
@@ -147,4 +148,42 @@ export function restoreAppendCursor(text: WordMotionText, ranges: readonly Offse
     if (range.anchor !== range.head || range.head === text.text.length) { return range; }
     return point(text.before(range.head)?.start ?? range.head);
   }));
+}
+
+/**
+ * `o` and `O`: the caret VS Code's native line command opens a line from, per
+ * selection. Helix opens below the line of the range's last grapheme (`o`) or
+ * above the line of its start (`O`). Each caret is distinct, so two selections
+ * on one line open two lines.
+ */
+export function openReferences(
+  text: WordMotionText,
+  ranges: readonly OffsetRange[],
+  direction: 'below' | 'above'
+): OffsetRange[] {
+  return ranges.map(range => {
+    const block = blockRange(text, range);
+    return point(direction === 'above' ? from(block) : text.before(to(block))?.start ?? 0);
+  });
+}
+
+/**
+ * Helix's `try_restore_indent`: when INSERT ends right after `o` or `O`, the
+ * indentation before the caret goes unless the session did more than open the
+ * line. `before` and `after` are the texts around the whole session, and the
+ * net change must be one insertion that ends at `caret`, starts with a line
+ * ending, and has only whitespace after it, with nothing else on the line.
+ */
+export function openedBlankLine(
+  before: string,
+  after: string,
+  caret: number
+): { readonly from: number; readonly to: number } | undefined {
+  const start = caret - (after.length - before.length);
+  if (start < 0 || start >= caret || after.slice(0, start) !== before.slice(0, start) ||
+    after.slice(caret) !== before.slice(start)) { return undefined; }
+  const opened = after.slice(start, caret).match(/^(\r\n|\n)[ \t]*$/);
+  if (!opened || !/^(?:[\r\n]|$)/.test(after.slice(caret, caret + 1))) { return undefined; }
+  const indentStart = start + opened[1].length;
+  return indentStart < caret ? { from: indentStart, to: caret } : undefined;
 }

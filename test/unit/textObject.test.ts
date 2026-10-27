@@ -31,7 +31,7 @@ test('cursorOffset follows the block cursor convention', () => {
 test('delimiterPair maps delimiters and aliases', () => {
   for (const [char, open, close] of [
     ['(', '(', ')'], [')', '(', ')'], ['[', '[', ']'], [']', '[', ']'], ['{', '{', '}'], ['}', '{', '}'],
-    ['<', '<', '>'], ['>', '<', '>'], ['"', '"', '"'], ["'", "'", "'"],
+    ['<', '<', '>'], ['>', '<', '>'], ['"', '"', '"'], ["'", "'", "'"], ['`', '`', '`'],
   ]) {
     assert.deepEqual(delimiterPair(char), { open, close });
   }
@@ -185,6 +185,14 @@ test('quotes: cursor inside, on either quote, or between pairs', () => {
   // The apostrophe pairs with the next quote, so the cursor lies between pairs.
   assert.equal(inside("it's 'a|b'", "'"), '∅');
   assert.equal(inside("it's 'a|b' c'd", "'"), '∅');
+});
+
+test('quotes: backticks pair like the other quotes', () => {
+  assert.equal(inside('run `npm |test` now', '`'), 'run `«npm test»` now');
+  assert.equal(around('run `npm |test` now', '`'), 'run «`npm test`» now');
+  assert.equal(inside('`a` |b `c`', '`'), '∅');
+  assert.equal(inside('`a "b|" c`', '`'), '`«a "b" c»`');
+  assert.equal(inside('`a|`', '`', 2), '∅');
 });
 
 test('quotes: pairs left to right, unmatched trailing quote', () => {
