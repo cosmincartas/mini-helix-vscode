@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Match commands: Rust helper and TypeScript</title>
+<style>
+  :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+  body { max-width: 1500px; margin: auto; padding: 24px; }
+  main { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 510px), 1fr)); gap: 32px; }
+  h1 { font-size: 1.6rem; } h2 { font-size: 1.2rem; }
+  p, li { line-height: 1.6; }
+  .mermaid { overflow: auto; }
+</style>
+<h1>Match commands: two architectures</h1>
+<p>Scope: inside and around words and explicit delimiter pairs, plus surround replacement. These are design comparisons, not completed integrations.</p>
+<main>
+<section>
+<h2>Bundled Rust helper</h2>
+<p>Key decision: a separate process runs the Helix algorithms. VS Code owns the editable document.</p>
+<pre class="mermaid">
+flowchart TD
+  subgraph Extension[VS Code extension — TypeScript]
+    K[Keybindings and pending command state] --> Q[Shared command queue]
+    Q --> C[Native client and selection conversion]
+    D[VS Code document — source of truth] --> S[Versioned document synchronization]
+    R[Check reply version and editor state] --> A[Apply selections or one undoable edit]
+    A --> D
+  end
+  subgraph Helper[Bundled Rust process]
+    H[Protocol handler] --> M[Document replica]
+    M --> E[Helix text-object and surround algorithms]
+    P[Syntax trees and grammar runtime] --> E
+  end
+  C -->|Command, count, selections, version| H
+  S -->|Open and change events| H
+  E -->|Selections or edits and version| R
+</pre>
+<p><strong>mi{:</strong> synchronize text → send selection request → run Helix → check reply → select inside braces.</p>
+<p><strong>mr([:</strong> look up parentheses in Rust → return replacement state → receive [ → request edits → check reply → apply both edits.</p>
+<p>Existing foundations: src/native/matchClient.ts:MatchClient, src/native/documents.ts:DocumentSync, native/match-helper/src/evaluate/textobjects.rs:select_textobject, and evaluate/surround_lookup.rs:lookup. User command integration remains incomplete.</p>
+<p>Strongest advantage: reuse of pinned Helix algorithms and syntax support. Strongest cost: process lifecycle, synchronization, offset conversion, and native packaging.</p>
+</section>
+<section>
+<h2>TypeScript only</h2>
+<p>Key decision: run the selectors in the extension process against the current document.</p>
+<pre class="mermaid">
+flowchart TD
+  subgraph Extension[VS Code extension — TypeScript]
+    K[Keybindings and pending command state — new] --> Q[Existing shared command queue]
+    Q --> D[Read current VS Code document and selections]
+    D --> E[Word selector and delimiter matcher — new]
+    E --> O{Operation}
+    O -->|mi / ma| S[Apply selections]
+    O -->|mr lookup| P[Retain pair positions and document version]
+    P --> N[Receive replacement character]
+    N --> V[Validate pending document and selection state]
+    V --> A[Apply both replacements as one undoable edit]
+  end
+</pre>
+<p><strong>mi{:</strong> read current text → find enclosing braces locally → select the interior.</p>
+<p><strong>mr([:</strong> find parentheses locally → retain positions → receive [ → validate state → replace both delimiters.</p>
+<p>Existing foundations: src/vscode/queue.ts:CommandQueue, src/core/wordMotion.ts:WordMotionText, and src/vscode/editing.ts:SelectionEdits. Word-object boundary rules and delimiter matching are new work.</p>
+<p>Strongest advantage: one document model and no process boundary. Strongest limitation: text scanning needs explicit rules for quotes, escapes, comments, and ambiguous angle brackets.</p>
+</section>
+</main>
+<p>Rust does not require grammars. A reduced Rust helper could omit them, but would retain the process boundary. TypeScript can also use a parser. Syntax awareness is a separate design choice.</p>
+<p>Recommendation for the stated scope: TypeScript only. No comparable latency measurements are available.</p>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, securityLevel: 'strict', theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default' });
+</script>
+</html>
