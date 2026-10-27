@@ -100,6 +100,30 @@
         "enablement": "miniHelix.enabled && miniHelix.mode == normal"
       },
       {
+        "command": "miniHelix.gotoFirstNonWhitespace",
+        "title": "Go to First Non-Whitespace (gs)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
+        "command": "miniHelix.gotoLineEnd",
+        "title": "Go to Line End (gl)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
+        "command": "miniHelix.gotoFileStart",
+        "title": "Go to File Start (gg)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
+        "command": "miniHelix.gotoLastLine",
+        "title": "Go to Last Line (ge)",
+        "category": "Mini Helix",
+        "enablement": "miniHelix.enabled && miniHelix.mode == normal"
+      },
+      {
         "command": "miniHelix.moveNextWordStart",
         "title": "Move to Next Word Start (w)",
         "category": "Mini Helix",
@@ -1038,6 +1062,26 @@
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
       {
+        "key": "g s",
+        "command": "miniHelix.gotoFirstNonWhitespace",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "g l",
+        "command": "miniHelix.gotoLineEnd",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "g g",
+        "command": "miniHelix.gotoFileStart",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
+        "key": "g e",
+        "command": "miniHelix.gotoLastLine",
+        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
+      },
+      {
         "key": "g a",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
@@ -1073,11 +1117,6 @@
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
       {
-        "key": "g e",
-        "command": "miniHelix.noop",
-        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
-      },
-      {
         "key": "g shift+e",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
@@ -1089,11 +1128,6 @@
       },
       {
         "key": "g shift+f",
-        "command": "miniHelix.noop",
-        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
-      },
-      {
-        "key": "g g",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
@@ -1139,11 +1173,6 @@
       },
       {
         "key": "g shift+k",
-        "command": "miniHelix.noop",
-        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
-      },
-      {
-        "key": "g l",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },
@@ -1204,11 +1233,6 @@
       },
       {
         "key": "g shift+r",
-        "command": "miniHelix.noop",
-        "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
-      },
-      {
-        "key": "g s",
         "command": "miniHelix.noop",
         "when": "editorTextFocus && miniHelix.enabled && miniHelix.mode == normal && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending"
       },

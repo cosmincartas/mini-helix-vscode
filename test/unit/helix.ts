@@ -6,6 +6,7 @@
 import { moveHorizontally, moveVertically, textLines } from '../../src/core/charMotion';
 import { Count } from '../../src/core/count';
 import { append, changeSelection, deleteSelection, EditResult, restoreAppendCursor } from '../../src/core/editing';
+import { gotoFirstNonWhitespace, gotoLastLine, gotoLine, gotoLineEnd } from '../../src/core/gotoMotion';
 import { moveWord, OffsetRange, WordMotionTarget, WordMotionText } from '../../src/core/wordMotion';
 
 export interface Document {
@@ -107,6 +108,8 @@ export const HELIX_INDENT = { unit: '\t', tabSize: 4 } as const;
 export class Session {
   mode: 'normal' | 'insert' = 'normal';
   private restoreCursor = false;
+  /** A `g` is waiting for its second key; the count stays pending, as in Helix. */
+  private goto = false;
   private readonly count = new Count();
   /** Columns kept between `j`/`k` presses, like Helix's `old_visual_position`. */
   private columns: (number | undefined)[] | undefined;
@@ -152,11 +155,29 @@ export class Session {
       this.count.digit(Number(key));
       return;
     }
+    if (key === 'g' && !this.goto) {
+      this.goto = true;
+      return;
+    }
     // Every other key uses the count and drops the remembered columns.
     const count = this.count.take();
     const columns = this.columns;
     this.columns = undefined;
-    if (key in motions) {
+    if (this.goto) {
+      this.goto = false;
+      const lines = textLines(this.text);
+      if (key === 's') {
+        this.ranges = merged(this.ranges.map(range => gotoFirstNonWhitespace(lines, range)));
+      } else if (key === 'l') {
+        this.ranges = merged(this.ranges.map(range => gotoLineEnd(text, lines, range)));
+      } else if (key === 'g') {
+        this.ranges = [gotoLine(lines, count)];
+      } else if (key === 'e') {
+        this.ranges = [gotoLastLine(lines)];
+      } else {
+        throw new Error(`Unsupported g key ${key}`);
+      }
+    } else if (key in motions) {
       this.ranges = this.ranges.map(range => moveWord(text, range, motions[key], count));
     } else if (key === 'h' || key === 'l') {
       this.ranges = merged(this.ranges.map(range => moveHorizontally(text, range, charMotions[key], count)));

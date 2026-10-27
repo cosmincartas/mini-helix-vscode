@@ -1,30 +1,15 @@
 import * as vscode from 'vscode';
-import { Lines } from '../core/charMotion';
 import { Count } from '../core/count';
 import { transformLineSelection } from '../core/lineSelection';
 import { ModeController } from '../core/mode';
 import { CommandQueue } from '../vscode/queue';
+import { documentLines } from './hjkl';
 import { prepared } from './word';
 
 const commands = {
   'miniHelix.extendLineBelow': 'x',
   'miniHelix.extendToLineBounds': 'X',
 } as const;
-
-function documentLines(document: vscode.TextDocument): Lines {
-  return {
-    count: document.lineCount,
-    indexAt: offset => document.positionAt(offset).line,
-    at: index => {
-      const line = document.lineAt(index);
-      return {
-        start: document.offsetAt(line.range.start),
-        end: document.offsetAt(line.range.end),
-        text: line.text,
-      };
-    },
-  };
-}
 
 /** Line commands normalize the complete selection set, including its primary. */
 export function registerLineSelections(

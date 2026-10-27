@@ -3,6 +3,7 @@ import { Count } from './core/count';
 import { Mode, ModeController, ModeState } from './core/mode';
 import { registerMotion } from './core/registerMotion';
 import { prepareInsert } from './core/selections';
+import { registerGotoMotions } from './motions/goto';
 import { CharMotions } from './motions/hjkl';
 import { registerLineSelections } from './motions/line';
 import { wordMotion, wordMotions } from './motions/word';
@@ -108,6 +109,7 @@ export async function activate(
       registerMotion(id, wordMotion(target), modes, count, queue)
     ),
     ...chars.register(modes, count, queue),
+    ...registerGotoMotions(modes, count, queue),
     ...registerLineSelections(modes, count, queue),
     ...edits.register(modes, count),
     ...history.register(count),

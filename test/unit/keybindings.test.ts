@@ -20,6 +20,10 @@ const manifest = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'
 const bindings: Binding[] = manifest.contributes.keybindings;
 const motionWhen = 'editorTextFocus && miniHelix.enabled && miniHelix.mode == normal';
 const idleWhen = `${motionWhen} && !miniHelix.wordJumpActive && !miniHelix.surroundReplacePending`;
+const gotoChords = [
+  ['g s', 'miniHelix.gotoFirstNonWhitespace'], ['g l', 'miniHelix.gotoLineEnd'],
+  ['g g', 'miniHelix.gotoFileStart'], ['g e', 'miniHelix.gotoLastLine'],
+];
 const pendingWhen = `${motionWhen} && miniHelix.surroundReplacePending`;
 const navigation = [
   ['g d', 'miniHelix.gotoDefinition'], ['g r', 'miniHelix.gotoReferences'],
@@ -62,6 +66,7 @@ test('i, a, c, d, o, O, u, U, Escape, g w, motions, and counts are the default b
     },
     { key: 'g w', command: 'miniHelix.gotoWord', when: motionWhen },
     ...navigation.map(([key, command]) => ({ key, command, when: motionWhen })),
+    ...gotoChords.map(([key, command]) => ({ key, command, when: motionWhen })),
     { key: 'w', command: 'miniHelix.moveNextWordStart', when: motionWhen },
     { key: 'b', command: 'miniHelix.movePrevWordStart', when: motionWhen },
     { key: 'e', command: 'miniHelix.moveNextWordEnd', when: motionWhen },
@@ -96,6 +101,7 @@ test('every bound motion and edit command is contributed and registered', () => 
     ['src/motions/word.ts', /^miniHelix\.move(Next|Prev)/],
     ['src/motions/line.ts', /^miniHelix\.(extendLineBelow|extendToLineBounds)$/],
     ['src/motions/hjkl.ts', /^miniHelix\.move(Char|VisualLine)/],
+    ['src/motions/goto.ts', /^miniHelix\.goto(FirstNonWhitespace|LineEnd|FileStart|LastLine)$/],
     ['src/vscode/editing.ts', /^miniHelix\.(append|changeSelection|deleteSelection|openBelow|openAbove)$/],
     ['src/vscode/history.ts', /^miniHelix\.(undo|redo)$/],
     ['src/vscode/navigation.ts', /^miniHelix\.(gotoDefinition|gotoReferences|expandSelection|shrinkSelection|jumpBack|jumpForward)$/],
@@ -142,7 +148,12 @@ test('every other g chord is an unbound key that clears the count', () => {
     [...single.map(binding => binding.key), 'escape', 'left', 'right', 'up', 'down', 'home', 'end',
       'pageup', 'pagedown'].map(key => `g ${key}`).sort());
   assert.deepEqual(new Set(chords.map(binding => binding.command)),
-    new Set(['miniHelix.noop', 'miniHelix.gotoWord', 'miniHelix.gotoDefinition', 'miniHelix.gotoReferences']));
+    new Set(['miniHelix.noop', 'miniHelix.gotoWord', 'miniHelix.gotoDefinition', 'miniHelix.gotoReferences',
+      ...gotoChords.map(([, command]) => command)]));
+  // gs, gl, gg, and ge are motions, not chord blockers.
+  for (const [key, command] of gotoChords) {
+    assert.deepEqual(bindings.filter(binding => binding.key === key), [{ key, command, when: idleWhen }]);
+  }
 });
 
 test('digits are counts in NORMAL and label-free; Escape clears a pending count', () => {
